@@ -4,6 +4,7 @@ const { connectDB } = require('./db');
 const { setupRoutes } = require('./routes');
 const fetchMunicipios = require('./jobs/fetchMunicipios');
 const updateJsonMunicipio = require('./jobs/updateJsonMunicipio');
+const autofetch = require('./jobs/autofetch');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,6 +25,10 @@ async function startServer() {
         // Run fetchMunicipios job every day at midnight
         cron.schedule('*/5  * * * *', () => {
             fetchMunicipios(connection, FETCH_MUNICIPIOS_URL);
+        });
+
+        cron.schedule('*/5  * * * *', () => {
+            autofetch("https://primeira-infancia-backend.onrender.com/api/municipios");
         });
         
         // Run updateJsonMunicipio job every day at 2 AM

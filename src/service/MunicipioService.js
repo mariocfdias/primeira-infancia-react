@@ -19,7 +19,7 @@ class MunicipioService {
             codIbge: municipioData.cod_ibge,
             status: municipioData.status,
             nome: municipioData.nome
-                };
+            };
         return await this.municipioRepository.save(municipio);
     }
 
