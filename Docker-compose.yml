@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/app/src
+      - ./municipios.sqlite:/app/municipios.sqlite
+    environment:
+      - PORT=3000
+      - FETCH_MUNICIPIOS_URL=https://script.google.com/macros/s/AKfycbxk6W-1FSg9jQ21AyJzROG-5z4M3citKP-ktjfa9bg17PP00pe2fhTc7YHQRBFzrjG1/exec
+      - UPDATE_JSON_URL=https://script.google.com/macros/s/AKfycbxk6W-1FSg9jQ21AyJzROG-5z4M3citKP-ktjfa9bg17PP00pe2fhTc7YHQRBFzrjG1/exec
+    restart: unless-stopped
