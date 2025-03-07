@@ -8,8 +8,8 @@ const autofetch = require('./jobs/autofetch');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const FETCH_MUNICIPIOS_URL = process.env.FETCH_MUNICIPIOS_URL || 'https://script.google.com/macros/s/AKfycbxk6W-1FSg9jQ21AyJzROG-5z4M3citKP-ktjfa9bg17PP00pe2fhTc7YHQRBFzrjG1/exec?request=municipios';
-const UPDATE_JSON_URL = process.env.UPDATE_JSON_URL || 'https://script.google.com/macros/s/AKfycbxk6W-1FSg9jQ21AyJzROG-5z4M3citKP-ktjfa9bg17PP00pe2fhTc7YHQRBFzrjG1/exec';
+const FETCH_MUNICIPIOS_URL = process.env.FETCH_MUNICIPIOS_URL || 'https://script.google.com/macros/s/AKfycbxTKjjdAP2a6ZM2haGXmTDfk4STu9RgIu5ttFFRBbjXBhNVae3DKf2MHHpLSZLTqFRg/exec?request=municipios';
+const UPDATE_JSON_URL = process.env.UPDATE_JSON_URL || 'https://script.google.com/macros/s/AKfycbxTKjjdAP2a6ZM2haGXmTDfk4STu9RgIu5ttFFRBbjXBhNVae3DKf2MHHpLSZLTqFRg/exec';
 
 app.use(express.json());
 
