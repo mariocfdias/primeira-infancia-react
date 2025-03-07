@@ -14,7 +14,8 @@ async function updateJsonMunicipio(connection, url) {
                 const response = await fetch(specificUrl);
                 const data = await response.json();
                 console.log({data})
-                
+                console.log({url})
+
                 if (data) {
                     await municipioService.updateMunicipioJson(municipio.codIbge, data);
                     console.log(`Updated JSON for municipio ${municipio.codIbge}`);

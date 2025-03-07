@@ -8,6 +8,7 @@ async function autofetch(url) {
         const data = await response.json();
 
         console.log({autofetch: data})
+        console.log({url})
     } catch (error) {
         console.error('Error in fetchMunicipios job:', error.message);
     }

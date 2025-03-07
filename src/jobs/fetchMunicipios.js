@@ -9,6 +9,7 @@ async function fetchMunicipios(connection, url) {
         const response = await fetch(url);
         const data = await response.json();
         console.log({data})
+        console.log({url})
 
         if (data.status === 'success' && Array.isArray(data.data)) {
             const promises = data.data.map(municipioData => {
