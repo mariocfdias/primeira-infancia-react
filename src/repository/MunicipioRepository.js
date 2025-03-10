@@ -5,7 +5,7 @@ class MunicipioRepository {
 
     async findAll() {
         return await this.repository.find({
-            select: ["codIbge", "nome"]
+            select: ["codIbge", "nome", "status", "badges", "points"]
         });
     }
 
