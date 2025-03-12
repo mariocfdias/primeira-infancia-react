@@ -6,7 +6,7 @@ async function updateJsonMunicipio(connection, url) {
     const municipioService = new MunicipioService(connection);
     
     try {
-        const municipios = await municipioService.findAll();
+        const municipios = await municipioService.findParticipantes();
         
         for (const municipio of municipios) {
             try {

@@ -9,6 +9,13 @@ class MunicipioRepository {
         });
     }
 
+    async findParticipantes() {
+        return await this.repository.find({
+            where: { status: "Participante" },
+            select: ["codIbge", "nome", "status", "badges", "points", "imagemAvatar"]
+        });
+    }
+
     async findByIdWithJson(codIbge) {
         return await this.repository.findOne({
             where: { codIbge },

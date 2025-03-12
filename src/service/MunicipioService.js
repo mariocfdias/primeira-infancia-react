@@ -10,6 +10,11 @@ class MunicipioService {
         return await this.municipioRepository.findAll();
     }
 
+    
+    async findParticipantes() {
+        return await this.municipioRepository.findParticipantes();
+    }
+
     async findByIdWithJson(codIbge) {
         return await this.municipioRepository.findByIdWithJson(codIbge);
     }
