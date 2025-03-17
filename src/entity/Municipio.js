@@ -6,7 +6,7 @@ module.exports = new EntitySchema({
     columns: {
         codIbge: {
             primary: true,
-            type: "int"
+            type: "varchar"
         },
         nome: {
             type: "varchar"
@@ -32,6 +32,10 @@ module.exports = new EntitySchema({
         },
         json: {
             type: "text",
+            nullable: true
+        },
+        orgao: {
+            type: "boolean",
             nullable: true
         }
     }

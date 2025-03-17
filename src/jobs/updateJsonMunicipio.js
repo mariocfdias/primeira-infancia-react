@@ -10,7 +10,8 @@ async function updateJsonMunicipio(connection, url) {
         
         for (const municipio of municipios) {
             try {
-                const specificUrl = `${url}?ibge=${municipio.codIbge}`;
+                const specificUrl = municipio.orgao ? `${url}?ibge=${municipio.codIbge}&request=orgao_details` :`${url}?ibge=${municipio.codIbge}`;
+                console.log({specificUrl, isOrgao: municipio.orgao})
                 const response = await fetch(specificUrl);
                 const data = await response.json();
                 console.log({data})

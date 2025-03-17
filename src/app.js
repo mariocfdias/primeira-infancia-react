@@ -5,11 +5,12 @@ const { setupRoutes } = require('./routes');
 const fetchMunicipios = require('./jobs/fetchMunicipios');
 const updateJsonMunicipio = require('./jobs/updateJsonMunicipio');
 const autofetch = require('./jobs/autofetch');
+const seedMunicipios = require('./service/MunicipioSeed');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const FETCH_MUNICIPIOS_URL = process.env.FETCH_MUNICIPIOS_URL || 'https://script.google.com/macros/s/AKfycbxxaiWSEfiloOAs0dHA0RW79xBDuenPa15XGY9pW1yZE4w2XBwXlh566r2ifRPxwSYb/exec?request=municipios';
-const UPDATE_JSON_URL = process.env.UPDATE_JSON_URL || 'https://script.google.com/macros/s/AKfycbxxaiWSEfiloOAs0dHA0RW79xBDuenPa15XGY9pW1yZE4w2XBwXlh566r2ifRPxwSYb/exec';
+const FETCH_MUNICIPIOS_URL = process.env.FETCH_MUNICIPIOS_URL || 'https://script.google.com/macros/s/AKfycbw6hpFD1hZHLTRvNE3G97NzCFJmh8_nProKqrd1N1Ei5oHDQwY2GOVoCxYptnrev0le/exec?request=municipios';
+const UPDATE_JSON_URL = process.env.UPDATE_JSON_URL || 'https://script.google.com/macros/s/AKfycbw6hpFD1hZHLTRvNE3G97NzCFJmh8_nProKqrd1N1Ei5oHDQwY2GOVoCxYptnrev0le/exec';
 
 app.use(express.json());
 
@@ -18,6 +19,7 @@ async function startServer() {
         const connection = await connectDB();
         app.use(require('cors')());
 
+        await seedMunicipios(connection);
         // Setup routes
         app.use('/api', setupRoutes(connection));
         

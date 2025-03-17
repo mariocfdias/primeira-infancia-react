@@ -21,13 +21,14 @@ class MunicipioService {
 
     async saveMunicipio(municipioData) {
         const municipio = {
-            codIbge: municipioData.cod_ibge,
+            codIbge: municipioData.cod_ibge.toString(),
             nome: municipioData.nome,
             status: municipioData.status,
             dataAlteracao: municipioData.data_alteracao || null,
             imagemAvatar: municipioData.imagem_avatar || null,
             badges: municipioData.badges || 0,
-            points: municipioData.points || 0
+            points: municipioData.points || 0,
+            orgao: municipioData.orgao || false
         };
         return await this.municipioRepository.save(municipio);
     }

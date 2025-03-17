@@ -12,7 +12,7 @@ class MunicipioRepository {
     async findParticipantes() {
         return await this.repository.find({
             where: { status: "Participante" },
-            select: ["codIbge", "nome", "status", "badges", "points", "imagemAvatar"]
+            select: ["codIbge", "nome", "status", "badges", "points", "imagemAvatar", "orgao"]
         });
     }
 

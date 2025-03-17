@@ -18,7 +18,7 @@ class MunicipioController {
         try {
             const { ibge } = req.params;
             console.log({codIbge: ibge})
-            const municipio = await this.municipioService.findByIdWithJson(parseInt(ibge));
+            const municipio = await this.municipioService.findByIdWithJson(ibge);
             if (!municipio) {
                 return res.status(404).json({ status: 'error', message: 'Municipio not found' });
             }
