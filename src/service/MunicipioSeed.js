@@ -14,7 +14,37 @@ async function seedMunicipios(connection) {
             badges: 0,
             points: 0,
             orgao: true
-        }
+        },
+        {
+            cod_ibge: "govce",
+            nome: "Governo do Estado do Ceará",
+            status: "Participante",
+            data_alteracao: new Date().toISOString(),
+            imagem_avatar: "https://drive.google.com/file/d/13L40cl7VagIjuQtvStsH39omSGaLovvS/view?usp=sharing",
+            badges: 0,
+            points: 0,
+            orgao: true
+        },
+        {
+            cod_ibge: "tcece",
+            nome: "TCE Ceará",
+            status: "Participante",
+            data_alteracao: new Date().toISOString(),
+            imagem_avatar: "https://drive.google.com/file/d/13L40cl7VagIjuQtvStsH39omSGaLovvS/view?usp=sharing",
+            badges: 0,
+            points: 0,
+            orgao: true
+        },
+        {
+            cod_ibge: "podleg",
+            nome: "Poder Legislativo do Estado do Ceará",
+            status: "Participante",
+            data_alteracao: new Date().toISOString(),
+            imagem_avatar: "https://drive.google.com/file/d/13L40cl7VagIjuQtvStsH39omSGaLovvS/view?usp=sharing",
+            badges: 0,
+            points: 0,
+            orgao: true
+        },
     ];
 
     try {
