@@ -12,6 +12,9 @@ module.exports = new EntitySchema({
         data_alteracao: {
             type: "datetime"
         },
+        cod_ibge: {
+            type: "varchar"
+        },
         event: {
             type: "varchar"
         },
@@ -24,7 +27,8 @@ module.exports = new EntitySchema({
             target: "Municipio",
             type: "many-to-one",
             joinColumn: {
-                name: "municipio_id"
+                name: "cod_ibge",
+                referencedColumnName: "codIbge"
             }
         }
     }
