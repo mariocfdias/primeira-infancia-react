@@ -20,12 +20,15 @@ function setupRoutes(connection) {
     router.get('/municipios/:ibge', municipioController.getMunicipioByIdWithJson.bind(municipioController));
 
     // Eventos routes
-    router.get('/eventos', eventosController.getAllEventos.bind(eventosController));
+    // More specific routes first
+    router.get('/eventos/municipios/search', eventosController.searchMunicipios.bind(eventosController));
+    router.get('/eventos/municipio/:codIbge', eventosController.getEventosByCodIbge.bind(eventosController));
     router.get('/eventos/:id', eventosController.getEventoById.bind(eventosController));
+    // General routes
+    router.get('/eventos', eventosController.getAllEventos.bind(eventosController));
     router.post('/eventos', eventosController.createEvento.bind(eventosController));
     router.put('/eventos/:id', eventosController.updateEvento.bind(eventosController));
     router.delete('/eventos/:id', eventosController.deleteEvento.bind(eventosController));
-    router.get('/eventos/municipio/:codIbge', eventosController.getEventosByCodIbge.bind(eventosController));
 
     // Missoes routes
     router.get('/missoes', missoesController.getAllMissoes.bind(missoesController));
@@ -35,10 +38,10 @@ function setupRoutes(connection) {
     router.delete('/missoes/:id', missoesController.deleteMissao.bind(missoesController));
 
     // MunicipioDesempenho routes
-    router.get('/desempenhos', municipioDesempenhoController.getAllDesempenhos.bind(municipioDesempenhoController));
-    router.get('/desempenhos/:id', municipioDesempenhoController.getDesempenhoById.bind(municipioDesempenhoController));
     router.get('/desempenhos/municipio/:codIbge', municipioDesempenhoController.getDesempenhosByIbgeCode.bind(municipioDesempenhoController));
     router.get('/desempenhos/missao/:missaoId', municipioDesempenhoController.getDesempenhosByMissaoId.bind(municipioDesempenhoController));
+    router.get('/desempenhos/:id', municipioDesempenhoController.getDesempenhoById.bind(municipioDesempenhoController));
+    router.get('/desempenhos', municipioDesempenhoController.getAllDesempenhos.bind(municipioDesempenhoController));
     router.post('/desempenhos', municipioDesempenhoController.createDesempenho.bind(municipioDesempenhoController));
     router.put('/desempenhos/:id', municipioDesempenhoController.updateDesempenho.bind(municipioDesempenhoController));
     router.patch('/desempenhos/:id/status', municipioDesempenhoController.updateValidationStatus.bind(municipioDesempenhoController));

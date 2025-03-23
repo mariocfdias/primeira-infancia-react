@@ -5,7 +5,7 @@ async function connectDB() {
         const connection = await typeorm.createConnection({
             type: "sqlite",
             database: "municipios.sqlite",
-            entities: [require('./entity/Municipio')],
+            entities: [__dirname + '/entity/*.js'],
             synchronize: true,
             logging: false
         });
