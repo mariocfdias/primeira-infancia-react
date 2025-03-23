@@ -1,4 +1,5 @@
 const EventosService = require('../service/EventosService');
+const MunicipioService = require('../service/MunicipioService');
 const { EventosDTO } = require('../dto/EventosDTO');
 
 /**
@@ -6,10 +7,70 @@ const { EventosDTO } = require('../dto/EventosDTO');
  * tags:
  *   name: Eventos
  *   description: Endpoints para gerenciamento de eventos
+ * 
+ * components:
+ *   schemas:
+ *     Eventos:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: ID do evento
+ *         data_alteracao:
+ *           type: string
+ *           format: date-time
+ *           description: Data do evento
+ *         event:
+ *           type: string
+ *           description: Nome do evento
+ *         description:
+ *           type: string
+ *           description: Descrição do evento
+ *         cod_ibge:
+ *           type: string
+ *           description: Código IBGE do município
+ *         municipio:
+ *           type: object
+ *           properties:
+ *             codIbge:
+ *               type: string
+ *               description: Código IBGE do município
+ *             nome:
+ *               type: string
+ *               description: Nome do município
+ *             status:
+ *               type: string
+ *               description: Status do município
+ *             badges:
+ *               type: integer
+ *               description: Número de badges do município
+ *             points:
+ *               type: integer
+ *               description: Pontuação do município
+ *             imagemAvatar:
+ *               type: string
+ *               description: URL da imagem do avatar do município
+ *     Pagination:
+ *       type: object
+ *       properties:
+ *         total:
+ *           type: integer
+ *           description: Total de registros
+ *         page:
+ *           type: integer
+ *           description: Página atual
+ *         limit:
+ *           type: integer
+ *           description: Limite de registros por página
+ *         pages:
+ *           type: integer
+ *           description: Total de páginas
  */
+
 class EventosController {
     constructor(connection) {
         this.eventosService = new EventosService(connection);
+        this.municipioService = new MunicipioService(connection);
     }
 
     /**
@@ -18,6 +79,36 @@ class EventosController {
      *   get:
      *     summary: Retorna todos os eventos
      *     tags: [Eventos]
+     *     parameters:
+     *       - in: query
+     *         name: page
+     *         schema:
+     *           type: integer
+     *           default: 0
+     *         description: Página a ser retornada (iniciando em 0)
+     *       - in: query
+     *         name: limit
+     *         schema:
+     *           type: integer
+     *           default: 10
+     *         description: Número de registros por página
+     *       - in: query
+     *         name: event
+     *         schema:
+     *           type: string
+     *         description: Filtro por nome do evento
+     *       - in: query
+     *         name: municipioSearch
+     *         schema:
+     *           type: string
+     *         description: Filtro por nome do município
+     *       - in: query
+     *         name: sortDirection
+     *         schema:
+     *           type: string
+     *           enum: [ASC, DESC]
+     *           default: DESC
+     *         description: Direção da ordenação por data
      *     responses:
      *       200:
      *         description: Lista de eventos
@@ -33,6 +124,8 @@ class EventosController {
      *                   type: array
      *                   items:
      *                     $ref: '#/components/schemas/Eventos'
+     *                 pagination:
+     *                   $ref: '#/components/schemas/Pagination'
      *       500:
      *         description: Erro no servidor
      *         content:
@@ -42,8 +135,19 @@ class EventosController {
      */
     async getAllEventos(req, res) {
         try {
-            const eventos = await this.eventosService.findAll();
-            return res.json({ status: 'success', data: eventos });
+            const { page, limit, event, municipioSearch, sortDirection } = req.query;
+            const eventos = await this.eventosService.findAll({ 
+                page: parseInt(page) || 0, 
+                limit: parseInt(limit) || 10,
+                event,
+                municipioSearch,
+                sortDirection: sortDirection?.toUpperCase() === 'ASC' ? 'ASC' : 'DESC'
+            });
+            return res.json({ 
+                status: 'success', 
+                data: eventos.data,
+                pagination: eventos.pagination
+            });
         } catch (error) {
             return res.status(500).json({ status: 'error', message: error.message });
         }
@@ -319,6 +423,30 @@ class EventosController {
      *           type: string
      *         required: true
      *         description: Código IBGE do município
+     *       - in: query
+     *         name: page
+     *         schema:
+     *           type: integer
+     *           default: 0
+     *         description: Página a ser retornada (iniciando em 0)
+     *       - in: query
+     *         name: limit
+     *         schema:
+     *           type: integer
+     *           default: 10
+     *         description: Número de registros por página
+     *       - in: query
+     *         name: event
+     *         schema:
+     *           type: string
+     *         description: Filtro por nome do evento
+     *       - in: query
+     *         name: sortDirection
+     *         schema:
+     *           type: string
+     *           enum: [ASC, DESC]
+     *           default: DESC
+     *         description: Direção da ordenação por data
      *     responses:
      *       200:
      *         description: Lista de eventos do município
@@ -334,6 +462,8 @@ class EventosController {
      *                   type: array
      *                   items:
      *                     $ref: '#/components/schemas/Eventos'
+     *                 pagination:
+     *                   $ref: '#/components/schemas/Pagination'
      *       500:
      *         description: Erro no servidor
      *         content:
@@ -344,8 +474,87 @@ class EventosController {
     async getEventosByCodIbge(req, res) {
         try {
             const { codIbge } = req.params;
-            const eventos = await this.eventosService.findByCodIbge(codIbge);
-            return res.json({ status: 'success', data: eventos });
+            const { page, limit, event, sortDirection } = req.query;
+            const eventos = await this.eventosService.findByCodIbge(codIbge, {
+                page: parseInt(page) || 0,
+                limit: parseInt(limit) || 10,
+                event,
+                sortDirection: sortDirection?.toUpperCase() === 'ASC' ? 'ASC' : 'DESC'
+            });
+            return res.json({ 
+                status: 'success', 
+                data: eventos.data,
+                pagination: eventos.pagination
+            });
+        } catch (error) {
+            return res.status(500).json({ status: 'error', message: error.message });
+        }
+    }
+
+    /**
+     * @swagger
+     * /eventos/municipios/search:
+     *   get:
+     *     summary: Busca municípios por nome para autocomplete
+     *     tags: [Eventos]
+     *     parameters:
+     *       - in: query
+     *         name: q
+     *         schema:
+     *           type: string
+     *         required: true
+     *         description: Termo de busca para nome do município
+     *       - in: query
+     *         name: limit
+     *         schema:
+     *           type: integer
+     *           default: 10
+     *         description: Número máximo de resultados
+     *     responses:
+     *       200:
+     *         description: Lista de municípios encontrados
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 status:
+     *                   type: string
+     *                   example: success
+     *                 data:
+     *                   type: array
+     *                   items:
+     *                     type: object
+     *                     properties:
+     *                       codIbge:
+     *                         type: string
+     *                       nome:
+     *                         type: string
+     *                       status:
+     *                         type: string
+     *                       badges:
+     *                         type: integer
+     *                       points:
+     *                         type: integer
+     *                       imagemAvatar:
+     *                         type: string
+     *       500:
+     *         description: Erro no servidor
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/Error'
+     */
+    async searchMunicipios(req, res) {
+        try {
+            const { q, limit } = req.query;
+            
+            if (!q || q.length < 2) {
+                return res.json({ status: 'success', data: [] });
+            }
+            
+            const municipios = await this.municipioService.searchByName(q, parseInt(limit) || 10);
+            return res.json({ status: 'success', data: municipios });
         } catch (error) {
             return res.status(500).json({ status: 'error', message: error.message });
         }

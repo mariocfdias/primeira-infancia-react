@@ -6,7 +6,7 @@ module.exports = new EntitySchema({
     columns: {
         id: {
             primary: true,
-            type: "numeric",
+            type: "int",
             generated: true
         },
         data_alteracao: {
@@ -19,7 +19,8 @@ module.exports = new EntitySchema({
             type: "varchar"
         },
         description: {
-            type: "varchar"
+            type: "varchar",
+            nullable: true
         }
     },
     relations: {

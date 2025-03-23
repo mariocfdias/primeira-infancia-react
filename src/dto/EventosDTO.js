@@ -5,6 +5,7 @@ class EventosDTO {
         this.event = '';
         this.description = '';
         this.cod_ibge = null;
+        this.municipio = null;
     }
 
     static builder() {
@@ -12,13 +13,25 @@ class EventosDTO {
     }
 
     static fromEntity(entity) {
-        return EventosDTO.builder()
+        const builder = EventosDTO.builder()
             .withId(entity.id)
             .withDataAlteracao(entity.data_alteracao)
             .withEvent(entity.event)
             .withDescription(entity.description)
-            .withCodIbge(entity.cod_ibge || (entity.municipio ? entity.municipio.codIbge : null))
-            .build();
+            .withCodIbge(entity.cod_ibge || (entity.municipio ? entity.municipio.codIbge : null));
+            
+        if (entity.municipio) {
+            builder.withMunicipio({
+                codIbge: entity.municipio.codIbge,
+                nome: entity.municipio.nome,
+                status: entity.municipio.status,
+                badges: entity.municipio.badges,
+                points: entity.municipio.points,
+                imagemAvatar: entity.municipio.imagemAvatar
+            });
+        }
+            
+        return builder.build();
     }
 
     toEntity() {
@@ -59,6 +72,11 @@ class EventosBuilder {
 
     withCodIbge(codIbge) {
         this.dto.cod_ibge = codIbge;
+        return this;
+    }
+
+    withMunicipio(municipio) {
+        this.dto.municipio = municipio;
         return this;
     }
 

@@ -15,6 +15,7 @@ async function fetchEventos(connection, url) {
         // Find all events and get the most recent data_alteracao
         const eventos = await eventosRepository.findAll();
         let latestDate = new Date(0); // Default to epoch if no events exist
+        console.log({latestDate})
         
         if (eventos.length > 0) {
             // Find the latest data_alteracao date
@@ -31,11 +32,14 @@ async function fetchEventos(connection, url) {
         console.log(`Fetching events newer than: ${dateParam}`);
         
         // Make the API request with the date parameter
-        const fetchUrl = `${url}?date=${encodeURIComponent(dateParam)}`;
+        const fetchUrl = `${url}?request=eventos&date=${encodeURIComponent(dateParam)}`;
         console.log(`Fetching from URL: ${fetchUrl}`);
         
         const response = await fetch(fetchUrl);
-        const newEvents = await response.json();
+        const newEventsData = await response.json();
+        const newEvents = newEventsData.data;
+
+        console.log({newEvents, test: newEvents.data})
         
         if (Array.isArray(newEvents) && newEvents.length > 0) {
             console.log(`Received ${newEvents.length} new events to process`);

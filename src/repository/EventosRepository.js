@@ -3,20 +3,70 @@ class EventosRepository {
         this.repository = connection.getRepository("Eventos");
     }
 
-    async findAll() {
-        return await this.repository.find();
+    async findAll(options = {}) {
+        const { page = 0, limit = 10, event, municipioSearch, sortDirection = "DESC" } = options;
+        const skip = page * limit;
+        
+        const queryBuilder = this.repository.createQueryBuilder("eventos")
+            .leftJoinAndSelect("eventos.municipio", "municipio")
+            .orderBy("eventos.data_alteracao", sortDirection)
+            .skip(skip)
+            .take(limit);
+            
+        if (event) {
+            queryBuilder.andWhere("eventos.event LIKE :event", { event: `%${event}%` });
+        }
+        
+        if (municipioSearch) {
+            queryBuilder.andWhere("municipio.nome LIKE :municipioSearch", { municipioSearch: `%${municipioSearch}%` });
+        }
+        
+        const [results, total] = await queryBuilder.getManyAndCount();
+        
+        return { 
+            data: results, 
+            pagination: {
+                total,
+                page: Number(page),
+                limit: Number(limit),
+                pages: Math.ceil(total / limit)
+            }
+        };
     }
 
     async findById(id) {
         return await this.repository.findOne({
-            where: { id }
+            where: { id },
+            relations: ["municipio"]
         });
     }
 
-    async findByCodIbge(codIbge) {
-        return await this.repository.find({
-            where: { cod_ibge: codIbge }
-        });
+    async findByCodIbge(codIbge, options = {}) {
+        const { page = 0, limit = 10, event, sortDirection = "DESC" } = options;
+        const skip = page * limit;
+        
+        const queryBuilder = this.repository.createQueryBuilder("eventos")
+            .leftJoinAndSelect("eventos.municipio", "municipio")
+            .where("eventos.cod_ibge = :codIbge", { codIbge })
+            .orderBy("eventos.data_alteracao", sortDirection)
+            .skip(skip)
+            .take(limit);
+            
+        if (event) {
+            queryBuilder.andWhere("eventos.event LIKE :event", { event: `%${event}%` });
+        }
+        
+        const [results, total] = await queryBuilder.getManyAndCount();
+        
+        return { 
+            data: results, 
+            pagination: {
+                total,
+                page: Number(page),
+                limit: Number(limit),
+                pages: Math.ceil(total / limit)
+            }
+        };
     }
 
     async create(evento) {

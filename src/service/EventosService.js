@@ -6,9 +6,13 @@ class EventosService {
         this.eventosRepository = new EventosRepository(connection);
     }
 
-    async findAll() {
-        const eventos = await this.eventosRepository.findAll();
-        return eventos.map(evento => EventosDTO.fromEntity(evento));
+    async findAll(options = {}) {
+        const result = await this.eventosRepository.findAll(options);
+        const eventos = result.data.map(evento => EventosDTO.fromEntity(evento));
+        return {
+            data: eventos,
+            pagination: result.pagination
+        };
     }
 
     async findById(id) {
@@ -19,9 +23,13 @@ class EventosService {
         return EventosDTO.fromEntity(evento);
     }
 
-    async findByCodIbge(codIbge) {
-        const eventos = await this.eventosRepository.findByCodIbge(codIbge);
-        return eventos.map(evento => EventosDTO.fromEntity(evento));
+    async findByCodIbge(codIbge, options = {}) {
+        const result = await this.eventosRepository.findByCodIbge(codIbge, options);
+        const eventos = result.data.map(evento => EventosDTO.fromEntity(evento));
+        return {
+            data: eventos,
+            pagination: result.pagination
+        };
     }
 
     async createEvento(eventoDTO) {
