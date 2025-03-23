@@ -28,7 +28,7 @@ module.exports = new EntitySchema({
             nullable: true
         },
         evidencias: {
-            type: "json",
+            type: "simple-json",
             nullable: true,
             default: "[]"
         }
