@@ -4,19 +4,20 @@
     "description": "Application to manage municipios data with async jobs",
     "main": "src/app.js",
     "scripts": {
-      "start": "node src/app.js",
-      "dev": "nodemon src/app.js"
+        "start": "node src/app.js",
+        "dev": "nodemon src/app.js"
     },
     "dependencies": {
-      "cors": "^2.8.5",
-      "express": "^4.17.1",
-      "typeorm": "^0.2.41",
-      "sqlite3": "^5.0.2",
-      "node-fetch": "^2.6.7",
-      "node-cron": "^3.0.0"
+        "cors": "^2.8.5",
+        "express": "^4.17.1",
+        "node-cron": "^3.0.0",
+        "node-fetch": "^2.6.7",
+        "sqlite3": "^5.0.2",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.1",
+        "typeorm": "^0.2.41"
     },
     "devDependencies": {
-      "nodemon": "^2.0.15"
+        "nodemon": "^2.0.15"
     }
-  }
-  
+}
