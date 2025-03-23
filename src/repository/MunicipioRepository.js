@@ -23,8 +23,24 @@ class MunicipioRepository {
         });
     }
 
+    async searchByName(search, limit = 10) {
+        return await this.repository.createQueryBuilder("municipio")
+            .where("municipio.nome LIKE :search", { search: `%${search}%` })
+            .select(["municipio.codIbge", "municipio.nome", "municipio.status", "municipio.badges", "municipio.points", "municipio.imagemAvatar"])
+            .take(limit)
+            .getMany();
+    }
+
     async save(municipio) {
         return await this.repository.save(municipio);
+    }
+
+    async getMaxDataAlteracao() {
+        const result = await this.repository.createQueryBuilder("municipio")
+            .select("MAX(municipio.dataAlteracao)", "maxDate")
+            .getRawOne();
+        console.log({result})
+        return result?.maxDate ? new Date(result.maxDate) : new Date(0);
     }
 }
 

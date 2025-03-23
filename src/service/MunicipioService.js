@@ -19,13 +19,17 @@ class MunicipioService {
         return await this.municipioRepository.findByIdWithJson(codIbge);
     }
 
+    async searchByName(search, limit = 10) {
+        return await this.municipioRepository.searchByName(search, limit);
+    }
+
     async saveMunicipio(municipioData) {
         const municipio = {
-            codIbge: municipioData.cod_ibge.toString(),
+            codIbge: municipioData.codIbge.toString(),
             nome: municipioData.nome,
             status: municipioData.status,
-            dataAlteracao: municipioData.data_alteracao || null,
-            imagemAvatar: municipioData.imagem_avatar || null,
+            dataAlteracao: municipioData.dataAlteracao || null,
+            imagemAvatar: municipioData.imagemAvatar || null,
             badges: municipioData.badges || 0,
             points: municipioData.points || 0,
             orgao: municipioData.orgao || false

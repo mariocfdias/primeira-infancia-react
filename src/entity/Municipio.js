@@ -31,7 +31,7 @@ module.exports = new EntitySchema({
             default: 0
         },
         json: {
-            type: "text",
+            type: "simple-json",
             nullable: true
         },
         orgao: {

@@ -1,10 +1,44 @@
 const MunicipioService = require('../service/MunicipioService');
 
+/**
+ * @swagger
+ * tags:
+ *   name: Municipios
+ *   description: Endpoints para gerenciamento de municípios
+ */
 class MunicipioController {
     constructor(connection) {
         this.municipioService = new MunicipioService(connection);
     }
 
+    /**
+     * @swagger
+     * /municipios:
+     *   get:
+     *     summary: Retorna todos os municípios
+     *     tags: [Municipios]
+     *     responses:
+     *       200:
+     *         description: Lista de municípios
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 status:
+     *                   type: string
+     *                   example: success
+     *                 data:
+     *                   type: array
+     *                   items:
+     *                     $ref: '#/components/schemas/Municipio'
+     *       500:
+     *         description: Erro no servidor
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/Error'
+     */
     async getAllMunicipios(req, res) {
         try {
             const municipios = await this.municipioService.findAll();
@@ -14,6 +48,45 @@ class MunicipioController {
         }
     }
 
+    /**
+     * @swagger
+     * /municipios/{ibge}:
+     *   get:
+     *     summary: Retorna um município específico com dados JSON
+     *     tags: [Municipios]
+     *     parameters:
+     *       - in: path
+     *         name: ibge
+     *         schema:
+     *           type: string
+     *         required: true
+     *         description: Código IBGE do município
+     *     responses:
+     *       200:
+     *         description: Dados do município
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 status:
+     *                   type: string
+     *                   example: success
+     *                 data:
+     *                   $ref: '#/components/schemas/Municipio'
+     *       404:
+     *         description: Município não encontrado
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/Error'
+     *       500:
+     *         description: Erro no servidor
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/Error'
+     */
     async getMunicipioByIdWithJson(req, res) {
         try {
             const { ibge } = req.params;
