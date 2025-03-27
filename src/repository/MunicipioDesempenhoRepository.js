@@ -52,6 +52,13 @@ class MunicipioDesempenhoRepository {
     async delete(id) {
         return await this.repository.delete(id);
     }
+
+    async findByIbgeCodeAndMissaoId(codIbge, missaoId) {
+        return await this.repository.findOne({
+            where: { codIbge, missaoId },
+            relations: ["municipio", "missao"]
+        });
+    }
 }
 
 module.exports = MunicipioDesempenhoRepository; 

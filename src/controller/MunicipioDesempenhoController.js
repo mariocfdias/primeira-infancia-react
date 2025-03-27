@@ -566,6 +566,64 @@ class MunicipioDesempenhoController {
             return res.status(500).json({ status: 'error', message: error.message });
         }
     }
+
+    /**
+     * @swagger
+     * /desempenhos/municipio/{codIbge}/missao/{missaoId}:
+     *   get:
+     *     summary: Retorna o registro de desempenho de um município em uma missão específica
+     *     tags: [Desempenhos]
+     *     parameters:
+     *       - in: path
+     *         name: codIbge
+     *         schema:
+     *           type: string
+     *         required: true
+     *         description: Código IBGE do município
+     *       - in: path
+     *         name: missaoId
+     *         schema:
+     *           type: string
+     *         required: true
+     *         description: ID da missão
+     *     responses:
+     *       200:
+     *         description: Dados do desempenho
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 status:
+     *                   type: string
+     *                   example: success
+     *                 data:
+     *                   $ref: '#/components/schemas/MunicipioDesempenho'
+     *       404:
+     *         description: Registro de desempenho não encontrado
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/Error'
+     *       500:
+     *         description: Erro no servidor
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/Error'
+     */
+    async getDesempenhoByIbgeCodeAndMissaoId(req, res) {
+        try {
+            const { codIbge, missaoId } = req.params;
+            const desempenho = await this.municipioDesempenhoService.findByIbgeCodeAndMissaoId(codIbge, missaoId);
+            return res.json({ status: 'success', data: desempenho });
+        } catch (error) {
+            if (error.message.includes('not found')) {
+                return res.status(404).json({ status: 'error', message: error.message });
+            }
+            return res.status(500).json({ status: 'error', message: error.message });
+        }
+    }
 }
 
 module.exports = MunicipioDesempenhoController; 

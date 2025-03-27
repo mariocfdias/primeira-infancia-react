@@ -5,45 +5,66 @@ class MissionPanoramaDTO {
         this.countPending = 0;
         this.countStarted = 0;
         this.totalMunicipios = 0;
+        this.completedMunicipios = [];
+        this.pendingMunicipios = [];
+        this.startedMunicipios = [];
     }
 
     static builder() {
-        return new MissionPanoramaBuilder();
-    }
-}
-
-class MissionPanoramaBuilder {
-    constructor() {
-        this.dto = new MissionPanoramaDTO();
-    }
-
-    withMissao(missao) {
-        this.dto.missao = missao;
-        return this;
-    }
-
-    withCountValid(count) {
-        this.dto.countValid = count;
-        return this;
-    }
-
-    withCountPending(count) {
-        this.dto.countPending = count;
-        return this;
-    }
-
-    withCountStarted(count) {
-        this.dto.countStarted = count;
-        return this;
-    }
-
-    withTotalMunicipios(count) {
-        this.dto.totalMunicipios = count;
-        return this;
-    }
-
-    build() {
-        return this.dto;
+        return new class {
+            withMissao(missao) {
+                this.missao = missao;
+                return this;
+            }
+            
+            withCountValid(countValid) {
+                this.countValid = countValid;
+                return this;
+            }
+            
+            withCountPending(countPending) {
+                this.countPending = countPending;
+                return this;
+            }
+            
+            withCountStarted(countStarted) {
+                this.countStarted = countStarted;
+                return this;
+            }
+            
+            withTotalMunicipios(totalMunicipios) {
+                this.totalMunicipios = totalMunicipios;
+                return this;
+            }
+            
+            withCompletedMunicipios(completedMunicipios) {
+                this.completedMunicipios = completedMunicipios;
+                return this;
+            }
+            
+            withPendingMunicipios(pendingMunicipios) {
+                this.pendingMunicipios = pendingMunicipios;
+                return this;
+            }
+            
+            withStartedMunicipios(startedMunicipios) {
+                this.startedMunicipios = startedMunicipios;
+                return this;
+            }
+            
+            build() {
+                return {
+                    missao: this.missao,
+                    countValid: this.countValid,
+                    countPending: this.countPending,
+                    countStarted: this.countStarted,
+                    totalMunicipios: this.totalMunicipios,
+                    completedMunicipios: this.completedMunicipios || [],
+                    pendingMunicipios: this.pendingMunicipios || [],
+                    startedMunicipios: this.startedMunicipios || []
+                };
+            }
+        }
     }
 }
 

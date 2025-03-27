@@ -40,6 +40,7 @@ function setupRoutes(connection) {
     router.delete('/missoes/:id', missoesController.deleteMissao.bind(missoesController));
 
     // MunicipioDesempenho routes
+    router.get('/desempenhos/municipio/:codIbge/missao/:missaoId', municipioDesempenhoController.getDesempenhoByIbgeCodeAndMissaoId.bind(municipioDesempenhoController));
     router.get('/desempenhos/municipio/:codIbge', municipioDesempenhoController.getDesempenhosByIbgeCode.bind(municipioDesempenhoController));
     router.get('/desempenhos/missao/:missaoId', municipioDesempenhoController.getDesempenhosByMissaoId.bind(municipioDesempenhoController));
     router.get('/desempenhos/:id', municipioDesempenhoController.getDesempenhoById.bind(municipioDesempenhoController));
@@ -52,7 +53,9 @@ function setupRoutes(connection) {
 
     // Dashboard routes
     router.get('/dashboard/mission-panorama', dashboardController.getMissionPanorama.bind(dashboardController));
+    router.get('/dashboard/mission-panorama/:missaoId', dashboardController.getMissionPanoramaById.bind(dashboardController));
     router.get('/dashboard/map-panorama', dashboardController.getMapPanorama.bind(dashboardController));
+    router.get('/dashboard/map-panorama/:codIbge', dashboardController.getMapPanoramaByIbgeCode.bind(dashboardController));
 
     return router;
 }

@@ -52,7 +52,7 @@ class MunicipioController {
      * @swagger
      * /municipios/{ibge}:
      *   get:
-     *     summary: Retorna um município específico com dados JSON
+     *     summary: Retorna um município específico com todos os dados relacionados
      *     tags: [Municipios]
      *     parameters:
      *       - in: path
@@ -63,7 +63,7 @@ class MunicipioController {
      *         description: Código IBGE do município
      *     responses:
      *       200:
-     *         description: Dados do município
+     *         description: Dados completos do município
      *         content:
      *           application/json:
      *             schema:
@@ -91,9 +91,9 @@ class MunicipioController {
         try {
             const { ibge } = req.params;
             console.log({codIbge: ibge})
-            const municipio = await this.municipioService.findByIdWithJson(ibge);
+            const municipio = await this.municipioService.findMunicipioCompleto(ibge);
             if (!municipio) {
-                return res.status(404).json({ status: 'error', message: 'Municipio not found' });
+                return res.status(404).json({ status: 'error', message: 'Municipio não encontrado' });
             }
             return res.json({ status: 'success', data: municipio });
         } catch (error) {

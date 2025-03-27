@@ -92,6 +92,14 @@ class MunicipioDesempenhoService {
         await this.municipioDesempenhoRepository.delete(id);
         return { success: true, message: `MunicipioDesempenho with id ${id} deleted successfully` };
     }
+
+    async findByIbgeCodeAndMissaoId(codIbge, missaoId) {
+        const desempenho = await this.municipioDesempenhoRepository.findByIbgeCodeAndMissaoId(codIbge, missaoId);
+        if (!desempenho) {
+            throw new Error(`MunicipioDesempenho with codIbge ${codIbge} and missaoId ${missaoId} not found`);
+        }
+        return MunicipioDesempenhoDTO.fromEntity(desempenho);
+    }
 }
 
 module.exports = MunicipioDesempenhoService; 

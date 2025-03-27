@@ -23,6 +23,13 @@ class MunicipioRepository {
         });
     }
 
+    async findOne(codIbge) {
+        return await this.repository.findOne({
+            where: { codIbge },
+            select: ["codIbge", "nome", "status", "badges", "points", "imagemAvatar"]
+        });
+    }
+
     async searchByName(search, limit = 10) {
         return await this.repository.createQueryBuilder("municipio")
             .where("municipio.nome LIKE :search", { search: `%${search}%` })

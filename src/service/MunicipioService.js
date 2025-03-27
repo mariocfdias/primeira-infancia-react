@@ -19,6 +19,16 @@ class MunicipioService {
         return await this.municipioRepository.findByIdWithJson(codIbge);
     }
 
+    async findMunicipioCompleto(codIbge) {
+        const municipio = await this.municipioRepository.findByIdWithJson(codIbge);
+        
+        if (!municipio) {
+            return null;
+        }
+        
+        return municipio;
+    }
+
     async searchByName(search, limit = 10) {
         return await this.municipioRepository.searchByName(search, limit);
     }
