@@ -15,7 +15,7 @@ const jobConfig = {
     FETCH_EVENTOS_URL: process.env.FETCH_EVENTOS_URL || 'https://script.google.com/macros/s/AKfycbxAzecewMjM7-oGGwy1zOImLpQX4TeyJXuKl2jbA6GGDXnLW2RebCAybku2uiMI3hmC/exec',
     AUTOFETCH_URL: process.env.AUTOFETCH_URL || 'https://primeira-infancia-backend.onrender.com/api/municipios',
     FETCH_MISSOES_URL: process.env.FETCH_MISSOES_URL || 'https://script.google.com/macros/s/AKfycbwC6X0BrzwzByMYVVOXdi-sGkytrYm7-6F1VBhvNoMJJWZsHyW_V0X1syzSUkyuheM/exec',
-    FETCH_MISSAO_DESEMPENHO_URL: process.env.FETCH_MISSAO_DESEMPENHO_URL || 'https://script.google.com/macros/s/AKfycbwC6X0BrzwzByMYVVOXdi-sGkytrYm7-6F1VBhvNoMJJWZsHyW_V0X1syzSUkyuheM/exec'
+    FETCH_MISSAO_DESEMPENHO_URL: process.env.FETCH_MISSAO_DESEMPENHO_URL || 'https://script.google.com/macros/s/AKfycbxcTV4SrjXBnYOaTr47bFmYTbHyePKB-BdR6fddMXdZVMnsM9Qy_E8knZEIsMgjdZHJ/exec'
 };
 
 app.use(express.json());

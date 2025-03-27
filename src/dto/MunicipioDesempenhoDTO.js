@@ -21,7 +21,7 @@ class MunicipioDesempenhoDTO {
             .withMissaoId(entity.missaoId)
             .withValidationStatus(entity.validation_status)
             .withUpdatedAt(entity.updated_at)
-            .withEvidence(entity.evidence ? JSON.parse(entity.evidence) : []);
+            .withEvidence(entity.evidence ? entity.evidence.length > 0 ? JSON.parse(entity.evidence) : [] : []);
             
         if (entity.municipio) {
             dto.withMunicipio({

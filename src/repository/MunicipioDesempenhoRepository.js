@@ -30,6 +30,16 @@ class MunicipioDesempenhoRepository {
         });
     }
 
+    async findLatestUpdateDateByMissaoId(missaoId) {
+        const result = await this.repository
+            .createQueryBuilder("desempenho")
+            .select("MAX(desempenho.updated_at)", "latestDate")
+            .where("desempenho.missaoId = :missaoId", { missaoId })
+            .getRawOne();
+        
+        return result?.latestDate ? new Date(result.latestDate) : new Date(0);
+    }
+
     async create(desempenho) {
         return await this.repository.save(desempenho);
     }

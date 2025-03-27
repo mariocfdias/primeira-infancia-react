@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const MunicipioDesempenhoService = require('../service/MunicipioDesempenhoService');
 const { MunicipioDesempenhoDTO } = require('../dto/MunicipioDesempenhoDTO');
 const MissoesService = require('../service/MissoesService');
+const MunicipioService = require('../service/MunicipioService');
 
 /**
  * Fetches the latest mission performance data from external API based on the most recent updated_at
@@ -13,26 +14,9 @@ async function fetchMissaoDesempenho(connection, url) {
     
     const municipioDesempenhoService = new MunicipioDesempenhoService(connection);
     const missoesService = new MissoesService(connection);
+    const municipioService = new MunicipioService(connection);
     
     try {
-        // Get all performance records to find the most recent updated_at
-        const desempenhos = await municipioDesempenhoService.findAll();
-        let latestDate = new Date(0); // Default to epoch if no records exist
-        
-        if (desempenhos.length > 0) {
-            // Find the latest updated_at date
-            desempenhos.forEach(desempenho => {
-                const updateDate = new Date(desempenho.updated_at);
-                if (updateDate > latestDate) {
-                    latestDate = updateDate;
-                }
-            });
-        }
-        
-        // Format date as ISO string for the API request
-        const dateParam = latestDate.toISOString();
-        console.log(`Fetching mission performance data newer than: ${dateParam}`);
-        
         // Get all missions from the database
         const missoes = await missoesService.findAll();
         console.log(`Found ${missoes.length} missions to process`);
@@ -40,6 +24,11 @@ async function fetchMissaoDesempenho(connection, url) {
         // Process each mission
         for (const missao of missoes) {
             try {
+                // Get the latest update date for this specific mission using TypeORM query
+                const latestDate = await municipioDesempenhoService.getLatestUpdateDateByMissaoId(missao.id);
+                const dateParam = latestDate.toISOString();
+                console.log(`Fetching mission performance data for mission ${missao.id} newer than: ${dateParam}`);
+                
                 // Make the API request with the request type, date parameter, and missao parameter
                 const fetchUrl = `${url}?request=missao_desempenho&date=${encodeURIComponent(dateParam)}&missao=${encodeURIComponent(missao.id)}`;
                 console.log(`Fetching from URL for mission ${missao.id}: ${fetchUrl}`);
@@ -75,8 +64,52 @@ async function fetchMissaoDesempenho(connection, url) {
                                 await municipioDesempenhoService.createDesempenho(desempenhoDTO);
                                 console.log(`Saved new performance record for municipality ${desempenhoData.codIbge}, mission ${desempenhoData.missaoId}`);
                             }
+                            
+                            // Update municipality points and badges by recalculating from all completed missions
+                            try {
+                                // Get the municipality
+                                const municipio = await municipioService.findByIdWithJson(desempenhoData.codIbge);
+                                if (municipio) {
+                                    // Get all completed missions for this municipality
+                                    const allDesempenhos = await municipioDesempenhoService.findByIbgeCode(desempenhoData.codIbge);
+                                    const completedDesempenhos = allDesempenhos.filter(d => d.validation_status === 'VALID');
+                                    
+                                    // Calculate total points and badges from completed missions
+                                    let totalPoints = 0;
+                                    const completedMissionIds = new Set();
+                                    
+                                    // For each completed mission, add its points
+                                    for (const completedDesempenho of completedDesempenhos) {
+                                        try {
+                                            const mission = await missoesService.findById(completedDesempenho.missaoId);
+                                            totalPoints += mission.qnt_pontos || 0;
+                                            completedMissionIds.add(completedDesempenho.missaoId);
+                                        } catch (missionError) {
+                                            console.error(`Error fetching mission ${completedDesempenho.missaoId}:`, missionError.message);
+                                        }
+                                    }
+                                    
+                                    // Count unique badges (one badge per completed mission)
+                                    const badgeCount = completedMissionIds.size;
+                                    
+                                    // Update municipality with calculated points and badges
+                                    const updatedMunicipio = {
+                                        ...municipio,
+                                        points: totalPoints,
+                                        badges: badgeCount
+                                    };
+                                    
+                                    await municipioService.saveMunicipio(updatedMunicipio);
+                                    console.log(`Updated municipality ${desempenhoData.codIbge} with recalculated points (${totalPoints}) and badges (${badgeCount})`);
+                                } else {
+                                    console.error(`Municipality ${desempenhoData.codIbge} not found, could not update points and badges`);
+                                }
+                            } catch (municipioError) {
+                                console.error(`Error updating municipality ${desempenhoData.codIbge} points and badges:`, municipioError.message);
+                            }
                         } catch (error) {
                             console.error(`Error processing performance record for municipality ${desempenhoData.codIbge}, mission ${desempenhoData.missaoId}:`, error.message);
+                            console.error(error.stack);
                         }
                     }
                     

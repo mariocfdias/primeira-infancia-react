@@ -29,6 +29,10 @@ class MunicipioDesempenhoService {
         return desempenhos.map(desempenho => MunicipioDesempenhoDTO.fromEntity(desempenho));
     }
 
+    async getLatestUpdateDateByMissaoId(missaoId) {
+        return await this.municipioDesempenhoRepository.findLatestUpdateDateByMissaoId(missaoId);
+    }
+
     async createDesempenho(desempenhoDTO) {
         const entity = desempenhoDTO.toEntity();
         const savedDesempenho = await this.municipioDesempenhoRepository.create(entity);
