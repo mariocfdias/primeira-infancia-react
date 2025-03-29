@@ -20,6 +20,7 @@ async function fetchMunicipios(connection, url) {
 
         if (data.status === 'success' && Array.isArray(data.data)) {
             const promises = data.data.map(municipioData => {
+                console.log({municipioData})
                 return municipioService.saveMunicipio(municipioData);
             });
             

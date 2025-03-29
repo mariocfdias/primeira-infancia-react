@@ -54,7 +54,9 @@ function setupJobs(connection, config) {
     });
 
     // Run the jobs immediately on startup
-    runJobsImmediately(connection, config);
+    runJobsImmediately(connection, config).catch(err => {
+        console.error('Error running startup jobs:', err);
+    });
 }
 
 /**
@@ -62,7 +64,7 @@ function setupJobs(connection, config) {
  * @param {Object} connection - Database connection
  * @param {Object} config - Configuration object containing URLs for various jobs
  */
-function runJobsImmediately(connection, config) {
+async function runJobsImmediately(connection, config) {
     console.log('Running jobs immediately on startup...');
     
     const {
@@ -73,12 +75,30 @@ function runJobsImmediately(connection, config) {
         FETCH_MISSAO_DESEMPENHO_URL
     } = config;
 
-    fetchMunicipios(connection, FETCH_MUNICIPIOS_URL);
-    // updateJsonMunicipio(connection, UPDATE_JSON_URL);
-    fetchMissoes(connection, FETCH_MISSOES_URL);
-    fetchMissaoDesempenho(connection, FETCH_MISSAO_DESEMPENHO_URL);
-    fetchEventos(connection, FETCH_EVENTOS_URL);
-
+    try {
+        console.log('Starting sequential job execution...');
+        
+        // Execute jobs in sequence, waiting for each to complete
+        await fetchMunicipios(connection, FETCH_MUNICIPIOS_URL);
+        console.log('fetchMunicipios job completed');
+        
+        // Uncomment if needed
+        // await updateJsonMunicipio(connection, UPDATE_JSON_URL);
+        // console.log('updateJsonMunicipio job completed');
+        
+        await fetchMissoes(connection, FETCH_MISSOES_URL);
+        console.log('fetchMissoes job completed');
+        
+        await fetchMissaoDesempenho(connection, FETCH_MISSAO_DESEMPENHO_URL);
+        console.log('fetchMissaoDesempenho job completed');
+        
+        await fetchEventos(connection, FETCH_EVENTOS_URL);
+        console.log('fetchEventos job completed');
+        
+        console.log('All startup jobs completed successfully');
+    } catch (error) {
+        console.error('Error during sequential job execution:', error);
+    }
 }
 
 module.exports = { setupJobs }; 
