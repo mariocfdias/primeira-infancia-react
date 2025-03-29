@@ -52,7 +52,7 @@ class MunicipioController {
      * @swagger
      * /municipios/{ibge}:
      *   get:
-     *     summary: Retorna um município específico com todos os dados relacionados
+     *     summary: Retorna um município específico com seus desempenhos e missões relacionadas
      *     tags: [Municipios]
      *     parameters:
      *       - in: path
@@ -63,7 +63,7 @@ class MunicipioController {
      *         description: Código IBGE do município
      *     responses:
      *       200:
-     *         description: Dados completos do município
+     *         description: Dados completos do município, incluindo desempenhos e missões
      *         content:
      *           application/json:
      *             schema:
@@ -73,7 +73,67 @@ class MunicipioController {
      *                   type: string
      *                   example: success
      *                 data:
-     *                   $ref: '#/components/schemas/Municipio'
+     *                   type: object
+     *                   properties:
+     *                     codIbge:
+     *                       type: string
+     *                     nome:
+     *                       type: string
+     *                     status:
+     *                       type: string
+     *                     dataAlteracao:
+     *                       type: string
+     *                       format: date-time
+     *                     imagemAvatar:
+     *                       type: string
+     *                       nullable: true
+     *                     badges:
+     *                       type: integer
+     *                     points:
+     *                       type: integer
+     *                     json:
+     *                       type: object
+     *                       nullable: true
+     *                     orgao:
+     *                       type: boolean
+     *                     desempenhos:
+     *                       type: array
+     *                       items:
+     *                         type: object
+     *                         properties:
+     *                           id:
+     *                             type: integer
+     *                           codIbge:
+     *                             type: string
+     *                           missaoId:
+     *                             type: string
+     *                           validation_status:
+     *                             type: string
+     *                           updated_at:
+     *                             type: string
+     *                             format: date-time
+     *                           evidence:
+     *                             type: array
+     *                           missao:
+     *                             type: object
+     *                             properties:
+     *                               id:
+     *                                 type: string
+     *                               categoria:
+     *                                 type: string
+     *                               descricao_da_categoria:
+     *                                 type: string
+     *                               emblema_da_categoria:
+     *                                 type: string
+     *                               descricao_da_missao:
+     *                                 type: string
+     *                               qnt_pontos:
+     *                                 type: integer
+     *                               link_formulario:
+     *                                 type: string
+     *                                 nullable: true
+     *                               evidencias:
+     *                                 type: array
      *       404:
      *         description: Município não encontrado
      *         content:

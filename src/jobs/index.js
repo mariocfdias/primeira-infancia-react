@@ -73,10 +73,10 @@ function runJobsImmediately(connection, config) {
         FETCH_MISSAO_DESEMPENHO_URL
     } = config;
 
-    // fetchMunicipios(connection, FETCH_MUNICIPIOS_URL);
+    fetchMunicipios(connection, FETCH_MUNICIPIOS_URL);
     // updateJsonMunicipio(connection, UPDATE_JSON_URL);
-    // fetchEventos(connection, FETCH_EVENTOS_URL);
-    // fetchMissoes(connection, FETCH_MISSOES_URL);
+    fetchEventos(connection, FETCH_EVENTOS_URL);
+    fetchMissoes(connection, FETCH_MISSOES_URL);
     fetchMissaoDesempenho(connection, FETCH_MISSAO_DESEMPENHO_URL);
 }
 

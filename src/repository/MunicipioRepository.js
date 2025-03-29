@@ -1,6 +1,7 @@
 class MunicipioRepository {
     constructor(connection) {
         this.repository = connection.getRepository("Municipio");
+        this.municipioDesempenhoRepository = connection.getRepository("MunicipioDesempenho");
     }
 
     async findAll() {
@@ -18,8 +19,7 @@ class MunicipioRepository {
 
     async findByIdWithJson(codIbge) {
         return await this.repository.findOne({
-            where: { codIbge },
-            select: ["codIbge", "json", "nome"]
+            where: { codIbge }
         });
     }
 
@@ -48,6 +48,27 @@ class MunicipioRepository {
             .getRawOne();
         console.log({result})
         return result?.maxDate ? new Date(result.maxDate) : new Date(0);
+    }
+
+    async findByIdWithDesempenhoEMissoes(codIbge) {
+        const municipio = await this.repository.findOne({
+            where: { codIbge }
+        });
+        
+        if (!municipio) {
+            return null;
+        }
+        
+        // Get all MunicipioDesempenho records related to this municipality
+        const desempenhos = await this.municipioDesempenhoRepository.find({
+            where: { codIbge },
+            relations: ["missao"]
+        });
+        
+        // Add desempenhos to the municipio object
+        municipio.desempenhos = desempenhos;
+        
+        return municipio;
     }
 }
 
