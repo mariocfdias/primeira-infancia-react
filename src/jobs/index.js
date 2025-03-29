@@ -24,14 +24,14 @@ function setupJobs(connection, config) {
     console.log('Setting up scheduled jobs...');
 
     // Run fetchMunicipios job every 5 minutes
-    // cron.schedule('*/5 * * * *', () => {
-    //     fetchMunicipios(connection, FETCH_MUNICIPIOS_URL);
-    // });
+    cron.schedule('*/5 * * * *', () => {
+        fetchMunicipios(connection, FETCH_MUNICIPIOS_URL);
+    });
 
     // // Run autofetch job every 5 minutes
-    // cron.schedule('*/5 * * * *', () => {
-    //     autofetch(AUTOFETCH_URL);
-    // });
+    cron.schedule('*/5 * * * *', () => {
+        autofetch(AUTOFETCH_URL);
+    });
     
     // // Run updateJsonMunicipio job every 5 minutes
     // cron.schedule('*/5 * * * *', () => {
@@ -39,19 +39,19 @@ function setupJobs(connection, config) {
     // });
     
     // Run fetchEventos job every minute
-    // cron.schedule('* * * * *', () => {
-    //     fetchEventos(connection, FETCH_EVENTOS_URL);
-    // });
+    cron.schedule('* * * * *', () => {
+        fetchEventos(connection, FETCH_EVENTOS_URL);
+    });
 
     // Run fetchMissoes job every hour
-    // cron.schedule('0 * * * *', () => {
-    //     fetchMissoes(connection, FETCH_MISSOES_URL);
-    // });
+    cron.schedule('0 * * * *', () => {
+        fetchMissoes(connection, FETCH_MISSOES_URL);
+    });
 
     // Run fetchMissaoDesempenho job every hour
-    // cron.schedule('0 * * * *', () => {
-    //     fetchMissaoDesempenho(connection, FETCH_MISSAO_DESEMPENHO_URL);
-    // });
+    cron.schedule('0 * * * *', () => {
+        fetchMissaoDesempenho(connection, FETCH_MISSAO_DESEMPENHO_URL);
+    });
 
     // Run the jobs immediately on startup
     runJobsImmediately(connection, config);
@@ -75,9 +75,10 @@ function runJobsImmediately(connection, config) {
 
     fetchMunicipios(connection, FETCH_MUNICIPIOS_URL);
     // updateJsonMunicipio(connection, UPDATE_JSON_URL);
-    fetchEventos(connection, FETCH_EVENTOS_URL);
     fetchMissoes(connection, FETCH_MISSOES_URL);
     fetchMissaoDesempenho(connection, FETCH_MISSAO_DESEMPENHO_URL);
+    fetchEventos(connection, FETCH_EVENTOS_URL);
+
 }
 
 module.exports = { setupJobs }; 
