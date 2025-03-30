@@ -1,5 +1,3 @@
-"use client"
-
 import { Box, Typography, Paper, Button, Chip, Grid, Divider, useTheme, useMediaQuery } from "@mui/material"
 import { CheckCircle, OpenInNew, Info } from "@mui/icons-material"
 import PropTypes from 'prop-types'

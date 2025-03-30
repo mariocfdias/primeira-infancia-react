@@ -1,5 +1,3 @@
-"use client"
-
 import { Box, Typography, Paper, useTheme, useMediaQuery } from "@mui/material"
 import { Star } from "@mui/icons-material"
 import PropTypes from 'prop-types'

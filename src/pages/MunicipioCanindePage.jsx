@@ -1,5 +1,3 @@
-"use client"
-
 import { Box, Typography, Container, Paper, Grid, Button, LinearProgress, useMediaQuery, useTheme } from "@mui/material"
 import { ArrowBack, Star, KeyboardArrowUp } from "@mui/icons-material"
 import { Link } from "react-router-dom"

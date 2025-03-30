@@ -1,10 +1,8 @@
-"use client"
-
 import { Box, Typography, Paper, Button, LinearProgress, useTheme, useMediaQuery } from "@mui/material"
 import { KeyboardArrowDown } from "@mui/icons-material"
 import PropTypes from 'prop-types'
 
-export default function MissionCard({ category, title, progress }) {
+export default function MissionCard({ category, title, progress, missionId, onViewMap }) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
 
@@ -109,6 +107,7 @@ export default function MissionCard({ category, title, progress }) {
                 textDecoration: "underline",
               },
             }}
+            onClick={() => onViewMap(missionId)}
           >
             Ver no mapa
           </Button>
@@ -121,6 +120,8 @@ export default function MissionCard({ category, title, progress }) {
 MissionCard.propTypes = {
   category: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  progress: PropTypes.string.isRequired
+  progress: PropTypes.string.isRequired,
+  missionId: PropTypes.string.isRequired,
+  onViewMap: PropTypes.func.isRequired
 }
 

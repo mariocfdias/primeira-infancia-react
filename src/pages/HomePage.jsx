@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Box,
   Typography,
@@ -15,17 +15,218 @@ import {
   Pagination,
   PaginationItem,
   useMediaQuery,
+  CircularProgress,
+  Alert,
 } from "@mui/material"
 import { FilterAlt, Search, KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material"
 import BrazilMap from "../components/BrazilMap"
+import MapLegend from "../components/MapLegend"
 import MissionCard from "../components/MissionCard"
 import ProgressUpdate from "../components/ProgressUpdate"
+import MunicipioPreview from "../components/MunicipioPreview"
 import { useTheme } from "@mui/material/styles"
+import { useApiRequest, services } from "../api"
 
 export default function HomePage() {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const isTablet = useMediaQuery(theme.breakpoints.down("md"))
+  const { makeRequest, loading, error, data } = useApiRequest()
+  const { 
+    makeRequest: makeRequestPanorama, 
+    loading: loadingPanorama, 
+    error: panoramaError, 
+    data: panoramaData 
+  } = useApiRequest()
+  const { 
+    makeRequest: makeRequestEventos, 
+    loading: loadingEventos, 
+    error: eventosError
+  } = useApiRequest()
+  const { 
+    makeRequest: makeRequestMunicipio, 
+    loading: loadingMunicipio, 
+    data: municipioData 
+  } = useApiRequest()
+  const { 
+    makeRequest: makeRequestMissionPanorama, 
+    loading: loadingMissionPanorama, 
+    data: missionPanoramaData 
+  } = useApiRequest()
+  const [municipios, setMunicipios] = useState([])
+  const [selectedMunicipio, setSelectedMunicipio] = useState("")
+  const [selectedMissao, setSelectedMissao] = useState(null)
+  const [missionPanoramaById, setMissionPanoramaById] = useState(null)
+  const [eventos, setEventos] = useState([])
+  const [missoes, setMissoes] = useState([])
+  const [missionPanorama, setMissionPanorama] = useState([])
+  const [currentPage, setCurrentPage] = useState(0)
+  const [totalPages, setTotalPages] = useState(0)
+  const [eventFilter, setEventFilter] = useState("mission_completed")
+  const eventosLimit = 10
+
+  // Fetch municipios on component mount
+  useEffect(() => {
+    const fetchMunicipios = async () => {
+      try {
+        const response = await makeRequest(services.municipiosService.getAllMunicipios)
+        if (response && response.status === 'success' && Array.isArray(response.data)) {
+          setMunicipios(response.data)
+        }
+      } catch (error) {
+        console.error("Error fetching municipios:", error)
+      }
+    }
+
+    fetchMunicipios()
+  }, [])
+
+  // Fetch missoes data on component mount
+  useEffect(() => {
+    const fetchMissoes = async () => {
+      try {
+        const response = await makeRequest(services.missoesService.getAllMissoes)
+        if (response && response.status === 'success' && Array.isArray(response.data)) {
+          setMissoes(response.data)
+        }
+      } catch (error) {
+        console.error("Error fetching missoes:", error)
+      }
+    }
+
+    fetchMissoes()
+  }, [])
+
+  // Fetch mission panorama data
+  useEffect(() => {
+    const fetchMissionPanorama = async () => {
+      try {
+        const response = await makeRequestPanorama(services.dashboardService.getMissionPanorama)
+        if (response && response.status === 'success' && Array.isArray(response.data)) {
+          setMissionPanorama(response.data)
+        }
+      } catch (error) {
+        console.error("Error fetching mission panorama:", error)
+      }
+    }
+
+    fetchMissionPanorama()
+  }, [])
+
+  // Fetch eventos based on filters and pagination
+  useEffect(() => {
+    const fetchEventos = async () => {
+      try {
+        const params = {
+          page: currentPage,
+          limit: eventosLimit,
+          event: eventFilter,
+          sortDirection: "DESC"
+        }
+        
+        const response = await makeRequestEventos(() => services.eventosService.getEventos(params))
+        if (response && response.status === 'success' && Array.isArray(response.data)) {
+          setEventos(response.data)
+          if (response.pagination) {
+            setTotalPages(response.pagination.pages)
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching eventos:", error)
+      }
+    }
+
+    fetchEventos()
+  }, [currentPage, eventFilter])
+
+  // Handle view mission on map
+  const handleViewMissionOnMap = async (missionId) => {
+    try {
+      setSelectedMissao(missionId);
+      const response = await makeRequestMissionPanorama(() => 
+        services.dashboardService.getMissionPanoramaById(missionId)
+      );
+      
+      if (response && response.status === 'success') {
+        setMissionPanoramaById(response.data);
+        
+        // If there's a selected municipality, fetch its data again to update the view
+        if (selectedMunicipio && selectedMunicipio !== "all" && selectedMunicipio !== "") {
+          makeRequestMunicipio(() => services.municipiosService.getMunicipioByIbge(selectedMunicipio));
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching mission panorama by ID:", error);
+    }
+  };
+
+  // Handle municipality selection change
+  const handleMunicipioChange = (event) => {
+    const codIbge = event.target.value;
+    setSelectedMunicipio(codIbge);
+    
+    // Fetch the selected municipality data if a valid option is selected
+    if (codIbge && codIbge !== "all") {
+      makeRequestMunicipio(() => services.municipiosService.getMunicipioByIbge(codIbge));
+    }
+  }
+
+  // Handle municipality selection from map
+  const handleMapMunicipioSelect = (codIbge) => {
+    setSelectedMunicipio(codIbge);
+    
+    // Fetch the selected municipality data
+    if (codIbge && codIbge !== "all") {
+      makeRequestMunicipio(() => services.municipiosService.getMunicipioByIbge(codIbge));
+    }
+  }
+
+  // Handle pagination change
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value - 1) // API uses 0-based pagination
+  }
+
+  // Handle event filter change
+  const handleEventFilterChange = (filterValue) => {
+    setEventFilter(filterValue)
+    setCurrentPage(0) // Reset to first page when changing filter
+  }
+
+  // Get mission details by ID
+  const getMissionDetails = (missionId) => {
+    return missoes.find(mission => mission.id === missionId) || { 
+      descricao_da_missao: "Missão não encontrada",
+      descricao_da_categoria: "Categoria não encontrada",
+      qnt_pontos: 0
+    }
+  }
+
+  // Format date for display
+  const formatDate = (dateString) => {
+    const date = new Date(dateString)
+    const now = new Date()
+    const diffTime = Math.abs(now - date)
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    
+    if (diffDays === 0) {
+      return "Hoje"
+    } else if (diffDays <= 7) {
+      return `${diffDays} dias`
+    } else {
+      return date.toLocaleDateString('pt-BR')
+    }
+  }
+
+  // Function to get progress value for each mission based on panorama data
+  const getMissionProgress = (missionId) => {
+    const panoramaItem = missionPanorama.find(item => item.missao.id === missionId)
+    
+    if (panoramaItem) {
+      return `${panoramaItem.countValid}/${panoramaItem.totalMunicipios}`
+    }
+    
+    return "0/184" // Default fallback
+  }
 
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 2, sm: 3, md: 4 } }}>
@@ -87,7 +288,7 @@ export default function HomePage() {
               fontSize: { xs: "2.5rem", sm: "3rem" },
             }}
           >
-            82
+            {loading ? <CircularProgress size={24} /> : municipios.length || 82}
           </Typography>
           <Box>
             <Typography
@@ -156,6 +357,123 @@ export default function HomePage() {
         </Box>
       </Paper>
 
+      {/* Main Content */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        {/* Map Section */}
+        <Grid item xs={12} md={8}>
+          <Paper
+            elevation={1}
+            sx={{
+              height: { xs: 280, sm: 480, md: 600 },
+              border: "1px solid #d3d3d3",
+              borderRadius: 1,
+              overflow: "hidden",
+            }}
+          >
+            <BrazilMap 
+              missionPanoramaData={missionPanoramaById} 
+              selectedMunicipio={selectedMunicipio}
+              onMunicipioSelect={handleMapMunicipioSelect}
+            />
+          </Paper>
+        </Grid>
+
+        {/* Municipality Details */}
+        <Grid item xs={12} md={4}>
+          {selectedMissao && (
+            <Box sx={{ p: 2, border: "1px solid #d3d3d3", borderRadius: 1, mb: 2 }}>
+              <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
+                Visualizando missão no mapa
+              </Typography>
+              <Typography variant="body2" sx={{ mb: 2 }}>
+                {missoes.find(m => m.id === selectedMissao)?.descricao_da_missao || "Missão selecionada"}
+              </Typography>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => {
+                  setSelectedMissao(null);
+                  setMissionPanoramaById(null);
+                }}
+                sx={{
+                  borderColor: "#d3d3d3",
+                  color: "#333333",
+                  textTransform: "none",
+                }}
+              >
+                Voltar à visualização padrão
+              </Button>
+            </Box>
+          )}
+
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, mb: 2 }}>
+            <FormControl 
+              fullWidth 
+              variant="outlined" 
+              sx={{ 
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: selectedMunicipio ? "#12447f" : "#d3d3d3",
+                  borderWidth: selectedMunicipio ? 2 : 1,
+                },
+                "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#12447f !important",
+                },
+              }}
+            >
+              <InputLabel id="municipio-select-label">Selecione o município</InputLabel>
+              <Select
+                labelId="municipio-select-label"
+                id="municipio-select"
+                value={selectedMunicipio}
+                onChange={handleMunicipioChange}
+                label="Selecione o município"
+              >
+                <MenuItem value="">
+                  <em>Selecione...</em>
+                </MenuItem>
+                {municipios.map((municipio) => (
+                  <MenuItem key={municipio.codIbge} value={municipio.codIbge}>
+                    {municipio.nome}
+                  </MenuItem>
+                ))}
+                <MenuItem value="all">Todas as prefeituras</MenuItem>
+              </Select>
+            </FormControl>
+            
+            {selectedMunicipio && (
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => {
+                  setSelectedMunicipio("");
+                  setMissionPanoramaById(null);
+                }}
+                sx={{
+                  minWidth: 'auto',
+                  borderColor: "#d3d3d3",
+                  color: "#333333",
+                  mt: 1,
+                  px: 1,
+                }}
+              >
+                Limpar
+              </Button>
+            )}
+          </Box>
+          
+          {selectedMunicipio && (
+            <MunicipioPreview
+              municipioData={municipioData?.status === 'success' ? municipioData.data : null}
+              loading={loadingMunicipio}
+              selectedMissionId={selectedMissao}
+            />
+          )}
+        </Grid>
+      </Grid>
+
+      {/* Mobile Legend - Only shows on mobile */}
+      <MapLegend selectedMissao={selectedMissao} />
+
       {/* Interactive Map */}
       <Typography
         variant="h5"
@@ -185,287 +503,11 @@ export default function HomePage() {
         .
       </Typography>
 
-      <Grid container spacing={2} sx={{ mb: { xs: 4, sm: 6 } }}>
-        <Grid item xs={12} md={8}>
-          <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-            <Button
-              startIcon={<FilterAlt fontSize="small" />}
-              variant="text"
-              size={isMobile ? "small" : "medium"}
-              sx={{
-                color: "#12447f",
-                textTransform: "none",
-                fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                fontWeight: "normal",
-                px: 1,
-              }}
-            >
-              Limpar filtros do mapa
-            </Button>
-          </Box>
-          <Paper
-            elevation={1}
-            sx={{
-              p: 1,
-              border: "1px solid #d3d3d3",
-              borderRadius: 1,
-              height: { xs: 300, sm: 400, md: 500 },
-            }}
-          >
-            <BrazilMap />
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Typography
-            variant="body1"
-            sx={{
-              fontWeight: "medium",
-              mb: 1,
-              fontSize: { xs: "0.875rem", sm: "1rem" },
-            }}
-          >
-            Prefeituras
-          </Typography>
-          <FormControl fullWidth variant="outlined" size={isMobile ? "small" : "medium"} sx={{ mb: 2 }}>
-            <InputLabel>Selecione</InputLabel>
-            <Select
-              label="Selecione"
-              defaultValue=""
-              sx={{
-                borderColor: "#d3d3d3",
-                ".MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#d3d3d3",
-                },
-              }}
-            >
-              <MenuItem value="">
-                <em>Selecione</em>
-              </MenuItem>
-              <MenuItem value="caninde">
-
-              </MenuItem>
-              <MenuItem value="all">Todas as prefeituras</MenuItem>
-            </Select>
-          </FormControl>
-
-          <Paper
-            elevation={2}
-            sx={{
-              bgcolor: "#333333",
-              color: "white",
-              p: { xs: 1.5, sm: 2 },
-              borderRadius: 1,
-            }}
-          >
-            <Typography
-              variant="body2"
-              sx={{
-                fontSize: { xs: "0.75rem", sm: "0.875rem" },
-              }}
-            >
-              Selecione o município para visualizar os detalhes da{" "}
-              <Box component="span" sx={{ fontWeight: "medium" }}>
-                prefeitura
-              </Box>
-              .
-            </Typography>
-          </Paper>
-        </Grid>
-      </Grid>
-
-      {/* Legend */}
-      <Paper
-        elevation={1}
-        sx={{
-          p: { xs: 1.5, sm: 2 },
-          maxWidth: { xs: "100%", sm: 400 },
-          mb: 4,
-          border: "1px solid #d3d3d3",
-          borderRadius: 1,
-        }}
-      >
-        <Typography
-          variant="body1"
-          sx={{
-            fontWeight: "medium",
-            mb: 1,
-            fontSize: { xs: "0.875rem", sm: "1rem" },
-          }}
-        >
-          Legenda
-        </Typography>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: { xs: 20, sm: 24 },
-                height: { xs: 20, sm: 24 },
-                bgcolor: "#a5a5a5",
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.75rem",
-                mr: 1,
-              }}
-            >
-              89
-            </Box>
-            <Typography
-              variant="body2"
-              sx={{
-                fontSize: { xs: "0.75rem", sm: "0.875rem" },
-              }}
-            >
-              Não iniciado
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: { xs: 20, sm: 24 },
-                height: { xs: 20, sm: 24 },
-                bgcolor: "#72c576",
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.75rem",
-                mr: 1,
-              }}
-            >
-              135
-            </Box>
-            <Box>
-              <Typography
-                variant="body2"
-                sx={{
-                  fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                }}
-              >
-                Nível 1
-              </Typography>
-              <Typography
-                variant="caption"
-                sx={{
-                  color: "#525252",
-                  fontSize: { xs: "0.65rem", sm: "0.75rem" },
-                }}
-              >
-                1 até 100 pontos
-              </Typography>
-            </Box>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: { xs: 20, sm: 24 },
-                height: { xs: 20, sm: 24 },
-                bgcolor: "#27884a",
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.75rem",
-                mr: 1,
-              }}
-            >
-              30
-            </Box>
-            <Box>
-              <Typography
-                variant="body2"
-                sx={{
-                  fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                }}
-              >
-                Nível 2
-              </Typography>
-              <Typography
-                variant="caption"
-                sx={{
-                  color: "#525252",
-                  fontSize: { xs: "0.65rem", sm: "0.75rem" },
-                }}
-              >
-                101 a 200 pontos
-              </Typography>
-            </Box>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: { xs: 20, sm: 24 },
-                height: { xs: 20, sm: 24 },
-                bgcolor: "#12447f",
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.75rem",
-                mr: 1,
-              }}
-            >
-              2
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography
-                variant="body2"
-                sx={{
-                  mr: 0.5,
-                  fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                }}
-              >
-                Concluído
-              </Typography>
-              <Box
-                sx={{
-                  width: { xs: 10, sm: 12 },
-                  height: { xs: 10, sm: 12 },
-                  bgcolor: "#f5d664",
-                  borderRadius: "50%",
-                }}
-              />
-              <Typography
-                variant="caption"
-                sx={{
-                  color: "#525252",
-                  ml: 0.5,
-                  fontSize: { xs: "0.65rem", sm: "0.75rem" },
-                }}
-              >
-                200 pontos
-              </Typography>
-            </Box>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: { xs: 20, sm: 24 },
-                height: { xs: 20, sm: 24 },
-                bgcolor: "white",
-                border: "1px solid #d3d3d3",
-                color: "#525252",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.75rem",
-                mr: 1,
-              }}
-            >
-              10
-            </Box>
-            <Typography
-              variant="body2"
-              sx={{
-                fontSize: { xs: "0.75rem", sm: "0.875rem" },
-              }}
-            >
-              Não aderiu o Pacto
-            </Typography>
-          </Box>
-        </Box>
-      </Paper>
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          Ocorreu um erro ao carregar os dados dos municípios: {error.message}
+        </Alert>
+      )}
 
       {/* Missions */}
       <Typography
@@ -498,69 +540,29 @@ export default function HomePage() {
       </Typography>
 
       <Grid container spacing={2} sx={{ mb: { xs: 4, sm: 6 } }}>
-        <Grid item xs={12} sm={6} md={4}>
-          <MissionCard
-            category="AMPLIAÇÃO E QUALIFICAÇÃO DOS SERVIÇOS"
-            title="Fortalecer a rede de serviços de atendimento à primeira infância, em especial, a articulação de serviços de saúde, educação e assistência (...)"
-            progress="19/184"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <MissionCard
-            category="AMPLIAÇÃO E QUALIFICAÇÃO DOS SERVIÇOS"
-            title="Investir na capacitação continuada de profissionais que atuam na primeira infância, em especial, os que trabalham diretamente (...)"
-            progress="19/184"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <MissionCard
-            category="FORTALECIMENTO DA GOVERNANÇA"
-            title="Priorizar a primeira infância na gestão de políticas e na alocação de recursos."
-            progress="168/184"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <MissionCard
-            category="FORTALECIMENTO DA GOVERNANÇA"
-            title="Promover a articulação intersetorial entre as diferentes secretarias municipais, assim como os órgãos protetivos (...)"
-            progress="150/184"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <MissionCard
-            category="FORTALECIMENTO DA GOVERNANÇA"
-            title="Realizar campanhas e atividades educativas para disseminar o conhecimento sobre os direitos da criança para a população (...)"
-            progress="168/184"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <MissionCard
-            category="FORTALECIMENTO DA GOVERNANÇA"
-            title="Elaborar, implementar, monitorar e divulgar os planos municipais para a primeira infância, alinhados ao Marco Legal (...)"
-            progress="168/184"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <MissionCard
-            category="MELHORIA DA GESTÃO DE RECURSOS"
-            title="Implementar sistemática de monitoramento e avaliação das políticas para a primeira infância, utilizando indicadores de (...)"
-            progress="85/184"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <MissionCard
-            category="MELHORIA DA GESTÃO DE RECURSOS"
-            title="Garantir o financiamento das políticas para a primeira infância, com recursos próprios e por meio de recursos de transferências, (...)"
-            progress="85/184"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <MissionCard
-            category="MELHORIA DA GESTÃO DE RECURSOS"
-            title="Evidenciar os recursos aplicados em projetos e atividades voltados para a primeira infância no orçamento municipal, conforme (...)"
-            progress="164/184"
-          />
-        </Grid>
+        {loading || loadingPanorama ? (
+          <Box sx={{ display: "flex", justifyContent: "center", width: "100%", p: 3 }}>
+            <CircularProgress />
+          </Box>
+        ) : error || panoramaError ? (
+          <Grid item xs={12}>
+            <Alert severity="error">
+              Erro ao carregar as missões: {(error || panoramaError)?.message}
+            </Alert>
+          </Grid>
+        ) : (
+          missoes.map((missao) => (
+            <Grid item xs={12} sm={6} md={4} key={missao.id}>
+              <MissionCard
+                category={missao.descricao_da_categoria.toUpperCase()}
+                title={missao.descricao_da_missao}
+                progress={getMissionProgress(missao.id)}
+                missionId={missao.id}
+                onViewMap={handleViewMissionOnMap}
+              />
+            </Grid>
+          ))
+        )}
       </Grid>
 
       {/* Recent Progress */}
@@ -614,16 +616,19 @@ export default function HomePage() {
         </Typography>
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
           <Button
-            variant="contained"
+            variant={eventFilter === "mission_completed" ? "contained" : "outlined"}
             size={isMobile ? "small" : "medium"}
             sx={{
-              bgcolor: "#12447f",
+              bgcolor: eventFilter === "mission_completed" ? "#12447f" : "transparent",
+              borderColor: "#d3d3d3",
+              color: eventFilter === "mission_completed" ? "white" : "#333333",
               textTransform: "none",
               fontSize: { xs: "0.75rem", sm: "0.875rem" },
               "&:hover": {
-                bgcolor: "#0d3666",
+                bgcolor: eventFilter === "mission_completed" ? "#0d3666" : "rgba(0, 0, 0, 0.04)",
+                borderColor: eventFilter === "mission_completed" ? "transparent" : "#b3b3b3",
               },
-              boxShadow: 2,
+              boxShadow: eventFilter === "mission_completed" ? 2 : 0,
             }}
             startIcon={
               <Box
@@ -635,22 +640,26 @@ export default function HomePage() {
                 }}
               />
             }
+            onClick={() => handleEventFilterChange("mission_completed")}
           >
             Missões concluídas
           </Button>
           <Button
-            variant="outlined"
+            variant={eventFilter === "evidence_submitted" ? "contained" : "outlined"}
             size={isMobile ? "small" : "medium"}
             sx={{
+              bgcolor: eventFilter === "evidence_submitted" ? "#12447f" : "transparent",
               borderColor: "#d3d3d3",
-              color: "#333333",
+              color: eventFilter === "evidence_submitted" ? "white" : "#333333",
               textTransform: "none",
               fontSize: { xs: "0.75rem", sm: "0.875rem" },
               "&:hover": {
-                borderColor: "#b3b3b3",
-                bgcolor: "rgba(0, 0, 0, 0.04)",
+                bgcolor: eventFilter === "evidence_submitted" ? "#0d3666" : "rgba(0, 0, 0, 0.04)",
+                borderColor: eventFilter === "evidence_submitted" ? "transparent" : "#b3b3b3",
               },
+              boxShadow: eventFilter === "evidence_submitted" ? 2 : 0,
             }}
+            onClick={() => handleEventFilterChange("evidence_submitted")}
           >
             Envio de evidências
           </Button>
@@ -723,46 +732,46 @@ export default function HomePage() {
         </Grid>
       </Grid>
 
+      {/* Pagination */}
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 4 }}>
-        <ProgressUpdate
-          city="Canindé"
-          mission="Priorizar a primeira infância na gestão de políticas e na alocação de recursos"
-          points={20}
-          badge="Fortalecimento da Governança"
-          date="Hoje"
-          isMobile={isMobile}
-        />
-        <ProgressUpdate
-          city="Ererê"
-          mission="Priorizar a primeira infância na gestão de políticas e na alocação de recursos"
-          points={20}
-          badge="Fortalecimento da Governança"
-          date="7 dias"
-          isMobile={isMobile}
-        />
-        <ProgressUpdate
-          city="Milagres"
-          mission="Priorizar a primeira infância na gestão de políticas e na alocação de recursos"
-          points={20}
-          badge="Fortalecimento da Governança"
-          date="08/03/2025"
-          isMobile={isMobile}
-        />
-        <ProgressUpdate
-          city="Milagres"
-          mission="Priorizar a primeira infância na gestão de políticas e na alocação de recursos"
-          points={20}
-          badge="Fortalecimento da Governança"
-          date="08/03/2025"
-          isMobile={isMobile}
-        />
+        {loadingEventos ? (
+          <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
+            <CircularProgress />
+          </Box>
+        ) : eventosError ? (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            Ocorreu um erro ao carregar os eventos: {eventosError?.message}
+          </Alert>
+        ) : eventos.length === 0 ? (
+          <Paper elevation={1} sx={{ p: 3, textAlign: "center" }}>
+            <Typography variant="body1">
+              Nenhum evento encontrado com os filtros atuais.
+            </Typography>
+          </Paper>
+        ) : (
+          eventos.map((evento) => {
+            const missionDetails = getMissionDetails(evento.description)
+            return (
+              <ProgressUpdate
+                key={evento.id}
+                city={evento.municipio?.nome || "Município não encontrado"}
+                mission={missionDetails.descricao_da_missao}
+                points={missionDetails.qnt_pontos}
+                badge={missionDetails.descricao_da_categoria}
+                date={formatDate(evento.data_alteracao)}
+                isMobile={isMobile}
+              />
+            )
+          })
+        )}
       </Box>
 
       {/* Pagination */}
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <Pagination
-          count={3}
-          page={2}
+          count={totalPages}
+          page={currentPage + 1} // API uses 0-based pagination
+          onChange={handlePageChange}
           size={isMobile ? "small" : "medium"}
           renderItem={(item) => (
             <PaginationItem
