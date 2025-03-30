@@ -1,0 +1,320 @@
+{
+    "status": "success",
+    "data": [
+      {
+        "id": 15987,
+        "codIbge": "2300408",
+        "missaoId": "CTG2-MISSAO1",
+        "validation_status": "STARTED",
+        "updated_at": "2025-03-15T19:51:43.000Z",
+        "evidence": [
+          {
+            "evidencia": "https://drive.google.com/open?id=1zGJH3QHYw_VSZvl6F46Uev0I6Qa3JmWB",
+            "title": "Evidência 1"
+          },
+          {
+            "evidencia": "https://drive.google.com/open?id=1RdEfN__vQCaLXq2m0mQFazcqpDlZz1gO",
+            "title": "Evidência 2"
+          },
+          {
+            "evidencia": "https://drive.google.com/open?id=1zE5ridB3KXhWe2UZ1pBlb27rER8xOBf_",
+            "title": "Evidência 3"
+          },
+          {
+            "evidencia": "dasjdlksamfçlsafasdfas",
+            "title": "Evidência 4"
+          }
+        ],
+        "municipio": {
+          "codIbge": "2300408",
+          "nome": "Aiuaba",
+          "status": "Participante"
+        },
+        "missao": {
+          "id": "CTG2-MISSAO1",
+          "categoria": "CTG2",
+          "descricao_da_missao": "Priorizar a primeira infância na gestão de políticas e na alocação de recursos"
+        }
+      },
+      {
+        "id": 16171,
+        "codIbge": "2300408",
+        "missaoId": "CTG2-MISSAO2",
+        "validation_status": "STARTED",
+        "updated_at": "2025-03-15T19:51:44.000Z",
+        "evidence": [
+          {
+            "evidencia": "https://drive.google.com/open?id=1zGJH3QHYw_VSZvl6F46Uev0I6Qa3JmWB",
+            "title": "Evidência 1"
+          },
+          {
+            "evidencia": "https://drive.google.com/open?id=1RdEfN__vQCaLXq2m0mQFazcqpDlZz1gO",
+            "title": "Evidência 2"
+          },
+          {
+            "evidencia": "https://drive.google.com/open?id=1zE5ridB3KXhWe2UZ1pBlb27rER8xOBf_",
+            "title": "Evidência 3"
+          },
+          {
+            "evidencia": "dasjdlksamfçlsafasdfas",
+            "title": "Evidência 4"
+          }
+        ],
+        "municipio": {
+          "codIbge": "2300408",
+          "nome": "Aiuaba",
+          "status": "Participante"
+        },
+        "missao": {
+          "id": "CTG2-MISSAO2",
+          "categoria": "CTG2",
+          "descricao_da_missao": "Elaborar, implementar, monitorar e divulgar os planos municipais para a primeira infância, alinhados ao Marco Legal da Primeira Infância e baseados em evidências locais, com objetivos, metas e indicadores claros"
+        }
+      },
+      {
+        "id": 16355,
+        "codIbge": "2300408",
+        "missaoId": "CTG2-MISSAO3",
+        "validation_status": "STARTED",
+        "updated_at": "2025-03-15T19:51:45.000Z",
+        "evidence": [
+          {
+            "evidencia": "https://drive.google.com/open?id=1zGJH3QHYw_VSZvl6F46Uev0I6Qa3JmWB",
+            "title": "Evidência 1"
+          },
+          {
+            "evidencia": "https://drive.google.com/open?id=1RdEfN__vQCaLXq2m0mQFazcqpDlZz1gO",
+            "title": "Evidência 2"
+          },
+          {
+            "evidencia": "https://drive.google.com/open?id=1zE5ridB3KXhWe2UZ1pBlb27rER8xOBf_",
+            "title": "Evidência 3"
+          },
+          {
+            "evidencia": "dasjdlksamfçlsafasdfas",
+            "title": "Evidência 4"
+          }
+        ],
+        "municipio": {
+          "codIbge": "2300408",
+          "nome": "Aiuaba",
+          "status": "Participante"
+        },
+        "missao": {
+          "id": "CTG2-MISSAO3",
+          "categoria": "CTG2",
+          "descricao_da_missao": "Promover a articulação intersetorial entre as diferentes secretarias municipais, assim como dos dados produzidos e acompanhados por essas secretarias"
+        }
+      },
+      {
+        "id": 16539,
+        "codIbge": "2300408",
+        "missaoId": "CTG2-MISSAO4",
+        "validation_status": "STARTED",
+        "updated_at": "2025-03-21T12:57:59.000Z",
+        "evidence": [
+          {
+            "evidencia": "https://drive.google.com/open?id=1zGJH3QHYw_VSZvl6F46Uev0I6Qa3JmWB",
+            "title": "Evidência 1"
+          },
+          {
+            "evidencia": "https://drive.google.com/open?id=1RdEfN__vQCaLXq2m0mQFazcqpDlZz1gO",
+            "title": "Evidência 2"
+          },
+          {
+            "evidencia": "https://drive.google.com/open?id=1zE5ridB3KXhWe2UZ1pBlb27rER8xOBf_",
+            "title": "Evidência 3"
+          },
+          {
+            "evidencia": "dasjdlksamfçlsafasdfas",
+            "title": "Evidência 4"
+          }
+        ],
+        "municipio": {
+          "codIbge": "2300408",
+          "nome": "Aiuaba",
+          "status": "Participante"
+        },
+        "missao": {
+          "id": "CTG2-MISSAO4",
+          "categoria": "CTG2",
+          "descricao_da_missao": "Realizar campanhas e atividades educativas para disseminar o conhecimento sobre os direitos da criança entre a população e a sociedade civil"
+        }
+      },
+      {
+        "id": 16723,
+        "codIbge": "2300408",
+        "missaoId": "CTG1-MISSAO1",
+        "validation_status": "VALID",
+        "updated_at": "2025-03-15T19:51:40.000Z",
+        "evidence": [
+          {
+            "evidencia": "https://drive.google.com/open?id=1zGJH3QHYw_VSZvl6F46Uev0I6Qa3JmWB",
+            "title": "Evidência 1"
+          },
+          {
+            "evidencia": "https://drive.google.com/open?id=1RdEfN__vQCaLXq2m0mQFazcqpDlZz1gO",
+            "title": "Evidência 2"
+          },
+          {
+            "evidencia": "https://drive.google.com/open?id=1zE5ridB3KXhWe2UZ1pBlb27rER8xOBf_",
+            "title": "Evidência 3"
+          },
+          {
+            "evidencia": "dasjdlksamfçlsafasdfas",
+            "title": "Evidência 4"
+          }
+        ],
+        "municipio": {
+          "codIbge": "2300408",
+          "nome": "Aiuaba",
+          "status": "Participante"
+        },
+        "missao": {
+          "id": "CTG1-MISSAO1",
+          "categoria": "CTG1",
+          "descricao_da_missao": "Fortalecer a rede de serviços de atendimento à primeira infância, em especial, na expansão de creches, centros de educação infantil e outros serviços essenciais, garantindo acesso a todas as crianças"
+        }
+      },
+      {
+        "id": 16907,
+        "codIbge": "2300408",
+        "missaoId": "CTG1-MISSAO2",
+        "validation_status": "VALID",
+        "updated_at": "2025-03-15T19:51:42.000Z",
+        "evidence": [
+          {
+            "evidencia": "https://drive.google.com/open?id=1zGJH3QHYw_VSZvl6F46Uev0I6Qa3JmWB",
+            "title": "Evidência 1"
+          },
+          {
+            "evidencia": "https://drive.google.com/open?id=1RdEfN__vQCaLXq2m0mQFazcqpDlZz1gO",
+            "title": "Evidência 2"
+          },
+          {
+            "evidencia": "https://drive.google.com/open?id=1zE5ridB3KXhWe2UZ1pBlb27rER8xOBf_",
+            "title": "Evidência 3"
+          },
+          {
+            "evidencia": "dasjdlksamfçlsafasdfas",
+            "title": "Evidência 4"
+          }
+        ],
+        "municipio": {
+          "codIbge": "2300408",
+          "nome": "Aiuaba",
+          "status": "Participante"
+        },
+        "missao": {
+          "id": "CTG1-MISSAO2",
+          "categoria": "CTG1",
+          "descricao_da_missao": "Investir na capacitação continuada de profissionais que atuam na primeira infância, promovendo a atualização de conhecimentos e a melhoria da qualidade dos serviços"
+        }
+      },
+      {
+        "id": 17091,
+        "codIbge": "2300408",
+        "missaoId": "CTG3-MISSAO1",
+        "validation_status": "STARTED",
+        "updated_at": "2025-03-15T19:51:46.000Z",
+        "evidence": [
+          {
+            "evidencia": "https://drive.google.com/open?id=1zGJH3QHYw_VSZvl6F46Uev0I6Qa3JmWB",
+            "title": "Evidência 1"
+          },
+          {
+            "evidencia": "https://drive.google.com/open?id=1RdEfN__vQCaLXq2m0mQFazcqpDlZz1gO",
+            "title": "Evidência 2"
+          },
+          {
+            "evidencia": "https://drive.google.com/open?id=1zE5ridB3KXhWe2UZ1pBlb27rER8xOBf_",
+            "title": "Evidência 3"
+          },
+          {
+            "evidencia": "dasjdlksamfçlsafasdfas",
+            "title": "Evidência 4"
+          }
+        ],
+        "municipio": {
+          "codIbge": "2300408",
+          "nome": "Aiuaba",
+          "status": "Participante"
+        },
+        "missao": {
+          "id": "CTG3-MISSAO1",
+          "categoria": "CTG3",
+          "descricao_da_missao": "Implementar sistemática de monitoramento e avaliação das políticas para a primeira infância, utilizando indicadores de desenvolvimento infantil que permitam acompanhar o progresso e identificar áreas para melhoria"
+        }
+      },
+      {
+        "id": 17275,
+        "codIbge": "2300408",
+        "missaoId": "CTG3-MISSAO2",
+        "validation_status": "STARTED",
+        "updated_at": "2025-03-15T19:51:47.000Z",
+        "evidence": [
+          {
+            "evidencia": "https://drive.google.com/open?id=1zGJH3QHYw_VSZvl6F46Uev0I6Qa3JmWB",
+            "title": "Evidência 1"
+          },
+          {
+            "evidencia": "https://drive.google.com/open?id=1RdEfN__vQCaLXq2m0mQFazcqpDlZz1gO",
+            "title": "Evidência 2"
+          },
+          {
+            "evidencia": "https://drive.google.com/open?id=1zE5ridB3KXhWe2UZ1pBlb27rER8xOBf_",
+            "title": "Evidência 3"
+          },
+          {
+            "evidencia": "dasjdlksamfçlsafasdfas",
+            "title": "Evidência 4"
+          }
+        ],
+        "municipio": {
+          "codIbge": "2300408",
+          "nome": "Aiuaba",
+          "status": "Participante"
+        },
+        "missao": {
+          "id": "CTG3-MISSAO2",
+          "categoria": "CTG3",
+          "descricao_da_missao": "Garantir o financiamento das políticas para a primeira infância, com recursos próprios e por meio de recursos de transferências, mediante a adesão aos programas disponibilizados"
+        }
+      },
+      {
+        "id": 17459,
+        "codIbge": "2300408",
+        "missaoId": "CTG3-MISSAO3",
+        "validation_status": "STARTED",
+        "updated_at": "2025-03-15T19:51:50.000Z",
+        "evidence": [
+          {
+            "evidencia": "https://drive.google.com/open?id=1zGJH3QHYw_VSZvl6F46Uev0I6Qa3JmWB",
+            "title": "Evidência 1"
+          },
+          {
+            "evidencia": "https://drive.google.com/open?id=1RdEfN__vQCaLXq2m0mQFazcqpDlZz1gO",
+            "title": "Evidência 2"
+          },
+          {
+            "evidencia": "https://drive.google.com/open?id=1zE5ridB3KXhWe2UZ1pBlb27rER8xOBf_",
+            "title": "Evidência 3"
+          },
+          {
+            "evidencia": "dasjdlksamfçlsafasdfas",
+            "title": "Evidência 4"
+          }
+        ],
+        "municipio": {
+          "codIbge": "2300408",
+          "nome": "Aiuaba",
+          "status": "Participante"
+        },
+        "missao": {
+          "id": "CTG3-MISSAO3",
+          "categoria": "CTG3",
+          "descricao_da_missao": "Evidenciar os recursos aplicados em projetos e atividades voltadas para a primeira infância no orçamento municipal, conforme metodologia proposta pelo TCE-CE para a classificação orçamentária dos gastos com a Primeira Infância"
+        }
+      }
+    ]
+  }

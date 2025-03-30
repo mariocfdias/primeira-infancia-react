@@ -1,0 +1,30 @@
+{
+    "status": "success",
+    "data": {
+      "id": "CTG2-MISSAO1",
+      "categoria": "CTG2",
+      "descricao_da_categoria": "Fortalecimento da Governança",
+      "emblema_da_categoria": "https://drive.google.com/file/d/14dyU3ZDElTxWsJIP7LTjzlszgmxhGMsu/view?usp=sharing",
+      "descricao_da_missao": "Priorizar a primeira infância na gestão de políticas e na alocação de recursos",
+      "qnt_pontos": 30,
+      "link_formulario": "https://docs.google.com/forms/d/e/1FAIpQLSeHaSK7hAev3M9HWl8Ar41gLpk1IMDMto-vr49w2CHyj5FQog/viewform?usp=sharing",
+      "evidencias": [
+        {
+          "titulo": "Assinatura do Pacto pela Primeira Infância",
+          "descricao": "Assinatura do Pacto pela Primeira Infância do Ceará."
+        },
+        {
+          "titulo": "Instituição do Comitê Intersetorial",
+          "descricao": "Portaria de instituição do Comitê Intersetorial de políticas públicas para a primeira infância, garantida a participação social por meio dos conselhos de direitos."
+        },
+        {
+          "titulo": "Plano de Ação Intersetorial Anual",
+          "descricao": "Plano de ação para o exercício, elaborado em conjunto entre as secretarias, com as definições dos objetivos, metas, prazos, unidades responsáveis pela ação e indicadores a serem monitorados."
+        },
+        {
+          "titulo": "Relatórios de Execução Orçamentária",
+          "descricao": "Relatórios de execução orçamentária que demonstrem a aplicação dos recursos próprios em programas, projetos ou atividades voltadas exclusivamente para a primeira infância."
+        }
+      ]
+    }
+  }

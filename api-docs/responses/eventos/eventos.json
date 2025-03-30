@@ -1,0 +1,161 @@
+{
+    "status": "success",
+    "data": [
+      {
+        "id": 452,
+        "data_alteracao": "2025-03-24T22:15:41.000Z",
+        "event": "mission_completed",
+        "description": "CTG2-MISSAO4",
+        "cod_ibge": "2300200",
+        "municipio": {
+          "codIbge": "2300200",
+          "nome": "Acarau",
+          "status": "Participante",
+          "badges": 3,
+          "points": 50,
+          "imagemAvatar": null
+        }
+      },
+      {
+        "id": 494,
+        "data_alteracao": "2025-03-24T22:15:41.000Z",
+        "event": "mission_completed",
+        "description": "CTG2-MISSAO4",
+        "cod_ibge": "2300200",
+        "municipio": {
+          "codIbge": "2300200",
+          "nome": "Acarau",
+          "status": "Participante",
+          "badges": 3,
+          "points": 50,
+          "imagemAvatar": null
+        }
+      },
+      {
+        "id": 536,
+        "data_alteracao": "2025-03-24T22:15:41.000Z",
+        "event": "mission_completed",
+        "description": "CTG2-MISSAO4",
+        "cod_ibge": "2300200",
+        "municipio": {
+          "codIbge": "2300200",
+          "nome": "Acarau",
+          "status": "Participante",
+          "badges": 3,
+          "points": 50,
+          "imagemAvatar": null
+        }
+      },
+      {
+        "id": 578,
+        "data_alteracao": "2025-03-24T22:15:41.000Z",
+        "event": "mission_completed",
+        "description": "CTG2-MISSAO4",
+        "cod_ibge": "2300200",
+        "municipio": {
+          "codIbge": "2300200",
+          "nome": "Acarau",
+          "status": "Participante",
+          "badges": 3,
+          "points": 50,
+          "imagemAvatar": null
+        }
+      },
+      {
+        "id": 620,
+        "data_alteracao": "2025-03-24T22:15:41.000Z",
+        "event": "mission_completed",
+        "description": "CTG2-MISSAO4",
+        "cod_ibge": "2300200",
+        "municipio": {
+          "codIbge": "2300200",
+          "nome": "Acarau",
+          "status": "Participante",
+          "badges": 3,
+          "points": 50,
+          "imagemAvatar": null
+        }
+      },
+      {
+        "id": 662,
+        "data_alteracao": "2025-03-24T22:15:41.000Z",
+        "event": "mission_completed",
+        "description": "CTG2-MISSAO4",
+        "cod_ibge": "2300200",
+        "municipio": {
+          "codIbge": "2300200",
+          "nome": "Acarau",
+          "status": "Participante",
+          "badges": 3,
+          "points": 50,
+          "imagemAvatar": null
+        }
+      },
+      {
+        "id": 704,
+        "data_alteracao": "2025-03-24T22:15:41.000Z",
+        "event": "mission_completed",
+        "description": "CTG2-MISSAO4",
+        "cod_ibge": "2300200",
+        "municipio": {
+          "codIbge": "2300200",
+          "nome": "Acarau",
+          "status": "Participante",
+          "badges": 3,
+          "points": 50,
+          "imagemAvatar": null
+        }
+      },
+      {
+        "id": 746,
+        "data_alteracao": "2025-03-24T22:15:41.000Z",
+        "event": "mission_completed",
+        "description": "CTG2-MISSAO4",
+        "cod_ibge": "2300200",
+        "municipio": {
+          "codIbge": "2300200",
+          "nome": "Acarau",
+          "status": "Participante",
+          "badges": 3,
+          "points": 50,
+          "imagemAvatar": null
+        }
+      },
+      {
+        "id": 788,
+        "data_alteracao": "2025-03-24T22:15:41.000Z",
+        "event": "mission_completed",
+        "description": "CTG2-MISSAO4",
+        "cod_ibge": "2300200",
+        "municipio": {
+          "codIbge": "2300200",
+          "nome": "Acarau",
+          "status": "Participante",
+          "badges": 3,
+          "points": 50,
+          "imagemAvatar": null
+        }
+      },
+      {
+        "id": 830,
+        "data_alteracao": "2025-03-24T22:15:41.000Z",
+        "event": "mission_completed",
+        "description": "CTG2-MISSAO4",
+        "cod_ibge": "2300200",
+        "municipio": {
+          "codIbge": "2300200",
+          "nome": "Acarau",
+          "status": "Participante",
+          "badges": 3,
+          "points": 50,
+          "imagemAvatar": null
+        }
+      }
+    ],
+    "pagination": {
+      "total": 1544,
+      "page": 0,
+      "limit": 10,
+      "pages": 155
+    }
+  }

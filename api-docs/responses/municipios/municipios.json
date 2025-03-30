@@ -1,0 +1,1477 @@
+{
+    "status": "success",
+    "data": [
+      {
+        "codIbge": "2300408",
+        "nome": "Aiuaba",
+        "status": "Participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1kj56delT_YMq-3v7MSb6g21TOWNgNwC8",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2300754",
+        "nome": "Amontada",
+        "status": "Participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1Gw9qen-kePO0WQO9NwFSNzzYONE6lL-j",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2300804",
+        "nome": "Antonina do Norte",
+        "status": "Não participante",
+        "imagemAvatar": null,
+        "badges": 1,
+        "points": 25
+      },
+      {
+        "codIbge": "2300507",
+        "nome": "Alcântaras",
+        "status": "Não participante",
+        "imagemAvatar": null,
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2301000",
+        "nome": "Aquiraz",
+        "status": "Participante",
+        "imagemAvatar": null,
+        "badges": 1,
+        "points": 25
+      },
+      {
+        "codIbge": "2300606",
+        "nome": "Altaneira",
+        "status": "Participante",
+        "imagemAvatar": null,
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2301109",
+        "nome": "Aracati",
+        "status": "Não participante",
+        "imagemAvatar": null,
+        "badges": 1,
+        "points": 25
+      },
+      {
+        "codIbge": "2301208",
+        "nome": "Aracoiaba",
+        "status": "Participante",
+        "imagemAvatar": null,
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2301257",
+        "nome": "Ararendá",
+        "status": "Não participante",
+        "imagemAvatar": null,
+        "badges": 1,
+        "points": 25
+      },
+      {
+        "codIbge": "2300705",
+        "nome": "Alto Santo",
+        "status": "Participante",
+        "imagemAvatar": null,
+        "badges": 1,
+        "points": 25
+      },
+      {
+        "codIbge": "2301406",
+        "nome": "Aratuba",
+        "status": "Participante",
+        "imagemAvatar": null,
+        "badges": 1,
+        "points": 25
+      },
+      {
+        "codIbge": "2301505",
+        "nome": "Arneiroz",
+        "status": "Participante",
+        "imagemAvatar": null,
+        "badges": 1,
+        "points": 25
+      },
+      {
+        "codIbge": "2301604",
+        "nome": "Assaré",
+        "status": "Participante",
+        "imagemAvatar": null,
+        "badges": 2,
+        "points": 55
+      },
+      {
+        "codIbge": "2301703",
+        "nome": "Aurora",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1b9aP9IqQkDuNywVRm4pIHzuqWnYzUA6j",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2301802",
+        "nome": "Baixio",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=18fngIIQJI2JkTak083KZ2BhhHQJnQjVZ",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2301851",
+        "nome": "Banabuiú",
+        "status": "Participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=17gyhN7Boo3DIBMat6tROmav5zZrNHhH7",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2301901",
+        "nome": "Barbalha",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1YZm2EAhS5UOT46qTrZKi-u710Hj7ncb3",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2301307",
+        "nome": "Araripe",
+        "status": "Participante",
+        "imagemAvatar": null,
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2302057",
+        "nome": "Barroquinha",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1v_1rzp8YMY7EpaBNJK1BEzHlk8cg3QO6",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2302107",
+        "nome": "Baturité",
+        "status": "Participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1HX3_Rx6oNFtVGUPJQrWKpf7TztzYUa74",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2302206",
+        "nome": "Beberibe",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1GvznNN4HKPIKbD4qdvkE9uOk3HDUXKE3",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2302305",
+        "nome": "Bela Cruz",
+        "status": "Participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1dEGEGNtkXhgyhQs7XFmn-yNgYm6zjZUz",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2302404",
+        "nome": "Boa Viagem",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1b4yFBrLFzUpEBwcIivoTU5BWKnLpW4st",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2300903",
+        "nome": "Apuiarés",
+        "status": "Não participante",
+        "imagemAvatar": null,
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2300150",
+        "nome": "Acarape",
+        "status": "Participante",
+        "imagemAvatar": null,
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2301950",
+        "nome": "Barreira",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1EZqosYQr-4WvgxxOMLUE2K8x3gk2f5N6",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2302602",
+        "nome": "Camocim",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1Zx2YBAV3KyPIscFRhLYIMH4zWi9YTqbp",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2302008",
+        "nome": "Barro",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1f2QmDLrBWoQUVavGwGDEpJFYvj6l8n4u",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2302909",
+        "nome": "Capistrano",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1QGEODiAIQH3ps5nMWb01cYgEPpcNy3SB",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2303105",
+        "nome": "Cariré",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1V5umW0pYBQmASWw5tbG4p8VA7ldbek6h",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2303204",
+        "nome": "Caririaçu",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1pYSjmAgP9RC_v7N4ggxKVOaRzReJeRA-",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2303303",
+        "nome": "Cariús",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1atVHQCg5H_TDxLwZtG8d6bqPs8CtU2Xn",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2303402",
+        "nome": "Carnaubal",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1ikymK4ygz2s5AtsQIycVwZO5UC73Eue7",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2303501",
+        "nome": "Cascavel",
+        "status": "Participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1DGZVGAl6hft3HQBJe-yBikAfJzCa0lz0",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2303600",
+        "nome": "Catarina",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1g7mf0g4NKLyx9i5vYOVLVr61C-6i9xCo",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2303659",
+        "nome": "Catunda",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1Lj156fl7To2XRZ6TloHUoGlUS9yvVQ24",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2303709",
+        "nome": "Caucaia",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1eRcNAaCKVorYZvaUf1zAXp2pkQrtuTSe",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2303808",
+        "nome": "Cedro",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1IOppezcjA_VvV4h3fiC6mRM3wqgBxsAv",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2303907",
+        "nome": "Chaval",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=15gUPLnEIWuBid1Mfyc_e2sCehQuQz1F0",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2303931",
+        "nome": "Choró",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1ox_DUgiCDKh94IzL6uLOuX-8LuAFROez",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2303956",
+        "nome": "Chorozinho",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=137LjLk5GfyyY_JZ8Uz4Os7LoR8EWfl1T",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2302701",
+        "nome": "Campos Sales",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1T6wUB893UaLlFI25FiphghoMKxeu4TXu",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304103",
+        "nome": "Crateús",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1q6b1twy57njzuRz38kF7t5Ymd5A6w_kH",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2302800",
+        "nome": "Canindé",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1QGEODiAIQH3ps5nMWb01cYgEPpcNy3SB",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304202",
+        "nome": "Crato",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1BqlkbxpORvmR9BGtGM15Z8RWVszXizhX",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304236",
+        "nome": "Croatá",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1iglwurR88xEAGgxhS3EuO_IneNyET2su",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304251",
+        "nome": "Cruz",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1k32Wu29n1tBAm-V0cL7M1DOo9U_YdHRI",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304269",
+        "nome": "Deputado Irapuan Pinheiro",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=10v-xCpcBLF8eOtpHzNqDLJMeZwtDcPVP",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304277",
+        "nome": "Ererê",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1pk0jjXzZ-_oQpTpXDWh48iWKxewVgs6b",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304285",
+        "nome": "Eusébio",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1TvsZJIv9sFPWn2E-6DeNx_YkwX7mFRRU",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304301",
+        "nome": "Farias Brito",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1-W-xgFwpYJQyL5zx3kbzoA3yQ5_3hGZw",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304004",
+        "nome": "Coreaú",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1PqeqSozi8KUEHt0gmgBuYZd6Lbrg0x0y",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304459",
+        "nome": "Fortim",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1pxaodFjeQBrJWv4nvWGwLupY7utzIvGC",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304509",
+        "nome": "Frecheirinha",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1DYAbE7lZ2xRtm08Co4473plxoEfQb26z",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2302503",
+        "nome": "Brejo Santo",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=135eRHqvH7yApmpShI1pnDLTY-T9dq7NO",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304608",
+        "nome": "General Sampaio",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1VI3vhPX3a0pPeWP3LIqZTpx55xJhOQ_K",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304657",
+        "nome": "Graça",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=10ZxVz0SD09ZfuklPwlQ5MhBREG6NcRh6",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304707",
+        "nome": "Granja",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1KwqC864ytl9D9v3PtSvFPuX2YCGkjbkH",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304806",
+        "nome": "Granjeiro",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1q2zI4KAi6U1MasKnl1ORl27kdZ9xqRDZ",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304905",
+        "nome": "Groaíras",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1fYr9klDrUjIA7NC7yi0cfacJltFyhcuz",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304954",
+        "nome": "Guaiúba",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1c4lQnW58L2V9keUKqpF2CBL23tn_z6oU",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2305001",
+        "nome": "Guaraciaba do Norte",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=177Cq4iY-SVEA_HJCfJwXbipyBKm9VYFu",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2305100",
+        "nome": "Guaramiranga",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1RN6hn92oilDgD6m3lM1HF7XM1qnvfZAk",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2305209",
+        "nome": "Hidrolândia",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1_T2-Wd7OUXB-DmF8egPWlQbNdFJjtW4X",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2305233",
+        "nome": "Horizonte",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1MytGJqplWuPu7wr0ITNpBpdkSRvKNDWA",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2305266",
+        "nome": "Ibaretama",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1dPJxaWfMLKgIdnDNn8Q7j_RIB_q_2St8",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2305308",
+        "nome": "Ibiapina",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1uE7wPe9t5_w9tE589sbVdM1MoJHpP-lG",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2305332",
+        "nome": "Ibicuitinga",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1d-m0mafr9sD4h8VgT7d2NB6V-5VpVkj_",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2305357",
+        "nome": "Icapuí",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1CvHIXyu-S4_WLVBWXtJVAYxDafPF4UOH",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2305407",
+        "nome": "Icó",
+        "status": "Participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1YfdRLa62uE8z_piJ1QiQx4pItIeUpl5b",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304400",
+        "nome": "Fortaleza",
+        "status": "Participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1xk9_T7sQyrix4IdfHINBcOmnLdrZvdS8",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2305506",
+        "nome": "Iguatu",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1Ig6kGz6KU6HoaQ_rY0inSp3HePZJcSfD",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2305654",
+        "nome": "Ipaporanga",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1djhfDxyEcnLDK-v9hwlTYAOQ_1Ujcj0w",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2305704",
+        "nome": "Ipaumirim",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1dvXWIZjE5vH4gW6L8__gWsIIqI_nmToi",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2305803",
+        "nome": "Ipu",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1HPLQwxEH6ALu84-NRYjm0ZS9U22L7Mq6",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2305902",
+        "nome": "Ipueiras",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1daFzaMA8g2vLWksTSjrCbYVzLJ8gOinw",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2306009",
+        "nome": "Iracema",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1EiqyUd0a56Nib7iLEMtO_mB4a8iCYzjc",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2305605",
+        "nome": "Independência",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1UJyADd8pVcTBI4GWynQuuO6YK2p85l67",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2306207",
+        "nome": "Itaiçaba",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1Qkfr7RM5WqoY8zrCQ-uV4GBsAV0sf48Y",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2306256",
+        "nome": "Itaitinga",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1OdknGf_wRICB2F1RXK7RQosEJ5zhqbnR",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2306306",
+        "nome": "Itapajé",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1dcvcvo8oYgh5b3bENE9s6umJuiJYlJ_h",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2306405",
+        "nome": "Itapipoca",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1TB1H3y_uG9RUGrcL6SfbDMe22NEhuVh5",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2304350",
+        "nome": "Forquilha",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1crcIEOnE1b7q5GQhkOdl1d2NGCwKAsZp",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2306603",
+        "nome": "Itatira",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1G5FVqb8OBopljS58qeiTPm4GrqyOlOVU",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2306108",
+        "nome": "Irauçuba",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1g_q-q0OVu0rCigTPg-1j9iUlngf0mUzo",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2306702",
+        "nome": "Jaguaretama",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1sk9ADE_ryMDWE2uvS53wmMxfS7Kk4zO2",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2306801",
+        "nome": "Jaguaribara",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1NCl8ewp3MCZXb1Mb_B-1XLXvTGnsW83X",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2306504",
+        "nome": "Itapiúna",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1xWrtgpic7i1bQGjYCXnV6_mlWIO5WtuX",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2307007",
+        "nome": "Jaguaruana",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1g1inTPBbrtVitqST1D1gzuH2iHVBzTIQ",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2307106",
+        "nome": "Jardim",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1e8JUqL7ZF_nZK87Z1QkDyVp9b0znpoU9",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2307205",
+        "nome": "Jati",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1JbVfait_jQbuc4HEOzKejXdjXqhUeKaS",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2306553",
+        "nome": "Itarema",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1rVC3Jkeb00rB_AuNV6a07fXRrmPJkzsy",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2307403",
+        "nome": "Jucás",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1S3mmpIZ6emMuMrgdwTRv8voeOij5mvrs",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2307254",
+        "nome": "Jijoca de Jericoacoara",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1I6kMPeT4ujX_gyAWEQc_4UPp_xiBw9eu",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2307601",
+        "nome": "Limoeiro do Norte",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1GcPAfLh03wH6281fibR9y-TtBa9MeKap",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2307635",
+        "nome": "Madalena",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1PC2eXLsuu7DTJgTGN960VOTDTGaF6gu1",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2306900",
+        "nome": "Jaguaribe",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1R88ebjJAqcF-dJ5yYX853j0d1rbSEZ0i",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2307700",
+        "nome": "Maranguape",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1u_bAip3kvh9GEEwgyeHJHUEruOCI_jAZ",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2307809",
+        "nome": "Marco",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1GMo8FXmrmInn7VAzInqq61TwlcOrKnO0",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2307304",
+        "nome": "Juazeiro do Norte",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1S6iotKUpUhsbcxG9_X6SrYmn6_lrJdX0",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2308005",
+        "nome": "Massapê",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1xQqHNTvptGf9RhyqBu3G5T_HG_ULuFKo",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2307502",
+        "nome": "Lavras da Mangabeira",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1jgD7FL1vv8CianXZ_RHoTMcOFKWIMIaL",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2308104",
+        "nome": "Mauriti",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1o6xkWz_bdy291QanjfYfisNvQPvqfc1u",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2308203",
+        "nome": "Meruoca",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1HrmY33w3qu6O6ZfOl1td14xixBj08MGr",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2308302",
+        "nome": "Milagres",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1npWqJFoLvd9D4jASNAvE6SaZWXC8w4o0",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2308351",
+        "nome": "Milhã",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1uYwvZdDp1ToGvTkAONmIOi4GXebp4Cj1",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2308377",
+        "nome": "Miraíma",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1ilZbZO_Y9WcBP9nUrBPwZWzjUBrlpXNh",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2308401",
+        "nome": "Missão Velha",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1X7bcX2fBql3cO3OMA0JsTNg6QAOJQkdR",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2307908",
+        "nome": "Martinópole",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1usyQSLrg-IRx9Drd3YyNlXHPzmeadvW8",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2308708",
+        "nome": "Morada Nova",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1DilYhGtobrwTJSOTmT2juj54jk21yfPp",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2307650",
+        "nome": "Maracanaú",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1QtAQaFgm0otQTl2MHRVKjJJ4vW6x7RKg",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2308906",
+        "nome": "Morrinhos",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=10xhe7wBd37sTG5jHyN4n7ZoayS3hylzW",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2309003",
+        "nome": "Mucambo",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1sdjk8LiP0d-0HJQPhiiUo0v74lFSpac5",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2309102",
+        "nome": "Mulungu",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1urmDaZSZO0rBzoIWBrd4tCXnPAtIXRud",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2309201",
+        "nome": "Nova Olinda",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1jw-VZ7AVkjywQMpZKC09m04jTFlWH8mH",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2309300",
+        "nome": "Nova Russas",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1OJRRmWuHW7Q0Vw9yGkEfN7CFu7Q3bt-v",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2308500",
+        "nome": "Mombaça",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1IJI4yvmsif9JOad2K0iap4QUfxyzQrI7",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2309458",
+        "nome": "Ocara",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=15uF0SFS4nMMu8Em2NqPts_v5XGNrD4B6",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2309508",
+        "nome": "Orós",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1sovglVnN8wLZezMvdmCWovlv5I4J9kTW",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2308609",
+        "nome": "Monsenhor Tabosa",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1XgMid3y_JysalTrrwjBRnsIB8MpEm6pc",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2309706",
+        "nome": "Pacatuba",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1Wje46lGbjxZlTS-541z1EsMz0ehoFKQ-",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2309805",
+        "nome": "Pacoti",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1rn5uoY8Ynl7qyIoD46m6Zqrxjb-5XJi2",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2309904",
+        "nome": "Pacujá",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1ozQAKg9hvzHxTnMgrSkcoEZX7PafVtGX",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2310001",
+        "nome": "Palhano",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1SpTLsoNG57pfIwZV5ZzlZAHpbRR62Rk-",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2310100",
+        "nome": "Palmácia",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1_LDw7xpSkyIEgZZ_ExvZOf7scfoUHpyt",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2310209",
+        "nome": "Paracuru",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1tUrd8JfGajJVId-KDwgG87cgPZXsjc2k",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2310258",
+        "nome": "Paraipaba",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1tUrd8JfGajJVId-KDwgG87cgPZXsjc2k",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2310308",
+        "nome": "Parambu",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1EVI6hzHV6O7PhBLgLCtdQsZ94ZEdHINF",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2310407",
+        "nome": "Paramoti",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1Ov1mvXH_KaBFIBWGHnhgPavbgXWIAofQ",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2310506",
+        "nome": "Pedra Branca",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=18gBFF4blEUkdnuQuOrcV_Ppd__W-Vjnk",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2310605",
+        "nome": "Penaforte",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=13roHdz6KBoBeJKxcspmvdruw6AcjqXuV",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2310704",
+        "nome": "Pentecoste",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1ntomI4ztjnefLJNg3Ihicj0pHD7FSWP_",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2310803",
+        "nome": "Pereiro",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1a_bGbz7B2dPeXzS-kh8pstrZmqc4cQxa",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2308807",
+        "nome": "Moraújo",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1iYoMHJh4MQ7OSp5to1iR_d3pln-Z2rT9",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2310902",
+        "nome": "Piquet Carneiro",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1zn-lCfgTMPiV3qmoddYSuWpyPTl6pbHN",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2309409",
+        "nome": "Novo Oriente",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1WjF5g1uy8DH0n4C21X_dtaw9PD8ew1q_",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2311009",
+        "nome": "Poranga",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1YEyHXGY7ydGlhapTochh7CW908umy5oL",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2309607",
+        "nome": "Pacajus",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1ewBFwS0rB_tosDWQoIxiQlrHNz0diKGC",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2311108",
+        "nome": "Porteiras",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1w8YP-zeQT8jm6duK9cXT3bsQwaRl4ai9",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2311207",
+        "nome": "Potengi",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=17WP7cgyhd3VDOSflCnljbNYyJ-wOq1Rr",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2311231",
+        "nome": "Potiretama",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1mIbctTmS3RaO0HSR6TmlIpPETviV_0eH",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2311264",
+        "nome": "Quiterianópolis",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1o_A1wuaQHAdeDZTzJP58EVya4dSAAscU",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2311306",
+        "nome": "Quixadá",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1RKbQy4HHkSWHMBRkV1sMZaIp18CoVca6",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2311355",
+        "nome": "Quixelô",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1h3XhtGaKaxWkYIwzGsqjxAH21znVzJg0",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2311405",
+        "nome": "Quixeramobim",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1yaKWHLVy1wq6yQoTEJ5FbfKshNHG-zNG",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2311504",
+        "nome": "Quixeré",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1ogYU781kiN35eLDDZc7KZzd02-4Lu8yT",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2311603",
+        "nome": "Redenção",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1trsi32Gm-_efloAVOt9mXwtvooboGjKc",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2311702",
+        "nome": "Reriutaba",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1o9MsHb0b5YkR-7YDdABNw2l15dlQu_0d",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2310852",
+        "nome": "Pindoretama",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1tFCP-ga4CBvgbfTuIEdOTc6FQHsuCwN1",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2311959",
+        "nome": "Salitre",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1if1mSwsv6zZV_CZHmUWJTmbYrkVMK3kR",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2311801",
+        "nome": "Russas",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1O_dECIyQGHTgo8N7cQUlccFwV_1YRzLe",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2312007",
+        "nome": "Santa Quitéria",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1ow8f4y0cGqgDypflouvtoXfa9W23autt",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2312106",
+        "nome": "Santana do Acaraú",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1TKoi9FGNSHFvOPRWmKgiZoSK8JulVN5o",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2310951",
+        "nome": "Pires Ferreira",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1i4JkZ9L59TnuzfG14RKrbUz5iRIYyOAq",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2312403",
+        "nome": "São Gonçalo do Amarante",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1ai1jofYJfgcUiLJfgBgGMjBEoUhcrkR0",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2311900",
+        "nome": "Saboeiro",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=125FZVzB54FBiiJfq2FnbwRMo7Sr-rggK",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2312502",
+        "nome": "São João do Jaguaribe",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1E5z3Oj0H486xGO2xLIr81ZsO48e-3rS2",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2312601",
+        "nome": "São Luís do Curu",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1EJhmUAgjEVp5whfkr_An-yPahVTB4fC_",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2312700",
+        "nome": "Senador Pompeu",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1lbQTR1hrzlEVnzBfEIJf3WtBJZjfOjOW",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2312809",
+        "nome": "Senador Sá",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1IHfS902Lzl4DY4eKY2Fl_v7tB5B9NHKC",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2312908",
+        "nome": "Sobral",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1Hhkwh9w1f3Hyw3xzAcHLYQc7D3j4y4Cc",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2313005",
+        "nome": "Solonópole",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1jHO2OR5UPVlTd1cIcXVDbxPK3qnOmtnh",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2313104",
+        "nome": "Tabuleiro do Norte",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1JekXZEWX0CE7uLqICsVpmrz7K47QmI-i",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2313203",
+        "nome": "Tamboril",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1Igm4nNOi8fsH2wt95oeCDVQjrMYcIhh_",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2312205",
+        "nome": "Santana do Cariri",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1vGl0b5Zqt6Vk2rd2gr8Ka0k2mJTHO_eG",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2313351",
+        "nome": "Tejuçuoca",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1E8CSW1w25LoY3TSWuffFr_i-8zR0_ULN",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2313401",
+        "nome": "Tianguá",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1VpbTWG_6h6K05H0P6BST6NK-zH25VlhS",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2312304",
+        "nome": "São Benedito",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1wKWBmwIUrwlZc7RlL7yonTIKnadwc97x",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2313500",
+        "nome": "Trairi",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1222W-KhLdrZOY7mUOl4bZVyqgieH7_TD",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2313559",
+        "nome": "Tururu",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1U-P2uLnh_vzjMUuGDUkr7uuW6SYNEe5d",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2313252",
+        "nome": "Tarrafas",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1sRQRThgsSwdwvS3vvD7axlHg4fA0l0pX",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2313708",
+        "nome": "Umari",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1OOBCQRnAtJGPJFJHq2D5_-Nby34j-hlq",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2313757",
+        "nome": "Umirim",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1ve8GLqbgNTjknqiqux_LarqHzpCknkzq",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2313807",
+        "nome": "Uruburetama",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1RQMf7Pqk9yuWIeUf8hz6BUTFjIthm7kq",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2313906",
+        "nome": "Uruoca",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1Quf5X9bMGW2Uw8_cAg3-DTlBmFShcABs",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2313302",
+        "nome": "Tauá",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1tc1reVWxEC9YQoj1jH-naJE8DiYoBuch",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2314003",
+        "nome": "Várzea Alegre",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1O8CzB7XYXnPOjYePamTMILNNjd4wYQ_E",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2314102",
+        "nome": "Viçosa do Ceará",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1NLARv28TCYK6Mb8Mgs-_b_QFkKXODDrg",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2313955",
+        "nome": "Varjota",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1GOsI-PMs25QNLNHt6SzzJDrvtoGktW3T",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2303006",
+        "nome": "Caridade",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1uNopk3MVHFUaVM8HSCNUFL4pb41Ay5tZ",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2300309",
+        "nome": "Acopiara",
+        "status": "Participante",
+        "imagemAvatar": null,
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2313609",
+        "nome": "Ubajara",
+        "status": "Não participante",
+        "imagemAvatar": "https://drive.google.com/uc?export=view&id=1dQhzGXI0LmsEvINfw0J_oSnkxHh7wM61",
+        "badges": 0,
+        "points": 0
+      },
+      {
+        "codIbge": "2300200",
+        "nome": "Acarau",
+        "status": "Participante",
+        "imagemAvatar": null,
+        "badges": 3,
+        "points": 50
+      },
+      {
+        "codIbge": "2300101",
+        "nome": "Abaiara",
+        "status": "Participante",
+        "imagemAvatar": null,
+        "badges": 0,
+        "points": 0
+      }
+    ]
+  }

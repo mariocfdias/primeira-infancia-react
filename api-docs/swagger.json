@@ -1,0 +1,2480 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Pacto Primeira Infância API",
+        "version": "1.0.0",
+        "description": "API para gerenciamento do sistema Pacto Primeira Infância",
+        "contact": {
+            "name": "API Support",
+            "email": "support@example.com"
+        }
+    },
+    "servers": [
+        {
+            "url": "/api",
+            "description": "API Server"
+        }
+    ],
+    "components": {
+        "schemas": {
+            "Municipio": {
+                "type": "object",
+                "properties": {
+                    "codIbge": {
+                        "type": "string"
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "dataAlteracao": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "imagemAvatar": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "badges": {
+                        "type": "integer",
+                        "default": 0
+                    },
+                    "points": {
+                        "type": "integer",
+                        "default": 0
+                    },
+                    "json": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "orgao": {
+                        "type": "boolean",
+                        "default": false
+                    }
+                }
+            },
+            "Missoes": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "categoria": {
+                        "type": "string"
+                    },
+                    "descricao_da_categoria": {
+                        "type": "string"
+                    },
+                    "emblema_da_categoria": {
+                        "type": "string"
+                    },
+                    "descricao_da_missao": {
+                        "type": "string"
+                    },
+                    "qnt_pontos": {
+                        "type": "integer"
+                    },
+                    "link_formulario": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "evidencias": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Eventos": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "ID do evento"
+                    },
+                    "data_alteracao": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Data do evento"
+                    },
+                    "event": {
+                        "type": "string",
+                        "description": "Nome do evento"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Descrição do evento"
+                    },
+                    "cod_ibge": {
+                        "type": "string",
+                        "description": "Código IBGE do município"
+                    },
+                    "municipio": {
+                        "type": "object",
+                        "properties": {
+                            "codIbge": {
+                                "type": "string",
+                                "description": "Código IBGE do município"
+                            },
+                            "nome": {
+                                "type": "string",
+                                "description": "Nome do município"
+                            },
+                            "status": {
+                                "type": "string",
+                                "description": "Status do município"
+                            },
+                            "badges": {
+                                "type": "integer",
+                                "description": "Número de badges do município"
+                            },
+                            "points": {
+                                "type": "integer",
+                                "description": "Pontuação do município"
+                            },
+                            "imagemAvatar": {
+                                "type": "string",
+                                "description": "URL da imagem do avatar do município"
+                            }
+                        }
+                    }
+                }
+            },
+            "MunicipioDesempenho": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "codIbge": {
+                        "type": "string"
+                    },
+                    "missaoId": {
+                        "type": "string"
+                    },
+                    "validation_status": {
+                        "type": "string",
+                        "enum": [
+                            "VALID",
+                            "PENDING",
+                            "STARTED"
+                        ],
+                        "default": "STARTED"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "evidence": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "municipio": {
+                        "type": "object",
+                        "nullable": true,
+                        "properties": {
+                            "codIbge": {
+                                "type": "string"
+                            },
+                            "nome": {
+                                "type": "string"
+                            },
+                            "status": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "missao": {
+                        "type": "object",
+                        "nullable": true,
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "categoria": {
+                                "type": "string"
+                            },
+                            "descricao_da_missao": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "Error": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "error"
+                        ]
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Success": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "success"
+                        ]
+                    },
+                    "data": {
+                        "type": "object"
+                    }
+                }
+            },
+            "Pagination": {
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "integer",
+                        "description": "Total de registros"
+                    },
+                    "page": {
+                        "type": "integer",
+                        "description": "Página atual"
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Limite de registros por página"
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "description": "Total de páginas"
+                    }
+                }
+            }
+        }
+    },
+    "paths": {
+        "/jobs-info": {
+            "get": {
+                "tags": [
+                    "Jobs"
+                ],
+                "summary": "Get detailed job information",
+                "description": "Returns detailed information about all jobs including descriptions and schedules",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "enum": [
+                                                "success"
+                                            ]
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "description": {
+                                                        "type": "string"
+                                                    },
+                                                    "schedule": {
+                                                        "type": "string"
+                                                    },
+                                                    "url_config_key": {
+                                                        "type": "string"
+                                                    },
+                                                    "function": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/docs/jobs": {
+            "get": {
+                "tags": [
+                    "Documentation"
+                ],
+                "summary": "Get complete jobs documentation",
+                "description": "Returns comprehensive, formatted JSON documentation about all jobs with execution order and URLs",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "enum": [
+                                                "success"
+                                            ]
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "description": {
+                                                        "type": "string"
+                                                    },
+                                                    "schedule": {
+                                                        "type": "string"
+                                                    },
+                                                    "url": {
+                                                        "type": "string"
+                                                    },
+                                                    "function": {
+                                                        "type": "string"
+                                                    },
+                                                    "execution_order": {
+                                                        "type": [
+                                                            "integer",
+                                                            "null"
+                                                        ],
+                                                        "description": "Order of execution during startup (null if not part of sequential execution)"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/dashboard/mission-panorama": {
+            "get": {
+                "summary": "Retorna um panorama geral de todas as missões com contagem de status",
+                "tags": [
+                    "Dashboard"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Panorama geral de missões"
+                    }
+                }
+            }
+        },
+        "/dashboard/mission-panorama/{missaoId}": {
+            "get": {
+                "summary": "Retorna um panorama detalhado de uma missão específica incluindo listas de municípios",
+                "tags": [
+                    "Dashboard"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "missaoId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Panorama detalhado da missão"
+                    },
+                    "404": {
+                        "description": "Missão não encontrada"
+                    }
+                }
+            }
+        },
+        "/dashboard/map-panorama": {
+            "get": {
+                "summary": "Retorna um panorama de municípios com contagem de status de missões e pontos",
+                "tags": [
+                    "Dashboard"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Panorama de municípios e distribuição de desempenho",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "mapPanorama": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "municipio": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "codIbge": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "nome": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "status": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "dataAlteracao": {
+                                                                        "type": "string",
+                                                                        "format": "date-time"
+                                                                    },
+                                                                    "imagemAvatar": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "badges": {
+                                                                        "type": "integer"
+                                                                    },
+                                                                    "points": {
+                                                                        "type": "integer"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "countValid": {
+                                                                "type": "integer"
+                                                            },
+                                                            "countPending": {
+                                                                "type": "integer"
+                                                            },
+                                                            "countStarted": {
+                                                                "type": "integer"
+                                                            },
+                                                            "totalMissoes": {
+                                                                "type": "integer"
+                                                            },
+                                                            "points": {
+                                                                "type": "integer"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "desempenho": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "levelDistribution": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "level": {
+                                                                        "type": "integer"
+                                                                    },
+                                                                    "minPoints": {
+                                                                        "type": "integer"
+                                                                    },
+                                                                    "maxPoints": {
+                                                                        "type": "integer"
+                                                                    },
+                                                                    "count": {
+                                                                        "type": "integer"
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "totalMunicipios": {
+                                                            "type": "integer"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/dashboard/map-panorama/{codIbge}": {
+            "get": {
+                "summary": "Retorna o panorama de um município específico com contagem de status de missões e pontos",
+                "tags": [
+                    "Dashboard"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "codIbge",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Código IBGE do município"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Panorama do município específico",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "mapPanorama": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "municipio": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "codIbge": {
+                                                                    "type": "string"
+                                                                },
+                                                                "nome": {
+                                                                    "type": "string"
+                                                                },
+                                                                "status": {
+                                                                    "type": "string"
+                                                                },
+                                                                "dataAlteracao": {
+                                                                    "type": "string",
+                                                                    "format": "date-time"
+                                                                },
+                                                                "imagemAvatar": {
+                                                                    "type": "string"
+                                                                },
+                                                                "badges": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "points": {
+                                                                    "type": "integer"
+                                                                }
+                                                            }
+                                                        },
+                                                        "countValid": {
+                                                            "type": "integer"
+                                                        },
+                                                        "countPending": {
+                                                            "type": "integer"
+                                                        },
+                                                        "countStarted": {
+                                                            "type": "integer"
+                                                        },
+                                                        "totalMissoes": {
+                                                            "type": "integer"
+                                                        },
+                                                        "points": {
+                                                            "type": "integer"
+                                                        }
+                                                    }
+                                                },
+                                                "level": {
+                                                    "type": "integer",
+                                                    "description": "Nível do município baseado nos pontos"
+                                                },
+                                                "totalPoints": {
+                                                    "type": "integer",
+                                                    "description": "Total de pontos do município"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Município não encontrado"
+                    },
+                    "500": {
+                        "description": "Erro no servidor"
+                    }
+                }
+            }
+        },
+        "/eventos": {
+            "get": {
+                "summary": "Retorna todos os eventos",
+                "tags": [
+                    "Eventos"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        },
+                        "description": "Página a ser retornada (iniciando em 0)"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        },
+                        "description": "Número de registros por página"
+                    },
+                    {
+                        "in": "query",
+                        "name": "event",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Filtro por nome do evento"
+                    },
+                    {
+                        "in": "query",
+                        "name": "municipioSearch",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Filtro por nome do município"
+                    },
+                    {
+                        "in": "query",
+                        "name": "sortDirection",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ASC",
+                                "DESC"
+                            ],
+                            "default": "DESC"
+                        },
+                        "description": "Direção da ordenação por data"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de eventos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Eventos"
+                                            }
+                                        },
+                                        "pagination": {
+                                            "$ref": "#/components/schemas/Pagination"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Cria um novo evento",
+                "tags": [
+                    "Eventos"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "data_alteracao": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "description": "Data do evento (opcional, padrão é a data atual)"
+                                    },
+                                    "event": {
+                                        "type": "string",
+                                        "description": "Nome do evento"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "Descrição do evento"
+                                    },
+                                    "cod_ibge": {
+                                        "type": "string",
+                                        "description": "Código IBGE do município relacionado"
+                                    }
+                                },
+                                "required": [
+                                    "event",
+                                    "description"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Evento criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Eventos"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/eventos/{id}": {
+            "get": {
+                "summary": "Retorna um evento específico",
+                "tags": [
+                    "Eventos"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "ID do evento"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados do evento",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Eventos"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Evento não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Atualiza um evento existente",
+                "tags": [
+                    "Eventos"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "ID do evento"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "data_alteracao": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "description": "Data do evento (opcional, padrão é a data atual)"
+                                    },
+                                    "event": {
+                                        "type": "string",
+                                        "description": "Nome do evento"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "Descrição do evento"
+                                    },
+                                    "cod_ibge": {
+                                        "type": "string",
+                                        "description": "Código IBGE do município relacionado"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Evento atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Eventos"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Evento não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Remove um evento",
+                "tags": [
+                    "Eventos"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "ID do evento"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Evento removido com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "success": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Evento with id 1 deleted successfully"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Evento não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/eventos/municipio/{codIbge}": {
+            "get": {
+                "summary": "Retorna todos os eventos de um município específico",
+                "tags": [
+                    "Eventos"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "codIbge",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "Código IBGE do município"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        },
+                        "description": "Página a ser retornada (iniciando em 0)"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        },
+                        "description": "Número de registros por página"
+                    },
+                    {
+                        "in": "query",
+                        "name": "event",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Filtro por nome do evento"
+                    },
+                    {
+                        "in": "query",
+                        "name": "sortDirection",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ASC",
+                                "DESC"
+                            ],
+                            "default": "DESC"
+                        },
+                        "description": "Direção da ordenação por data"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de eventos do município",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Eventos"
+                                            }
+                                        },
+                                        "pagination": {
+                                            "$ref": "#/components/schemas/Pagination"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/eventos/municipios/search": {
+            "get": {
+                "summary": "Busca municípios por nome para autocomplete",
+                "tags": [
+                    "Eventos"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "q",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "Termo de busca para nome do município"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        },
+                        "description": "Número máximo de resultados"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de municípios encontrados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "codIbge": {
+                                                        "type": "string"
+                                                    },
+                                                    "nome": {
+                                                        "type": "string"
+                                                    },
+                                                    "status": {
+                                                        "type": "string"
+                                                    },
+                                                    "badges": {
+                                                        "type": "integer"
+                                                    },
+                                                    "points": {
+                                                        "type": "integer"
+                                                    },
+                                                    "imagemAvatar": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/missoes": {
+            "get": {
+                "summary": "Retorna todas as missões",
+                "tags": [
+                    "Missoes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de missões",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Missoes"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Cria uma nova missão",
+                "tags": [
+                    "Missoes"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "description": "ID da missão"
+                                    },
+                                    "categoria": {
+                                        "type": "string",
+                                        "description": "Categoria da missão"
+                                    },
+                                    "descricao_da_categoria": {
+                                        "type": "string",
+                                        "description": "Descrição da categoria"
+                                    },
+                                    "emblema_da_categoria": {
+                                        "type": "string",
+                                        "description": "URL do emblema da categoria"
+                                    },
+                                    "descricao_da_missao": {
+                                        "type": "string",
+                                        "description": "Descrição da missão"
+                                    },
+                                    "qnt_pontos": {
+                                        "type": "integer",
+                                        "description": "Quantidade de pontos da missão"
+                                    },
+                                    "link_formulario": {
+                                        "type": "string",
+                                        "description": "Link do formulário da missão (opcional)"
+                                    },
+                                    "evidencias": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "description": "Lista de evidências (opcional)"
+                                    }
+                                },
+                                "required": [
+                                    "id",
+                                    "categoria",
+                                    "descricao_da_categoria",
+                                    "emblema_da_categoria",
+                                    "descricao_da_missao",
+                                    "qnt_pontos"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Missão criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Missoes"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/missoes/{id}": {
+            "get": {
+                "summary": "Retorna uma missão específica",
+                "tags": [
+                    "Missoes"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "ID da missão"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados da missão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Missoes"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Missão não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Atualiza uma missão existente",
+                "tags": [
+                    "Missoes"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "ID da missão"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "categoria": {
+                                        "type": "string",
+                                        "description": "Categoria da missão"
+                                    },
+                                    "descricao_da_categoria": {
+                                        "type": "string",
+                                        "description": "Descrição da categoria"
+                                    },
+                                    "emblema_da_categoria": {
+                                        "type": "string",
+                                        "description": "URL do emblema da categoria"
+                                    },
+                                    "descricao_da_missao": {
+                                        "type": "string",
+                                        "description": "Descrição da missão"
+                                    },
+                                    "qnt_pontos": {
+                                        "type": "integer",
+                                        "description": "Quantidade de pontos da missão"
+                                    },
+                                    "link_formulario": {
+                                        "type": "string",
+                                        "description": "Link do formulário da missão (opcional)"
+                                    },
+                                    "evidencias": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "description": "Lista de evidências (opcional)"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Missão atualizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Missoes"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Missão não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Remove uma missão",
+                "tags": [
+                    "Missoes"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "ID da missão"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Missão removida com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "success": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Missão with id 'abc123' deleted successfully"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Missão não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/municipios": {
+            "get": {
+                "summary": "Retorna todos os municípios",
+                "tags": [
+                    "Municipios"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de municípios",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Municipio"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/municipios/{ibge}": {
+            "get": {
+                "summary": "Retorna um município específico com seus desempenhos e missões relacionadas",
+                "tags": [
+                    "Municipios"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "ibge",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "Código IBGE do município"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados completos do município, incluindo desempenhos e missões",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "codIbge": {
+                                                    "type": "string"
+                                                },
+                                                "nome": {
+                                                    "type": "string"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                },
+                                                "dataAlteracao": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "imagemAvatar": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "badges": {
+                                                    "type": "integer"
+                                                },
+                                                "points": {
+                                                    "type": "integer"
+                                                },
+                                                "json": {
+                                                    "type": "object",
+                                                    "nullable": true
+                                                },
+                                                "orgao": {
+                                                    "type": "boolean"
+                                                },
+                                                "desempenhos": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "codIbge": {
+                                                                "type": "string"
+                                                            },
+                                                            "missaoId": {
+                                                                "type": "string"
+                                                            },
+                                                            "validation_status": {
+                                                                "type": "string"
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "format": "date-time"
+                                                            },
+                                                            "evidence": {
+                                                                "type": "array"
+                                                            },
+                                                            "missao": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "categoria": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "descricao_da_categoria": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "emblema_da_categoria": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "descricao_da_missao": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "qnt_pontos": {
+                                                                        "type": "integer"
+                                                                    },
+                                                                    "link_formulario": {
+                                                                        "type": "string",
+                                                                        "nullable": true
+                                                                    },
+                                                                    "evidencias": {
+                                                                        "type": "array"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Município não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/desempenhos": {
+            "get": {
+                "summary": "Retorna todos os registros de desempenho",
+                "tags": [
+                    "Desempenhos"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de desempenhos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/MunicipioDesempenho"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Cria um novo registro de desempenho",
+                "tags": [
+                    "Desempenhos"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "codIbge": {
+                                        "type": "string",
+                                        "description": "Código IBGE do município"
+                                    },
+                                    "missaoId": {
+                                        "type": "string",
+                                        "description": "ID da missão"
+                                    },
+                                    "validation_status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "VALID",
+                                            "PENDING",
+                                            "STARTED"
+                                        ],
+                                        "default": "STARTED",
+                                        "description": "Status de validação (opcional)"
+                                    },
+                                    "updated_at": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "description": "Data de atualização (opcional)"
+                                    },
+                                    "evidence": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "description": "Lista de evidências (opcional)"
+                                    }
+                                },
+                                "required": [
+                                    "codIbge",
+                                    "missaoId"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Registro de desempenho criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/MunicipioDesempenho"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/desempenhos/{id}": {
+            "get": {
+                "summary": "Retorna um registro de desempenho específico",
+                "tags": [
+                    "Desempenhos"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "ID do registro de desempenho"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados do desempenho",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/MunicipioDesempenho"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Registro de desempenho não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Atualiza um registro de desempenho existente",
+                "tags": [
+                    "Desempenhos"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "ID do registro de desempenho"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "codIbge": {
+                                        "type": "string",
+                                        "description": "Código IBGE do município"
+                                    },
+                                    "missaoId": {
+                                        "type": "string",
+                                        "description": "ID da missão"
+                                    },
+                                    "validation_status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "VALID",
+                                            "PENDING",
+                                            "STARTED"
+                                        ],
+                                        "description": "Status de validação"
+                                    },
+                                    "updated_at": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "description": "Data de atualização (opcional)"
+                                    },
+                                    "evidence": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "description": "Lista de evidências"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Registro de desempenho atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/MunicipioDesempenho"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Registro de desempenho não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Remove um registro de desempenho",
+                "tags": [
+                    "Desempenhos"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "ID do registro de desempenho"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Registro de desempenho removido com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "success": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "MunicipioDesempenho with id 1 deleted successfully"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Registro de desempenho não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/desempenhos/municipio/{codIbge}": {
+            "get": {
+                "summary": "Retorna todos os registros de desempenho de um município específico",
+                "tags": [
+                    "Desempenhos"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "codIbge",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "Código IBGE do município"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de desempenhos do município",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/MunicipioDesempenho"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/desempenhos/missao/{missaoId}": {
+            "get": {
+                "summary": "Retorna todos os registros de desempenho de uma missão específica",
+                "tags": [
+                    "Desempenhos"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "missaoId",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "ID da missão"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de desempenhos da missão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/MunicipioDesempenho"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/desempenhos/{id}/status": {
+            "patch": {
+                "summary": "Atualiza apenas o status de validação de um registro de desempenho",
+                "tags": [
+                    "Desempenhos"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "ID do registro de desempenho"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "VALID",
+                                            "PENDING",
+                                            "STARTED"
+                                        ],
+                                        "description": "Novo status de validação"
+                                    }
+                                },
+                                "required": [
+                                    "status"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Status atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/MunicipioDesempenho"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Status inválido ou ausente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Registro de desempenho não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/desempenhos/{id}/evidence": {
+            "patch": {
+                "summary": "Adiciona uma evidência a um registro de desempenho",
+                "tags": [
+                    "Desempenhos"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "ID do registro de desempenho"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "evidenceUrl": {
+                                        "type": "string",
+                                        "description": "URL da evidência a ser adicionada"
+                                    }
+                                },
+                                "required": [
+                                    "evidenceUrl"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Evidência adicionada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/MunicipioDesempenho"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "URL de evidência ausente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Registro de desempenho não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/desempenhos/municipio/{codIbge}/missao/{missaoId}": {
+            "get": {
+                "summary": "Retorna o registro de desempenho de um município em uma missão específica",
+                "tags": [
+                    "Desempenhos"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "codIbge",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "Código IBGE do município"
+                    },
+                    {
+                        "in": "path",
+                        "name": "missaoId",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "ID da missão"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados do desempenho",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/MunicipioDesempenho"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Registro de desempenho não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Dashboard",
+            "description": "Endpoints para visualização de dados do dashboard"
+        },
+        {
+            "name": "Eventos",
+            "description": "Endpoints para gerenciamento de eventos"
+        },
+        {
+            "name": "Missoes",
+            "description": "Endpoints para gerenciamento de missões"
+        },
+        {
+            "name": "Municipios",
+            "description": "Endpoints para gerenciamento de municípios"
+        },
+        {
+            "name": "Desempenhos",
+            "description": "Endpoints para gerenciamento de desempenho dos municípios nas missões"
+        }
+    ]
+}
