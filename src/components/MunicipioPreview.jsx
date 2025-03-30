@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import React from 'react';
 import { 
   Box, 
   Typography, 
@@ -10,14 +11,49 @@ import {
   Divider,
   CircularProgress,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
+  Alert,
+  Tooltip
 } from '@mui/material';
 import { InfoOutlined, StarOutlined, Star, OpenInNew, EmojiEventsOutlined } from '@mui/icons-material';
 
-const MunicipioPreview = ({ municipioData, loading = false, selectedMissionId = null }) => {
+const MunicipioPreview = ({ 
+  municipioData, 
+  loading = false, 
+  selectedMissionId = null, 
+  isNonParticipant = false,
+  onViewProfile = () => {}
+}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [imgError, setImgError] = useState(false);
+
+  // Handle image load error
+  const handleImageError = () => {
+    setImgError(true);
+  };
+
+  // Extract municipio data correctly
+  const municipio = municipioData?.data || {};
+
+  // Format Google Drive image URL if it's a drive URL
+  const formatImageUrl = (imageUrl) => {
+    if (!imageUrl) return null;
+    
+    // Check if it's a Google Drive link
+    const driveMatch = imageUrl.match(/drive\.google\.com\/file\/d\/(.*?)\/view/);
+    if (driveMatch && driveMatch[1]) {
+      const imageId = driveMatch[1];
+      return `https://drive.google.com/thumbnail?id=${imageId}`;
+    }
+    
+    // If not a Drive URL, return the original URL
+    return imageUrl;
+  };
+
+  useEffect(() => {
+    console.log({municipioData});
+  }, [municipioData]);
 
   if (loading) {
     return (
@@ -69,6 +105,78 @@ const MunicipioPreview = ({ municipioData, loading = false, selectedMissionId = 
       </Paper>
     );
   }
+  
+  // Special render for non-participating municipalities
+  if (isNonParticipant || municipio.status === "Não participante") {
+    return (
+      <Paper
+        elevation={2}
+        sx={{
+          bgcolor: "#333333",
+          color: "white",
+          borderRadius: 1,
+          overflow: "hidden",
+          height: "100%",
+        }}
+      >
+        <Box p={{ xs: 2, sm: 3 }}>
+          {/* Header with initial and title */}
+          <Box display="flex" gap={2} mb={2}>
+            <Box 
+              sx={{
+                width: { xs: 80, sm: 100 },
+                height: { xs: 80, sm: 100 },
+                borderRadius: 1,
+                overflow: "hidden",
+                flexShrink: 0,
+                bgcolor: "#555555",
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: { xs: "2rem", sm: "2.5rem" },
+                fontWeight: "bold",
+                color: "#ffffff",
+                opacity: 0.7
+              }}
+            >
+              {municipio.nome ? municipio.nome.charAt(0) : "?"}
+            </Box>
+
+            <Box flex={1}>
+              <Typography variant="h5" fontWeight="bold" mb={0.5}>
+                {municipio.nome}
+              </Typography>
+              
+              <Box mt={1} mb={2}>
+                <Chip
+                  label="Não participante"
+                  sx={{
+                    bgcolor: "#f5f5f5",
+                    color: "#333333",
+                  }}
+                />
+              </Box>
+              
+              <Alert 
+                severity="info" 
+                sx={{ 
+                  mt: 2,
+                  "& .MuiAlert-icon": {
+                    color: "#ffffff"
+                  },
+                  bgcolor: "rgba(255, 255, 255, 0.1)",
+                  color: "#ffffff"
+                }}
+              >
+                Este município ainda não aderiu ao Pacto pela Primeira Infância. 
+              </Alert>
+            </Box>
+          </Box>
+        </Box>
+      </Paper>
+    );
+  }
 
   // Calculate level based on points
   const getLevel = (points) => {
@@ -96,28 +204,35 @@ const MunicipioPreview = ({ municipioData, loading = false, selectedMissionId = 
 
   // Get the most recent mission
   const getRecentMission = () => {
-    if (!municipioData.desempenhos || municipioData.desempenhos.length === 0) return null;
+    if (!municipio.desempenhos || municipio.desempenhos.length === 0) return null;
     
     // If a mission ID is selected, try to find it first
     if (selectedMissionId) {
-      const selectedMission = municipioData.desempenhos.find(d => 
+      const selectedMission = municipio.desempenhos.find(d => 
         d.missao.id === selectedMissionId
       );
       if (selectedMission) return selectedMission;
     }
     
     // Otherwise get the first mission with VALID status, or the first mission if none are valid
-    const validMission = municipioData.desempenhos.find(d => d.validation_status === "VALID");
-    return validMission || municipioData.desempenhos[0];
+    const validMission = municipio.desempenhos.find(d => d.validation_status === "VALID");
+    return validMission || municipio.desempenhos[0];
   };
 
   const recentMission = getRecentMission();
   const evidenceItems = recentMission ? 
     JSON.parse(recentMission.missao.evidencias) : [];
   
-  const level = getLevel(municipioData.points);
-  const levelColor = getLevelColor(municipioData.points);
-  const progressPercentage = getProgressPercentage(municipioData.points);
+  // Safely access properties with default values
+  const points = municipio.points || 0;
+  const badges = municipio.badges || 0;
+  const status = municipio.status || "Desconhecido";
+  const nome = municipio.nome || "Município";
+  
+  const level = getLevel(points);
+  const levelColor = getLevelColor(points);
+  const progressPercentage = getProgressPercentage(points);
+  const imageUrl = formatImageUrl(municipio.imagemAvatar);
 
   return (
     <Paper
@@ -144,16 +259,16 @@ const MunicipioPreview = ({ municipioData, loading = false, selectedMissionId = 
               position: "relative"
             }}
           >
-            {municipioData.imagemAvatar && !imgError ? (
+            {imageUrl && !imgError ? (
               <Avatar
-                src={municipioData.imagemAvatar}
-                alt={`${municipioData.nome} logo`}
+                src={imageUrl}
+                alt={`${nome} logo`}
                 variant="square"
                 sx={{ 
                   width: "100%",
                   height: "100%"
                 }}
-                onError={() => setImgError(true)}
+                onError={handleImageError}
               />
             ) : (
               <Box 
@@ -169,14 +284,14 @@ const MunicipioPreview = ({ municipioData, loading = false, selectedMissionId = 
                   opacity: 0.7
                 }}
               >
-                {municipioData.nome ? municipioData.nome.charAt(0) : "?"}
+                {nome.charAt(0)}
               </Box>
             )}
           </Box>
 
           <Box flex={1}>
             <Typography variant="h5" fontWeight="bold" mb={0.5}>
-              {municipioData.nome}
+              {nome}
             </Typography>
             
             <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -185,7 +300,7 @@ const MunicipioPreview = ({ municipioData, loading = false, selectedMissionId = 
               </Typography>
               <Box display="flex" alignItems="center" gap={0.5}>
                 <Typography color={levelColor} variant="subtitle1" fontWeight="medium">
-                  {municipioData.points}/200
+                  {points}/100
                 </Typography>
                 <Star sx={{ color: levelColor }} />
               </Box>
@@ -212,7 +327,7 @@ const MunicipioPreview = ({ municipioData, loading = false, selectedMissionId = 
             <Box display="flex" gap={1} flexWrap="wrap">
               <Chip
                 icon={<StarOutlined />}
-                label={`${municipioData.points} pontos`}
+                label={`${points} pontos`}
                 sx={{
                   bgcolor: "#fdf9de",
                   color: "#333333",
@@ -223,7 +338,7 @@ const MunicipioPreview = ({ municipioData, loading = false, selectedMissionId = 
               />
               <Chip
                 icon={<EmojiEventsOutlined />}
-                label={`${municipioData.badges} emblemas`}
+                label={`${badges} emblemas`}
                 sx={{
                   bgcolor: "#e7eef8",
                   color: "#333333",
@@ -233,9 +348,9 @@ const MunicipioPreview = ({ municipioData, loading = false, selectedMissionId = 
                 }}
               />
               <Chip
-                label={municipioData.status}
+                label={status}
                 sx={{
-                  bgcolor: municipioData.status === "Participante" ? "#e8f5e9" : "#f5f5f5",
+                  bgcolor: status === "Participante" ? "#e8f5e9" : "#f5f5f5",
                   color: "#333333",
                 }}
               />
@@ -271,13 +386,20 @@ const MunicipioPreview = ({ municipioData, loading = false, selectedMissionId = 
                   <Typography variant="body2" fontWeight="medium">
                     {index + 1}. {item.titulo}
                   </Typography>
-                  <InfoOutlined
-                    sx={{
-                      ml: "auto",
-                      color: "#1f5bb4",
-                      fontSize: 18
-                    }}
-                  />
+                  <Tooltip 
+                    title={item.descricao || "Evidência necessária para concluir a missão"} 
+                    arrow 
+                    placement="top"
+                  >
+                    <InfoOutlined
+                      sx={{
+                        ml: "auto",
+                        color: "#1f5bb4",
+                        fontSize: 18,
+                        cursor: "pointer"
+                      }}
+                    />
+                  </Tooltip>
                 </Box>
               ))}
             </Box>
@@ -288,6 +410,7 @@ const MunicipioPreview = ({ municipioData, loading = false, selectedMissionId = 
         <Button
           variant="contained"
           fullWidth
+          onClick={onViewProfile}
           sx={{
             mt: 3,
             bgcolor: "#1f5bb4",
@@ -308,4 +431,15 @@ const MunicipioPreview = ({ municipioData, loading = false, selectedMissionId = 
   );
 };
 
-export default MunicipioPreview; 
+// Use React.memo with a custom comparison function to optimize re-renders
+export default React.memo(MunicipioPreview, (prevProps, nextProps) => {
+  // Only re-render if relevant props have changed
+  const dataChanged = prevProps.municipioData?.data?.codIbge !== nextProps.municipioData?.data?.codIbge;
+  const loadingChanged = prevProps.loading !== nextProps.loading;
+  const missionChanged = prevProps.selectedMissionId !== nextProps.selectedMissionId;
+  const participantStatusChanged = prevProps.isNonParticipant !== nextProps.isNonParticipant;
+  const viewProfileChanged = prevProps.onViewProfile !== nextProps.onViewProfile;
+  
+  // If any important prop changed, we should re-render
+  return !(dataChanged || loadingChanged || missionChanged || participantStatusChanged || viewProfileChanged);
+}); 

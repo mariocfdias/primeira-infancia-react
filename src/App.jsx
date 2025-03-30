@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom"
 import HomePage from "./pages/HomePage"
-import MunicipioCanindePage from "./pages/MunicipioCanindePage"
+import MunicipioPage from "./pages/MunicipioPage"
 import { ApiProvider } from "./api"
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
     <ApiProvider>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/municipio-caninde" element={<MunicipioCanindePage />} />
+        <Route path="/municipio-caninde" element={<MunicipioPage />} />
       </Routes>
     </ApiProvider>
   )

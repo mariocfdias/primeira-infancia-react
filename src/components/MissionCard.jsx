@@ -1,8 +1,9 @@
 import { Box, Typography, Paper, Button, LinearProgress, useTheme, useMediaQuery } from "@mui/material"
 import { KeyboardArrowDown } from "@mui/icons-material"
 import PropTypes from 'prop-types'
+import React from 'react'
 
-export default function MissionCard({ category, title, progress, missionId, onViewMap }) {
+function MissionCard({ category, title, progress, missionId, onViewMap, isSelected }) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
 
@@ -17,18 +18,21 @@ export default function MissionCard({ category, title, progress, missionId, onVi
 
   return (
     <Paper
-      elevation={2}
+      elevation={isSelected ? 6 : 2}
       sx={{
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        border: "1px solid #d3d3d3",
+        border: isSelected ? "2px solid #12447f" : "1px solid #d3d3d3",
         borderRadius: 1,
         overflow: "hidden",
-        transition: "transform 0.2s ease-in-out",
+        transition: "all 0.2s ease-in-out",
+        transform: isSelected ? "scale(1.02)" : "scale(1)",
+        opacity: isSelected ? 1 : 0.7,
         "&:hover": {
-          transform: "translateY(-4px)",
-          boxShadow: 3,
+          transform: isSelected ? "scale(1.02)" : "translateY(-4px)",
+          boxShadow: isSelected ? 6 : 3,
+          opacity: 1,
         },
       }}
     >
@@ -109,7 +113,7 @@ export default function MissionCard({ category, title, progress, missionId, onVi
             }}
             onClick={() => onViewMap(missionId)}
           >
-            Ver no mapa
+            {isSelected ? 'Mostrando no mapa' : 'Ver no mapa'}
           </Button>
         </Box>
       </Box>
@@ -122,6 +126,15 @@ MissionCard.propTypes = {
   title: PropTypes.string.isRequired,
   progress: PropTypes.string.isRequired,
   missionId: PropTypes.string.isRequired,
-  onViewMap: PropTypes.func.isRequired
+  onViewMap: PropTypes.func.isRequired,
+  isSelected: PropTypes.bool
 }
+
+MissionCard.defaultProps = {
+  isSelected: false
+}
+
+export default React.memo(MissionCard, (prevProps, nextProps) => {
+  return prevProps.isSelected === nextProps.isSelected && prevProps.progress === nextProps.progress;
+})
 

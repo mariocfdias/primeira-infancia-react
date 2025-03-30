@@ -2,9 +2,23 @@ import { Box, Typography, Paper, useTheme, useMediaQuery } from "@mui/material"
 import { Star } from "@mui/icons-material"
 import PropTypes from 'prop-types'
 
-export default function EmblemCard({ title, iconUrl, stars, color }) {
+export default function EmblemCard({ title, categoryId, stars, color }) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
+  console.log({categoryId})
+  
+  // Extract category ID from iconUrl or title to use the correct icon
+  const getCategoryIcon = (categoryId) => {
+    // Try to extract CTG pattern from iconUrl or title
+
+    // If a valid category ID was found, use the corresponding icon
+    if (categoryId) {
+      return `/icons/${categoryId}.png`
+    }
+    
+    // Fallback to the provided iconUrl or placeholder
+    return "/placeholder.svg"
+  }
 
   return (
     <Box sx={{ textAlign: "center" }}>
@@ -31,7 +45,7 @@ export default function EmblemCard({ title, iconUrl, stars, color }) {
         }}
       >
         <img
-          src={iconUrl || "/placeholder.svg"}
+          src={getCategoryIcon(categoryId)}
           alt={title}
           style={{
             width: "60px",

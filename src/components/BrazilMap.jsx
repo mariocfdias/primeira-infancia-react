@@ -197,6 +197,44 @@ const LeafletMap = ({ municipiosData, geoJsonData, isMobile, missionPanoramaData
   const mapRef = useRef(null)
   const geoJsonRef = useRef(null)
 
+  // Log when LeafletMap receives new mission panorama data
+  useEffect(() => {
+    console.log('LeafletMap received updated missionPanoramaData:', missionPanoramaData);
+    
+    // Debug function to check missionPanoramaData structure
+    if (missionPanoramaData) {
+      console.log('Mission panorama data structure check:');
+      console.log('Has completedMunicipios?', !!missionPanoramaData.completedMunicipios);
+      console.log('Has startedMunicipios?', !!missionPanoramaData.startedMunicipios);
+      console.log('Has pendingMunicipios?', !!missionPanoramaData.pendingMunicipios);
+      
+      // Log the structure of the first item in each array if they exist
+      if (missionPanoramaData.completedMunicipios?.length > 0) {
+        console.log('Sample completedMunicipios item:', missionPanoramaData.completedMunicipios[0]);
+      }
+      if (missionPanoramaData.startedMunicipios?.length > 0) {
+        console.log('Sample startedMunicipios item:', missionPanoramaData.startedMunicipios[0]);
+      }
+      if (missionPanoramaData.pendingMunicipios?.length > 0) {
+        console.log('Sample pendingMunicipios item:', missionPanoramaData.pendingMunicipios[0]);
+      }
+      
+      // Check if they have a codIbge property as expected by the style function
+      const hasCorrectStructure = 
+        (missionPanoramaData.completedMunicipios?.length > 0 && 'codIbge' in missionPanoramaData.completedMunicipios[0]) ||
+        (missionPanoramaData.startedMunicipios?.length > 0 && 'codIbge' in missionPanoramaData.startedMunicipios[0]) ||
+        (missionPanoramaData.pendingMunicipios?.length > 0 && 'codIbge' in missionPanoramaData.pendingMunicipios[0]);
+      
+      console.log('Data has correct structure with codIbge property?', hasCorrectStructure);
+      
+      // If structure doesn't match, log what we received
+      if (!hasCorrectStructure) {
+        console.warn('Mission panorama data structure doesn\'t match what the style function expects!');
+        console.log('Full data received:', missionPanoramaData);
+      }
+    }
+  }, [missionPanoramaData]);
+
   // Style function for the GeoJSON features
   const getFeatureStyle = (feature) => {
     const codIbge = feature.properties.id
@@ -212,19 +250,25 @@ const LeafletMap = ({ municipiosData, geoJsonData, isMobile, missionPanoramaData
     
     // If showing mission panorama, color municipalities based on mission status
     if (missionPanoramaData) {
+      console.log('Mission Panorama Data in style function:', missionPanoramaData);
+      console.log('Checking municipality:', codIbge);
+      
       // Default color for municipalities not in the panorama
       fillColor = "#cccccc"
       
       // Check if the municipality is in completed municipalities
       if (missionPanoramaData.completedMunicipios?.some(m => m.codIbge === codIbge)) {
+        console.log(`Municipality ${codIbge} has completed the mission`);
         fillColor = "#12447F" // Blue for completed missions
       } 
       // Check if the municipality is in started municipalities
       else if (missionPanoramaData.startedMunicipios?.some(m => m.codIbge === codIbge)) {
+        console.log(`Municipality ${codIbge} has started the mission`);
         fillColor = "#72C576" // Light green for started missions
       } 
       // Check if the municipality is in pending municipalities
       else if (missionPanoramaData.pendingMunicipios?.some(m => m.codIbge === codIbge)) {
+        console.log(`Municipality ${codIbge} has the mission pending`);
         fillColor = "#9F9F9F" // Gray for pending missions
       }
     }
@@ -311,21 +355,12 @@ const LeafletMap = ({ municipiosData, geoJsonData, isMobile, missionPanoramaData
     // Add click handler to select a municipality
     layer.on({
       click: () => {
-        if (onMunicipioSelect && municipio) {
-          onMunicipioSelect(municipio.codIbge);
+        if (onMunicipioSelect) {
+          // Use the codIbge directly from feature properties
+          // This allows selection of all municipalities, even if not in municipiosData
+          onMunicipioSelect(codIbge);
           
-          // Zoom to the clicked municipality
-          if (mapRef.current) {
-            try {
-              mapRef.current.fitBounds(layer.getBounds(), {
-                padding: [30, 30],
-                maxZoom: 9,
-                animate: true
-              });
-            } catch (error) {
-              console.error("Error focusing on municipality:", error);
-            }
-          }
+          // Remove zoom to clicked municipality functionality
         }
       }
     });
@@ -334,49 +369,27 @@ const LeafletMap = ({ municipiosData, geoJsonData, isMobile, missionPanoramaData
   // Refresh GeoJSON when selected municipality changes
   useEffect(() => {
     if (geoJsonRef.current) {
+      console.log('Refreshing GeoJSON styles for municipality selection');
       geoJsonRef.current.setStyle(getFeatureStyle);
       
-      // If there's a selected municipality, find and zoom to its layer
-      if (selectedMunicipioCode && mapRef.current) {
-        let selectedLayer = null;
-        
-        geoJsonRef.current.eachLayer((layer) => {
-          const codIbge = layer.feature.properties.id;
-          if (codIbge === selectedMunicipioCode) {
-            selectedLayer = layer;
-          }
-        });
-        
-        if (selectedLayer) {
-          try {
-            mapRef.current.fitBounds(selectedLayer.getBounds(), {
-              padding: [30, 30],
-              maxZoom: 9,
-              animate: true
-            });
-          } catch (error) {
-            console.error("Error focusing on selected municipality:", error);
-          }
-        }
-      }
+      // Remove zoom to selected municipality functionality
     }
   }, [selectedMunicipioCode]);
+
+  // This effect ensures GeoJSON is redrawn when mission data changes
+  useEffect(() => {
+    if (geoJsonRef.current && missionPanoramaData) {
+      console.log('Mission panorama data changed - refreshing map styles');
+      // Explicitly redraw everything with a new style function to ensure closure variables are updated
+      geoJsonRef.current.setStyle(feature => getFeatureStyle(feature));
+    }
+  }, [missionPanoramaData, municipiosData, selectedMunicipioCode]);
 
   // Fit map to GeoJSON bounds when data is loaded or screen size changes
   useEffect(() => {
     if (!geoJsonRef.current || !mapRef.current) return;
 
-    try {
-      const bounds = geoJsonRef.current.getBounds();
-      mapRef.current.fitBounds(bounds, {
-        padding: [20, 20],
-        maxZoom: 10,
-        animate: true
-      });
-    } catch (error) {
-      console.error("Error fitting bounds:", error);
-      // Fallback to default center and zoom if bounds calculation fails
-    }
+    // Remove fit bounds functionality 
   }, [geoJsonData, isMobile]);
 
   return (
@@ -399,16 +412,19 @@ const LeafletMap = ({ municipiosData, geoJsonData, isMobile, missionPanoramaData
         style={{ width: "100%", height: "100%" }}
         attributionControl={false}
         ref={mapRef}
-        zoomControl={true}
-        dragging={true}
-        touchZoom={true}
-        doubleClickZoom={true}
-        scrollWheelZoom={true}
-        boxZoom={true}
-        keyboard={true}
+        zoomControl={false}
+        dragging={false}
+        touchZoom={false}
+        doubleClickZoom={false}
+        scrollWheelZoom={false}
+        boxZoom={false}
+        keyboard={false}
       >
         <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          subdomains={['a', 'b', 'c', 'd']}
+          opacity={0.5}
+          crossOrigin={true}
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         {geoJsonData && municipiosData.length > 0 && (
@@ -434,6 +450,11 @@ export default function BrazilMap({ missionPanoramaData, selectedMunicipio, onMu
   const [geoJsonData, setGeoJsonData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [hasWindow, setHasWindow] = useState(false)
+
+  // Log mission panorama data when it changes
+  useEffect(() => {
+    console.log('BrazilMap received missionPanoramaData:', missionPanoramaData);
+  }, [missionPanoramaData]);
 
   // Check if window is available
   useEffect(() => {

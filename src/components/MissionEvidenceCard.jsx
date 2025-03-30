@@ -1,9 +1,10 @@
-import { Box, Typography, Paper, Button, Chip, Grid, Divider, useTheme, useMediaQuery } from "@mui/material"
+import { Box, Typography, Paper, Button, Chip, Grid, Divider, useTheme, useMediaQuery, Tooltip } from "@mui/material"
 import { CheckCircle, OpenInNew, Info } from "@mui/icons-material"
 import PropTypes from 'prop-types'
 
 export default function MissionEvidenceCard({
   category,
+  categoryId,
   title,
   status,
   points,
@@ -14,6 +15,17 @@ export default function MissionEvidenceCard({
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
 
+  const getCategoryIcon = (categoryId) => {
+    // Try to extract CTG pattern from iconUrl or title
+
+    // If a valid category ID was found, use the corresponding icon
+    if (categoryId) {
+      return `/icons/${categoryId}.png`
+    }
+    
+    // Fallback to the provided iconUrl or placeholder
+    return "/placeholder.svg"
+  }
   const getCategoryColor = (category) => {
     if (category.includes("AMPLIAÇÃO")) return "#1c434f"
     if (category.includes("FORTALECIMENTO")) return "#27884a"
@@ -112,7 +124,7 @@ export default function MissionEvidenceCard({
             }}
           >
             <img
-              src={iconUrl || "/placeholder.svg"}
+              src={getCategoryIcon(categoryId)}
               alt="Mission icon"
               style={{
                 width: "100%",
@@ -196,9 +208,13 @@ export default function MissionEvidenceCard({
                   {item.id}. {item.title}
                 </Typography>
                 {item.status === "pending" ? (
-                  <Info sx={{ color: "#12447f", fontSize: { xs: "0.9rem", sm: "1rem" }, ml: "auto" }} />
+                  <Tooltip title={item.description || "Clique para ver detalhes da evidência"} arrow placement="top">
+                    <Info sx={{ color: "#12447f", fontSize: { xs: "0.9rem", sm: "1rem" }, ml: "auto", cursor: "pointer" }} />
+                  </Tooltip>
                 ) : (
-                  <OpenInNew sx={{ color: "#12447f", fontSize: { xs: "0.9rem", sm: "1rem" }, ml: "auto" }} />
+                  <Tooltip title={item.description || "Clique para ver detalhes da evidência"} arrow placement="top">
+                    <OpenInNew sx={{ color: "#12447f", fontSize: { xs: "0.9rem", sm: "1rem" }, ml: "auto", cursor: "pointer" }} />
+                  </Tooltip>
                 )}
               </Box>
             </Grid>
@@ -238,7 +254,8 @@ MissionEvidenceCard.propTypes = {
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       title: PropTypes.string.isRequired,
-      status: PropTypes.oneOf(['pending', 'completed']).isRequired
+      status: PropTypes.oneOf(['pending', 'completed']).isRequired,
+      description: PropTypes.string
     })
   ).isRequired,
   viewOnly: PropTypes.bool

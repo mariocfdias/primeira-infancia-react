@@ -1,34 +1,140 @@
-import { Box, Typography, Container, Paper, Grid, Button, LinearProgress, useMediaQuery, useTheme } from "@mui/material"
+import { Box, Typography, Container, Paper, Grid, Button, LinearProgress, useMediaQuery, useTheme, CircularProgress } from "@mui/material"
 import { ArrowBack, Star, KeyboardArrowUp } from "@mui/icons-material"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
+import { useState, useEffect } from "react"
 import MissionEvidenceCard from "../components/MissionEvidenceCard"
 import EmblemCard from "../components/EmblemCard"
+import { services } from "../api"
 
-export default function MunicipioCanindePage() {
+export default function MunicipioPage({ onBack, ibge }) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
-
-  // Static data for the municipality
-  const municipio = {
-    id: "caninde",
-    nome: "Canindé",
-    subtitulo: "Agentes de Transformação",
-    nivel: 1,
-    progresso: 75,
-    total: 100,
-    pontos: 123,
-    emblemas: 5,
-    logo: "/placeholder.svg?height=200&width=200",
+  console.log({ibge})
+  
+  const [loading, setLoading] = useState(true)
+  const [municipioData, setMunicipioData] = useState(null)
+  const [error, setError] = useState(null)
+  
+  useEffect(() => {
+    const fetchMunicipioData = async () => {
+      try {
+        setLoading(true)
+        const response = await services.municipiosService.getMunicipioByIbge(ibge)
+        // The response is already processed by axios interceptor, no need to use response.data
+        setMunicipioData(response.data)
+        setLoading(false)
+      } catch (err) {
+        console.error("Error fetching municipality data:", err)
+        setError(err.message || "Erro ao carregar dados do município")
+        setLoading(false)
+      }
+    }
+    
+    if (ibge) {
+      fetchMunicipioData()
+    }
+  }, [ibge])
+  
+  // Add debug information
+  console.log("Loading:", loading)
+  console.log("Error:", error)
+  console.log("Municipality data:", municipioData)
+  
+  if (loading) {
+    return (
+      <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh" }}>
+        <CircularProgress />
+      </Container>
+    )
+  }
+  
+  if (error) {
+    return (
+      <Container>
+        <Typography color="error" variant="h6">
+          Erro ao carregar dados: {error}
+        </Typography>
+        <Button
+          onClick={onBack}
+          startIcon={<ArrowBack />}
+          variant="contained"
+          sx={{
+            mt: 2,
+            bgcolor: "#12447f",
+            "&:hover": {
+              bgcolor: "#0d3666",
+            },
+            textTransform: "none",
+          }}
+        >
+          Voltar para o mapa
+        </Button>
+      </Container>
+    )
+  }
+  
+  // Handle case where data is missing
+  if (!municipioData) {
+    return (
+      <Container>
+        <Typography color="error" variant="h6">
+          Nenhum dado encontrado para este município
+        </Typography>
+        <Button
+          onClick={onBack}
+          startIcon={<ArrowBack />}
+          variant="contained"
+          sx={{
+            mt: 2,
+            bgcolor: "#12447f",
+            "&:hover": {
+              bgcolor: "#0d3666",
+            },
+            textTransform: "none",
+          }}
+        >
+          Voltar para o mapa
+        </Button>
+      </Container>
+    )
   }
 
+  // Group desempenhos by categoria
+  const categorias = municipioData?.desempenhos?.reduce((acc, desempenho) => {
+    const categoria = desempenho.missao.categoria
+    if (!acc[categoria]) {
+      acc[categoria] = {
+        id: categoria,
+        nome: desempenho.missao.descricao_da_categoria,
+        emblema: desempenho.missao.emblema_da_categoria,
+        missoes: []
+      }
+    }
+    acc[categoria].missoes.push(desempenho)
+    return acc
+  }, {}) || {}
+
+  // Calculate total points and progress
+  const totalPointsAvailable = municipioData?.desempenhos?.reduce((total, desempenho) => 
+    total + parseInt(desempenho.missao.qnt_pontos), 0) || 0
+    
+  const earnedPoints = municipioData?.desempenhos?.reduce((total, desempenho) => 
+    desempenho.validation_status === "VALID" ? total + parseInt(desempenho.missao.qnt_pontos) : total, 0) || 0
+  
+  // Calculate number of emblems earned (categories with all missions completed)
+  const categoriasList = Object.values(categorias)
+  const emblemCount = categoriasList.reduce((count, categoria) => {
+    const allComplete = categoria.missoes.every(missao => missao.validation_status === "VALID")
+    return allComplete ? count + 1 : count
+  }, 0)
+
   return (
-    <Container maxWidth="lg" sx={{ py: { xs: 2, sm: 3, md: 4 } }}>
+    <Container maxWidth={false} sx={{ py: { xs: 2, sm: 3, md: 4 }, width: '100%' }}>
       <Grid container spacing={4}>
         {/* Left Column */}
         <Grid item xs={12} md={5} lg={4}>
           <Button
-            component={Link}
-            to="/"
+            onClick={onBack}
             startIcon={<ArrowBack />}
             variant="contained"
             sx={{
@@ -60,8 +166,8 @@ export default function MunicipioCanindePage() {
                 }}
               >
                 <img
-                  src={municipio.logo || "/placeholder.svg"}
-                  alt={municipio.nome}
+                  src={municipioData.imagemAvatar || "/placeholder.svg"}
+                  alt={municipioData.nome}
                   style={{
                     width: "100%",
                     height: "100%",
@@ -79,7 +185,7 @@ export default function MunicipioCanindePage() {
                     fontSize: { xs: "1.5rem", sm: "1.75rem" },
                   }}
                 >
-                  {municipio.nome}
+                  {municipioData.nome}
                 </Typography>
                 <Typography
                   variant="body1"
@@ -89,7 +195,7 @@ export default function MunicipioCanindePage() {
                     mb: 1,
                   }}
                 >
-                  {municipio.subtitulo}
+                  {municipioData.status || "Participante"}
                 </Typography>
                 <Typography
                   variant="body1"
@@ -101,7 +207,7 @@ export default function MunicipioCanindePage() {
                     alignItems: "center",
                   }}
                 >
-                  Nível {municipio.nivel}
+                  Nível {Math.floor(earnedPoints / 50) + 1 || 1}
                 </Typography>
               </Box>
             </Box>
@@ -115,7 +221,7 @@ export default function MunicipioCanindePage() {
                     fontSize: { xs: "0.75rem", sm: "0.875rem" },
                   }}
                 >
-                  {municipio.progresso}/{municipio.total}
+                  {earnedPoints}/{totalPointsAvailable}
                 </Typography>
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   <Star sx={{ color: "#f5d664", fontSize: { xs: "1rem", sm: "1.25rem" } }} />
@@ -123,7 +229,7 @@ export default function MunicipioCanindePage() {
               </Box>
               <LinearProgress
                 variant="determinate"
-                value={(municipio.progresso / municipio.total) * 100}
+                value={totalPointsAvailable > 0 ? (earnedPoints / totalPointsAvailable) * 100 : 0}
                 sx={{
                   height: 10,
                   borderRadius: 5,
@@ -158,7 +264,7 @@ export default function MunicipioCanindePage() {
                     fontSize: { xs: "1.25rem", sm: "1.5rem" },
                   }}
                 >
-                  {municipio.pontos}
+                  {earnedPoints}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -181,7 +287,7 @@ export default function MunicipioCanindePage() {
                     fontSize: { xs: "1.25rem", sm: "1.5rem" },
                   }}
                 >
-                  {municipio.emblemas}
+                  {emblemCount}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -221,30 +327,28 @@ export default function MunicipioCanindePage() {
           </Typography>
 
           <Grid container spacing={2}>
-            <Grid item xs={4}>
-              <EmblemCard
-                title="Ampliação e Qualificação dos Serviços"
-                iconUrl="/placeholder.svg?height=60&width=60"
-                stars={0}
-                color="#1c434f"
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <EmblemCard
-                title="Fortalecimento da Governança"
-                iconUrl="/placeholder.svg?height=60&width=60"
-                stars={2}
-                color="#27884a"
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <EmblemCard
-                title="Melhoria da Gestão de Recursos"
-                iconUrl="/placeholder.svg?height=60&width=60"
-                stars={0}
-                color="#3f6087"
-              />
-            </Grid>
+            {categoriasList.map((categoria, index) => {
+              const allComplete = categoria.missoes.every(missao => missao.validation_status === "VALID")
+              const stars = allComplete ? 3 : categoria.missoes.filter(missao => missao.validation_status === "VALID").length
+              
+              // Define a map of colors for each category
+              const categoryColors = {
+                "CTG1": "#1c434f", // Ampliação e Qualificação dos Serviços
+                "CTG2": "#27884a", // Fortalecimento da Governança
+                "CTG3": "#3f6087", // Melhoria da Gestão de Recursos
+              }
+              
+              return (
+                <Grid item xs={4} key={categoria.id}>
+                  <EmblemCard
+                    title={categoria.nome}
+                    categoryId={categoria.id}
+                    stars={stars}
+                    color={categoryColors[categoria.id] || "#333333"}
+                  />
+                </Grid>
+              )
+            })}
           </Grid>
         </Grid>
 
@@ -274,51 +378,46 @@ export default function MunicipioCanindePage() {
           </Typography>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-            {/* Mission 1 - Not Started */}
-            <MissionEvidenceCard
-              category="FORTALECIMENTO DA GOVERNANÇA"
-              title="Priorizar as ações voltadas para a primeira infância quanto à gestão de políticas e a destinação de recursos."
-              status="not-started"
-              points={25}
-              iconUrl="/placeholder.svg?height=60&width=60"
-              evidenceItems={[
-                { id: 1, title: "Assinatura do Pacto", status: "pending" },
-                { id: 2, title: "Portaria de instituição", status: "pending" },
-                { id: 3, title: "Plano de ação", status: "pending" },
-                { id: 4, title: "Relatórios de execução orçamentária", status: "pending" },
-              ]}
-            />
-
-            {/* Mission 2 - Completed */}
-            <MissionEvidenceCard
-              category="MELHORIA DA GESTÃO DE RECURSOS"
-              title="Priorizar as ações voltadas para a primeira infância quanto à gestão de políticas e a destinação de recursos."
-              status="completed"
-              points={50}
-              iconUrl="/placeholder.svg?height=60&width=60"
-              evidenceItems={[
-                { id: 1, title: "Assinatura do Pacto", status: "completed" },
-                { id: 2, title: "Relatórios de execução orçamentária", status: "completed" },
-                { id: 3, title: "Portaria de instituição", status: "completed" },
-                { id: 4, title: "Plano de ação", status: "completed" },
-              ]}
-              viewOnly={true}
-            />
-
-            {/* Mission 3 - In Progress */}
-            <MissionEvidenceCard
-              category="MELHORIA DA GESTÃO DE RECURSOS"
-              title="Priorizar as ações voltadas para a primeira infância quanto à gestão de políticas e a destinação de recursos."
-              status="in-progress"
-              points={50}
-              iconUrl="/placeholder.svg?height=60&width=60"
-              evidenceItems={[
-                { id: 1, title: "Assinatura do Pacto", status: "pending" },
-                { id: 2, title: "Relatórios de execução orçamentária", status: "completed" },
-                { id: 3, title: "Portaria de instituição", status: "completed" },
-                { id: 4, title: "Plano de ação", status: "completed" },
-              ]}
-            />
+            {/* Map through all missions and render MissionEvidenceCard for each */}
+            {municipioData.desempenhos.map((desempenho) => {
+              // Parse evidence items if they exist
+              let evidenceItems = []
+              if (desempenho.missao.evidencias) {
+                try {
+                  const parsedEvidencias = JSON.parse(desempenho.missao.evidencias)
+                  evidenceItems = parsedEvidencias.map((item, index) => ({
+                    id: index + 1,
+                    title: item.titulo,
+                    description: item.descricao,
+                    status: desempenho.validation_status === "VALID" ? "completed" : "pending"
+                  }))
+                } catch (e) {
+                  console.error("Failed to parse evidencias:", e)
+                }
+              }
+              
+              // Map API status to component status
+              let status = "not-started"
+              if (desempenho.validation_status === "VALID") {
+                status = "completed"
+              } else if (desempenho.validation_status === "STARTED") {
+                status = "in-progress"
+              }
+              
+              return (
+                <MissionEvidenceCard
+                  key={desempenho.missaoId}
+                  category={desempenho.missao.descricao_da_categoria.toUpperCase()}
+                  categoryId={desempenho.missao.categoria}
+                  title={desempenho.missao.descricao_da_missao}
+                  status={status}
+                  points={parseInt(desempenho.missao.qnt_pontos)}
+                  iconUrl={desempenho.missao.emblema_da_categoria || "/placeholder.svg?height=60&width=60"}
+                  evidenceItems={evidenceItems}
+                  viewOnly={desempenho.validation_status === "VALID"}
+                />
+              )
+            })}
           </Box>
 
           <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
