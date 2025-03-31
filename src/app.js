@@ -4,9 +4,10 @@ const { setupRoutes } = require('./routes');
 const { setupSwagger } = require('./swagger');
 const { setupJobs } = require('./jobs');
 const seedMunicipios = require('./service/MunicipioSeed');
+const swaggerJsdoc = require('swagger-jsdoc');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // Job configuration
 const jobConfig = {
@@ -27,6 +28,18 @@ async function startServer() {
 
         await seedMunicipios(connection);
         
+        // Raw JSON endpoint (before Swagger setup to avoid middleware conflict)
+        app.get('/raw-swagger.json', (req, res) => {
+            // Get swagger options from the swagger.js file
+            const options = require('./swagger').options;
+            // Generate the specifications
+            const specs = swaggerJsdoc(options);
+            
+            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.send(JSON.stringify(specs, null, 4));
+        });
+        
         // Setup Swagger documentation
         setupSwagger(app);
         
@@ -39,6 +52,7 @@ async function startServer() {
         app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
             console.log(`Swagger documentation available at http://localhost:${PORT}/api-docs`);
+            console.log(`Raw Swagger JSON available at http://localhost:${PORT}/raw-swagger.json`);
         });
     } catch (error) {
         console.error('Failed to start server:', error);

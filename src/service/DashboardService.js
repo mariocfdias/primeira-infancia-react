@@ -147,6 +147,13 @@ class DashboardService {
         const pointsPerLevel = 100;
         const municipioPoints = [];
         
+        // Count participating prefeituras
+        const totalParticipatingPrefeituras = municipios.filter(m => m.status === 'Participante').length;
+        
+        // Count for percentage of finished missions
+        let totalValidMissions = 0;
+        let totalMissionEntries = 0;
+        
         for (const municipio of municipios) {
             // Get all desempenhos for this municipio
             const desempenhos = await this.municipioDesempenhoRepository.findByIbgeCode(municipio.codIbge);
@@ -155,6 +162,10 @@ class DashboardService {
             const countValid = desempenhos.filter(d => d.validation_status === 'VALID').length;
             const countPending = desempenhos.filter(d => d.validation_status === 'PENDING').length;
             const countStarted = desempenhos.filter(d => d.validation_status === 'STARTED').length;
+            
+            // Add to totals for percentage calculation
+            totalValidMissions += countValid;
+            totalMissionEntries += desempenhos.length;
             
             // Calculate total points from valid missions
             let totalPoints = 0;
@@ -183,6 +194,11 @@ class DashboardService {
             
             mapPanorama.push(panoramaDTO);
         }
+        
+        // Calculate percentage of finished missions
+        const percentageFinishedMissions = totalMissionEntries > 0 
+            ? (totalValidMissions / totalMissionEntries) * 100 
+            : 0;
         
         // Inicializa a distribuição de níveis com grupos especiais
         const levelDistribution = [
@@ -253,7 +269,9 @@ class DashboardService {
         
         return {
             mapPanorama,
-            desempenho: desempenhoPanorama
+            desempenho: desempenhoPanorama,
+            totalParticipatingPrefeituras,
+            percentageFinishedMissions
         };
     }
 

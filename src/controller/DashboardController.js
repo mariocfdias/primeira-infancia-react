@@ -132,6 +132,13 @@ class DashboardController {
      *                                 type: integer
      *                         totalMunicipios:
      *                           type: integer
+     *                     totalParticipatingPrefeituras:
+     *                       type: integer
+     *                       description: Número de prefeituras participantes no pacto
+     *                     percentageFinishedMissions:
+     *                       type: number
+     *                       format: float
+     *                       description: Porcentagem de missões concluídas (0-100)
      *       500:
      *         description: Erro no servidor
      *         content:

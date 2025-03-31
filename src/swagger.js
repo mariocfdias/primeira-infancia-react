@@ -106,6 +106,80 @@ const options = {
           }
         }
       }
+    },
+    paths: {
+      '/jobs-info': {
+        get: {
+          tags: ['Jobs'],
+          summary: 'Get detailed job information',
+          description: 'Returns detailed information about all jobs including descriptions and schedules',
+          responses: {
+            '200': {
+              description: 'Successful operation',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      status: { type: 'string', enum: ['success'] },
+                      data: {
+                        type: 'object',
+                        additionalProperties: {
+                          type: 'object',
+                          properties: {
+                            description: { type: 'string' },
+                            schedule: { type: 'string' },
+                            url_config_key: { type: 'string' },
+                            function: { type: 'string' }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/docs/jobs': {
+        get: {
+          tags: ['Documentation'],
+          summary: 'Get complete jobs documentation',
+          description: 'Returns comprehensive, formatted JSON documentation about all jobs with execution order and URLs',
+          responses: {
+            '200': {
+              description: 'Successful operation',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      status: { type: 'string', enum: ['success'] },
+                      data: {
+                        type: 'object',
+                        additionalProperties: {
+                          type: 'object',
+                          properties: {
+                            description: { type: 'string' },
+                            schedule: { type: 'string' },
+                            url: { type: 'string' },
+                            function: { type: 'string' },
+                            execution_order: { 
+                              type: ['integer', 'null'],
+                              description: 'Order of execution during startup (null if not part of sequential execution)'
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   apis: ['./src/controller/*.js']
@@ -114,7 +188,15 @@ const options = {
 const specs = swaggerJsdoc(options);
 
 function setupSwagger(app) {
+  // Serve the Swagger UI
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+  
+  // Expose the raw Swagger JSON
+  app.get('/api-docs/swagger.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    // Format the JSON with proper indentation (4 spaces)
+    res.send(JSON.stringify(specs, null, 4));
+  });
 }
 
-module.exports = { setupSwagger }; 
+module.exports = { setupSwagger, options }; 

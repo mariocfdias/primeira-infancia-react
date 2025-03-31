@@ -54,10 +54,15 @@ class MunicipioDesempenhoRepository {
     }
 
     async findByIbgeCodeAndMissaoId(codIbge, missaoId) {
-        return await this.repository.findOne({
-            where: { codIbge, missaoId },
-            relations: ["municipio", "missao"]
-        });
+        const result = await this.repository
+            .createQueryBuilder("desempenho")
+            .leftJoinAndSelect("desempenho.municipio", "municipio")
+            .leftJoinAndSelect("desempenho.missao", "missao")
+            .where("desempenho.codIbge = :codIbge", { codIbge })
+            .andWhere("desempenho.missaoId = :missaoId", { missaoId })
+            .getOne();
+                    
+        return result;
     }
 }
 

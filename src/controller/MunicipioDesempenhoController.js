@@ -615,9 +615,12 @@ class MunicipioDesempenhoController {
     async getDesempenhoByIbgeCodeAndMissaoId(req, res) {
         try {
             const { codIbge, missaoId } = req.params;
+            console.log(`Fetching desempenho for codIbge ${codIbge} and missaoId ${missaoId}`);
             const desempenho = await this.municipioDesempenhoService.findByIbgeCodeAndMissaoId(codIbge, missaoId);
+            console.log('Found desempenho:', JSON.stringify(desempenho));
             return res.json({ status: 'success', data: desempenho });
         } catch (error) {
+            console.error('Error fetching desempenho:', error.message);
             if (error.message.includes('not found')) {
                 return res.status(404).json({ status: 'error', message: error.message });
             }

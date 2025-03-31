@@ -24,39 +24,39 @@ function setupJobs(connection, config) {
     console.log('Setting up scheduled jobs...');
 
     // Run fetchMunicipios job every 5 minutes
-    cron.schedule('*/5 * * * *', () => {
-        fetchMunicipios(connection, FETCH_MUNICIPIOS_URL);
-    });
-
-    // // Run autofetch job every 5 minutes
-    cron.schedule('*/5 * * * *', () => {
-        autofetch(AUTOFETCH_URL);
-    });
-    
-    // // Run updateJsonMunicipio job every 5 minutes
     // cron.schedule('*/5 * * * *', () => {
-    //     updateJsonMunicipio(connection, UPDATE_JSON_URL);
+    //     fetchMunicipios(connection, FETCH_MUNICIPIOS_URL);
+    // });
+
+    // // // Run autofetch job every 5 minutes
+    // cron.schedule('*/5 * * * *', () => {
+    //     autofetch(AUTOFETCH_URL);
     // });
     
-    // Run fetchEventos job every minute
-    cron.schedule('* * * * *', () => {
-        fetchEventos(connection, FETCH_EVENTOS_URL);
-    });
+    // // // Run updateJsonMunicipio job every 5 minutes
+    // // cron.schedule('*/5 * * * *', () => {
+    // //     updateJsonMunicipio(connection, UPDATE_JSON_URL);
+    // // });
+    
+    // // Run fetchEventos job every minute
+    // cron.schedule('* * * * *', () => {
+    //     fetchEventos(connection, FETCH_EVENTOS_URL);
+    // });
 
-    // Run fetchMissoes job every hour
-    cron.schedule('0 * * * *', () => {
-        fetchMissoes(connection, FETCH_MISSOES_URL);
-    });
+    // // Run fetchMissoes job every hour
+    // cron.schedule('0 * * * *', () => {
+    //     fetchMissoes(connection, FETCH_MISSOES_URL);
+    // });
 
-    // Run fetchMissaoDesempenho job every hour
-    cron.schedule('0 * * * *', () => {
-        fetchMissaoDesempenho(connection, FETCH_MISSAO_DESEMPENHO_URL);
-    });
+    // // Run fetchMissaoDesempenho job every hour
+    // cron.schedule('0 * * * *', () => {
+    //     fetchMissaoDesempenho(connection, FETCH_MISSAO_DESEMPENHO_URL);
+    // });
 
-    // Run the jobs immediately on startup
-    runJobsImmediately(connection, config).catch(err => {
-        console.error('Error running startup jobs:', err);
-    });
+    // // Run the jobs immediately on startup
+    // runJobsImmediately(connection, config).catch(err => {
+    //     console.error('Error running startup jobs:', err);
+    // });
 }
 
 /**
