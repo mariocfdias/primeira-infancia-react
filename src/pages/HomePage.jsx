@@ -47,8 +47,7 @@ export default function HomePage() {
   const { 
     makeRequest: makeRequestMunicipio, 
     loading: loadingMunicipio, 
-    data: municipioData,
-    setData: setMunicipioData
+    data: municipioData
   } = useApiRequest()
   const { 
     makeRequest: makeRequestMissionPanorama, 
@@ -202,10 +201,13 @@ export default function HomePage() {
         }
       }
       
-      // If there's a selected municipality, we don't need to refetch - just ensure the view is updated
-      if (selectedMunicipio && selectedMunicipio !== "all" && selectedMunicipio !== "" && municipioData) {
-        // Use existing data, just trigger a re-render of MunicipioPreview by creating a shallow copy
-        setMunicipioData({...municipioData});
+      // If there's a selected municipality, we need to refetch its data to update mission-specific information
+      if (selectedMunicipio && selectedMunicipio !== "all" && selectedMunicipio !== "") {
+        if (selectedMunicipio.codIbge) {
+          const codIbge = selectedMunicipio.codIbge;
+          // Refetch municipality data to get updated mission status
+          makeRequestMunicipio(() => services.municipiosService.getMunicipioByIbge(codIbge));
+        }
       }
     } catch (error) {
       console.error("Error fetching mission panorama by ID:", error);
@@ -234,12 +236,15 @@ export default function HomePage() {
       // Check if we already have this municipality in cache
       if (municipioCache[codIbge]) {
         console.log('Using cached municipality data for:', codIbge);
-        setMunicipioData(municipioCache[codIbge]);
-        return;
+        // Just reuse the existing municipality data through the normal API flow
+        // First, store the cached data back into the municipioCache to ensure it's available
+        setMunicipioCache(prev => ({...prev, [codIbge]: municipioCache[codIbge]}));
+        // Then, force a refetch to update the municipioData state through the API mechanism
+        makeRequestMunicipio(() => services.municipiosService.getMunicipioByIbge(codIbge));
+      } else {
+        // Fetch the selected municipality data if not in cache
+        makeRequestMunicipio(() => services.municipiosService.getMunicipioByIbge(codIbge));
       }
-      
-      // Fetch the selected municipality data if not in cache
-      makeRequestMunicipio(() => services.municipiosService.getMunicipioByIbge(codIbge));
     }
   }
 
@@ -263,18 +268,21 @@ export default function HomePage() {
       // Check if we already have this municipality in cache
       if (municipioCache[codIbge]) {
         console.log('Using cached municipality data for:', codIbge);
-        setMunicipioData(municipioCache[codIbge]);
-        return;
+        // Just reuse the existing municipality data through the normal API flow
+        // First, store the cached data back into the municipioCache to ensure it's available
+        setMunicipioCache(prev => ({...prev, [codIbge]: municipioCache[codIbge]}));
+        // Then, force a refetch to update the municipioData state through the API mechanism
+        makeRequestMunicipio(() => services.municipiosService.getMunicipioByIbge(codIbge));
+      } else {
+        // Fetch the selected municipality data if not in cache
+        makeRequestMunicipio(() => services.municipiosService.getMunicipioByIbge(codIbge))
+          .then(response => {
+            if (response && response.status === 'success') {
+              // Store in cache for future use
+              setMunicipioCache(prev => ({...prev, [codIbge]: response}));
+            }
+          });
       }
-      
-      // Fetch the selected municipality data if not in cache
-      makeRequestMunicipio(() => services.municipiosService.getMunicipioByIbge(codIbge))
-        .then(response => {
-          if (response && response.status === 'success') {
-            // Store in cache for future use
-            setMunicipioCache(prev => ({...prev, [codIbge]: response}));
-          }
-        });
     } else {
       // Create a basic object for municipalities not in our list
       const basicMunicipio = {
@@ -580,11 +588,11 @@ export default function HomePage() {
             {/* Municipality Details */}
             <Grid item xs={12} md={4}>
               {selectedMissao && (
-                <Box sx={{ p: 2, border: "1px solid #d3d3d3", borderRadius: 1, mb: 2 }}>
+                <Box sx={{ p: 2, border: "1px solid #d3d3d3", borderRadius: 1, mb: 2, backgroundColor: "#F2F2F2" }}>
                   <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
                     Visualizando missão no mapa
                   </Typography>
-                  <Typography variant="body2" sx={{ mb: 2 }}>
+                  <Typography variant="body2" fontWeight={"400"} fontSize={"20px"} sx={{ mb: 2 }}>
                     {missoes.find(m => m.id === selectedMissao)?.descricao_da_missao || "Missão selecionada"}
                   </Typography>
                   <Button
@@ -660,7 +668,7 @@ export default function HomePage() {
                 )}
               </Box>
               
-              {selectedMunicipio && memoizedMunicipioPreview}
+              {memoizedMunicipioPreview}
             </Grid>
           </Grid>
     
@@ -732,7 +740,7 @@ export default function HomePage() {
             missão.
           </Typography>
     
-          <Grid container spacing={2} sx={{ mb: { xs: 4, sm: 6 } }}>
+          <Grid container spacing={4} sx={{ mb: { xs: 4, sm: 6 } }}>
             {missionCardsGrid}
           </Grid>
     

@@ -13,6 +13,40 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png"
 });
 
+// Legend Description component
+const LegendDescription = ({ backgroundColor, color, description, number, title }) => {
+  return (
+    <Box sx={{ display: "flex", alignItems: "flex-start" }}>
+      <Box
+        sx={{
+          width: 30,
+          height: 30,
+          bgcolor: backgroundColor,
+          color: color || "white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "0.7rem",
+          mr: 1,
+          border: backgroundColor === "white" ? "1px solid #d3d3d3" : "none",
+        }}
+      >
+        {number}
+      </Box>
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
+        {title && (
+          <Typography variant="body2" sx={{ fontSize: "1rem", fontWeight: "medium", lineHeight: 1.2 }}>
+            {title}
+          </Typography>
+        )}
+        <Typography variant="body2" sx={{ fontSize: "0.85rem", lineHeight: 1.2 }}>
+          {description}
+        </Typography>
+      </Box>
+    </Box>
+  );
+};
+
 // Map Legend component for non-mobile
 const MapLegendInternal = ({ selectedMissao }) => {
   return (
@@ -27,8 +61,8 @@ const MapLegendInternal = ({ selectedMissao }) => {
         width: "250px",
         border: "1px solid #d3d3d3",
         borderRadius: 1,
-        bgcolor: "rgba(255, 255, 255, 0.9)",
-        fontSize: "0.85rem",
+        bgcolor: "rgba(255, 255, 255, 1)",
+        fontSize: "1rem",
       }}
     >
       <Typography
@@ -36,157 +70,63 @@ const MapLegendInternal = ({ selectedMissao }) => {
         sx={{
           fontWeight: "medium",
           mb: 1,
-          fontSize: "0.875rem",
+          fontSize: "1rem",
         }}
       >
         {selectedMissao ? "Legenda de Missão" : "Legenda"}
       </Typography>
       
       {selectedMissao ? (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: 16,
-                height: 16,
-                bgcolor: "#12447F",
-                mr: 1,
-              }}
-            />
-            <Typography variant="body2" sx={{ fontSize: "0.75rem" }}>
-              Missão Concluída
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: 16,
-                height: 16,
-                bgcolor: "#72C576",
-                mr: 1,
-              }}
-            />
-            <Typography variant="body2" sx={{ fontSize: "0.75rem" }}>
-              Missão em Andamento
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: 16,
-                height: 16,
-                bgcolor: "#9F9F9F",
-                mr: 1,
-              }}
-            />
-            <Typography variant="body2" sx={{ fontSize: "0.75rem" }}>
-              Missão Pendente
-            </Typography>
-          </Box>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+          <LegendDescription 
+            backgroundColor="#12447F"
+            title="Concluída"
+            description="Todas etapas foram finalizadas"
+          />
+          <LegendDescription 
+            backgroundColor="#72C576"
+            title="Em Andamento"
+            description="Missão está em progresso"
+          />
+          <LegendDescription 
+            backgroundColor="#9F9F9F"
+            title="Pendente"
+            description="Missão ainda não iniciada"
+          />
         </Box>
       ) : (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: 16,
-                height: 16,
-                bgcolor: "#707070",
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.6rem",
-                mr: 1,
-              }}
-            >
-              89
-            </Box>
-            <Typography variant="body2" sx={{ fontSize: "0.75rem" }}>
-              Não iniciado
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: 16,
-                height: 16,
-                bgcolor: "#50B755",
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.6rem",
-                mr: 1,
-              }}
-            >
-              135
-            </Box>
-            <Typography variant="body2" sx={{ fontSize: "0.75rem" }}>
-              Nível 1 (1-100 pts)
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: 16,
-                height: 16,
-                bgcolor: "#066829",
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.6rem",
-                mr: 1,
-              }}
-            >
-              30
-            </Box>
-            <Typography variant="body2" sx={{ fontSize: "0.75rem" }}>
-              Nível 2 (101-199 pts)
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: 16,
-                height: 16,
-                bgcolor: "#12447f",
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.6rem",
-                mr: 1,
-              }}
-            >
-              2
-            </Box>
-            <Typography variant="body2" sx={{ fontSize: "0.75rem" }}>
-              Concluído (200+ pts)
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: 16,
-                height: 16,
-                bgcolor: "white",
-                border: "1px solid #d3d3d3",
-                color: "#525252",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.6rem",
-                mr: 1,
-              }}
-            >
-              10
-            </Box>
-            <Typography variant="body2" sx={{ fontSize: "0.75rem" }}>
-              Não aderiu
-            </Typography>
-          </Box>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+          <LegendDescription 
+            backgroundColor="#707070"
+            title="Não iniciado"
+            description="Município sem pontos"
+            number="89"
+          />
+          <LegendDescription 
+            backgroundColor="#50B755"
+            title="Nível 1"
+            description="Entre 1 e 100 pontos"
+            number="135"
+          />
+          <LegendDescription 
+            backgroundColor="#066829"
+            title="Nível 2"
+            description="Entre 101 e 199 pontos"
+            number="30"
+          />
+          <LegendDescription 
+            backgroundColor="#12447f"
+            title="Concluído"
+            description="200 pontos ou mais"
+            number="2"
+          />
+          <LegendDescription 
+            backgroundColor="white"
+            color="#525252"
+            title="Não aderiu"
+            description="Município não participante"
+            number="10"
+          />
         </Box>
       )}
     </Paper>
@@ -250,25 +190,20 @@ const LeafletMap = ({ municipiosData, geoJsonData, isMobile, missionPanoramaData
     
     // If showing mission panorama, color municipalities based on mission status
     if (missionPanoramaData) {
-      console.log('Mission Panorama Data in style function:', missionPanoramaData);
-      console.log('Checking municipality:', codIbge);
       
       // Default color for municipalities not in the panorama
       fillColor = "#cccccc"
       
       // Check if the municipality is in completed municipalities
       if (missionPanoramaData.completedMunicipios?.some(m => m.codIbge === codIbge)) {
-        console.log(`Municipality ${codIbge} has completed the mission`);
         fillColor = "#12447F" // Blue for completed missions
       } 
       // Check if the municipality is in started municipalities
       else if (missionPanoramaData.startedMunicipios?.some(m => m.codIbge === codIbge)) {
-        console.log(`Municipality ${codIbge} has started the mission`);
         fillColor = "#72C576" // Light green for started missions
       } 
       // Check if the municipality is in pending municipalities
       else if (missionPanoramaData.pendingMunicipios?.some(m => m.codIbge === codIbge)) {
-        console.log(`Municipality ${codIbge} has the mission pending`);
         fillColor = "#9F9F9F" // Gray for pending missions
       }
     }

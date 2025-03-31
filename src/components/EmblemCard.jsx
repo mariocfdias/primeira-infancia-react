@@ -1,5 +1,4 @@
 import { Box, Typography, Paper, useTheme, useMediaQuery } from "@mui/material"
-import { Star } from "@mui/icons-material"
 import PropTypes from 'prop-types'
 
 export default function EmblemCard({ title, categoryId, stars, color }) {
@@ -22,8 +21,7 @@ export default function EmblemCard({ title, categoryId, stars, color }) {
 
   return (
     <Box sx={{ textAlign: "center" }}>
-      <Paper
-        elevation={stars > 0 ? 3 : 1}
+      <Box
         sx={{
           width: "100%",
           aspectRatio: "1/1",
@@ -34,11 +32,9 @@ export default function EmblemCard({ title, categoryId, stars, color }) {
           p: 1,
           position: "relative",
           mb: 1,
-          bgcolor: stars > 0 ? color : "white",
-          border: stars > 0 ? "none" : "1px solid #d3d3d3",
-          borderRadius: "50%",
           overflow: "hidden",
           transition: "transform 0.2s ease-in-out",
+          opacity: stars === 0 ? 0.7 : 1,
           "&:hover": {
             transform: "scale(1.05)",
           },
@@ -48,32 +44,39 @@ export default function EmblemCard({ title, categoryId, stars, color }) {
           src={getCategoryIcon(categoryId)}
           alt={title}
           style={{
-            width: "60px",
-            height: "60px",
+            maxWidth: "80%",
+            maxHeight: "80%",
             objectFit: "contain",
-            filter: stars > 0 ? "brightness(0) invert(1)" : "none",
           }}
         />
-        {stars > 0 && (
+        {stars >= 0 && (
           <Box
             sx={{
-              position: "absolute",
-              bottom: 5,
+              position: "relative",
+              bottom: 30,
+              left: 30,
               display: "flex",
-              gap: 0.25,
+              justifyContent: "center",
+              alignItems: "center",
+              bgcolor: "#213B7B",
+              color: "#FFFFFF",
+              borderRadius: 300,
+              width: { xs: 20, sm: 34 },
+              height: { xs: 20, sm: 34 },
+              fontSize: { xs: "0.75rem", sm: "1rem" },
+              fontWeight: "bold",
             }}
           >
-            {[...Array(stars)].map((_, i) => (
-              <Star key={i} sx={{ color: "#f5d664", fontSize: { xs: "0.75rem", sm: "1rem" } }} />
-            ))}
+            {stars}
           </Box>
         )}
-      </Paper>
+      </Box>
       <Typography
         variant="caption"
         sx={{
           color: "#525252",
-          fontSize: { xs: "0.65rem", sm: "0.7rem" },
+          fontSize: { xs: "0.65rem", sm: "0.7rem", lg: "1rem" },
+          fontWeight: "400",
           display: "block",
           lineHeight: 1.2,
         }}
@@ -86,7 +89,7 @@ export default function EmblemCard({ title, categoryId, stars, color }) {
 
 EmblemCard.propTypes = {
   title: PropTypes.string.isRequired,
-  iconUrl: PropTypes.string.isRequired,
+  categoryId: PropTypes.string.isRequired,
   stars: PropTypes.number.isRequired,
   color: PropTypes.string.isRequired
 }

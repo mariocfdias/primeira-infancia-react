@@ -1,6 +1,7 @@
 import { Box, Typography, Paper, Button, Chip, Grid, Divider, useTheme, useMediaQuery, Tooltip } from "@mui/material"
 import { CheckCircle, OpenInNew, Info } from "@mui/icons-material"
 import PropTypes from 'prop-types'
+import EvidenceItem from './EvidenceItem'
 
 export default function MissionEvidenceCard({
   category,
@@ -27,55 +28,57 @@ export default function MissionEvidenceCard({
     return "/placeholder.svg"
   }
   const getCategoryColor = (category) => {
-    if (category.includes("AMPLIAÇÃO")) return "#1c434f"
-    if (category.includes("FORTALECIMENTO")) return "#27884a"
-    if (category.includes("MELHORIA")) return "#3f6087"
+    if (category.includes("AMPLIAÇÃO")) return "linear-gradient(to right, #1C434F, #0A5166)"
+    if (category.includes("FORTALECIMENTO")) return "linear-gradient(to right, #3D5E85, #5E7DA0)"
+    if (category.includes("MELHORIA")) return "linear-gradient(to right, #256F93, #5B97B5)"
     return "#333333"
   }
 
   const getStatusChip = () => {
-    switch (status) {
-      case "not-started":
-        return (
-          <Chip
-            label="Não iniciada"
-            sx={{
-              bgcolor: "white",
-              border: "1px solid #d3d3d3",
-              fontSize: { xs: "0.65rem", sm: "0.75rem" },
-              height: 24,
-            }}
-          />
-        )
-      case "in-progress":
-        return (
-          <Chip
-            label="Em ação"
-            sx={{
-              bgcolor: "#e7eef8",
-              color: "#12447f",
-              fontSize: { xs: "0.65rem", sm: "0.75rem" },
-              height: 24,
-            }}
-          />
-        )
-      case "completed":
-        return (
-          <Chip
-            icon={<CheckCircle sx={{ fontSize: "1rem !important", color: "white" }} />}
-            label="Missão concluída"
-            sx={{
-              bgcolor: "#50b755",
-              color: "white",
-              fontSize: { xs: "0.65rem", sm: "0.75rem" },
-              height: 24,
-              "& .MuiChip-icon": {
-                color: "white",
-              },
-            }}
-          />
-        )
-    }
+    const statusConfig = {
+      'not-started': {
+        label: 'Não iniciada',
+        style: {
+          bgcolor: 'white',
+          border: '1px solid #d3d3d3',
+          color: '#333333',
+        },
+        icon: null
+      },
+      'in-progress': {
+        label: 'Em ação',
+        style: {
+          bgcolor: '#e7eef8',
+          color: '#12447f',
+        },
+        icon: null
+      },
+      'completed': {
+        label: 'Missão concluída',
+        style: {
+          bgcolor: '#50b755',
+          color: 'white',
+        },
+        icon: <CheckCircle sx={{ fontSize: "1rem !important" }} />
+      }
+    };
+
+    const config = statusConfig[status];
+    
+    return (
+      <Chip
+        icon={config.icon}
+        label={config.label}
+        sx={{
+          ...config.style,
+          fontSize: { xs: "0.65rem", sm: "0.75rem" },
+          height: 24,
+          "& .MuiChip-icon": {
+            color: "white",
+          },
+        }}
+      />
+    );
   }
 
   const getEvidenceInstructions = () => {
@@ -92,25 +95,31 @@ export default function MissionEvidenceCard({
     <Paper
       elevation={2}
       sx={{
+        background: getCategoryColor(category),
+        color: "white",
         border: "1px solid #d3d3d3",
         borderRadius: 1,
-        overflow: "hidden",
       }}
     >
-      <Box
-        sx={{
-          bgcolor: getCategoryColor(category),
-          color: "white",
-          py: 0.5,
-          px: 2,
-          fontSize: { xs: "0.65rem", sm: "0.75rem" },
-          fontWeight: "medium",
-        }}
-      >
-        {category}
-      </Box>
 
-      <Box sx={{ p: { xs: 1.5, sm: 2 } }}>
+      <Chip
+        label={category}
+        sx={{
+          position: "relative",
+          top: -15,
+          left: 15,
+          overflow: "visible",
+          zIndex: 1000,
+          color: "white",
+          fontWeight: "medium",
+          fontSize: { xs: "0.65rem", sm: "0.75rem" },
+          background: getCategoryColor(category),
+          "& .MuiChip-label": {
+            px: 1,
+          }
+        }}
+      />
+      <Box>
         <Box sx={{ display: "flex", alignItems: "flex-start", mb: 2 }}>
           <Box
             sx={{
@@ -137,14 +146,14 @@ export default function MissionEvidenceCard({
             <Typography
               variant="body1"
               sx={{
-                fontWeight: "medium",
-                fontSize: { xs: "0.875rem", sm: "1rem" },
+                fontWeight: "400",
+                fontSize: { xs: "0.875rem", sm: "1.2rem" },
                 mb: 1,
               }}
             >
               {title}
             </Typography>
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 2 }}>
               {getStatusChip()}
               <Typography
                 variant="body2"
@@ -162,7 +171,8 @@ export default function MissionEvidenceCard({
           </Box>
         </Box>
 
-        <Divider sx={{ my: 2 }} />
+        <Divider  />
+        <Box sx={{ backgroundColor: "white", m:0, p:2 }} >
 
         <Typography
           variant="body2"
@@ -185,38 +195,17 @@ export default function MissionEvidenceCard({
           {getEvidenceInstructions()}
         </Typography>
 
-        <Grid container spacing={1} sx={{ mb: status !== "completed" ? 2 : 0 }}>
+        <Grid container spacing={1}  sx={{ mb: status !== "completed" ? 2 : 0 }}>
           {evidenceItems.map((item) => (
             <Grid item xs={12} sm={6} key={item.id}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  p: 1,
-                  border: "1px solid #d3d3d3",
-                  borderRadius: 1,
-                  bgcolor: item.status === "completed" ? "#f3f5ed" : "white",
-                }}
-              >
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontSize: { xs: "0.7rem", sm: "0.8rem" },
-                    mr: 1,
-                  }}
-                >
-                  {item.id}. {item.title}
-                </Typography>
-                {item.status === "pending" ? (
-                  <Tooltip title={item.description || "Clique para ver detalhes da evidência"} arrow placement="top">
-                    <Info sx={{ color: "#12447f", fontSize: { xs: "0.9rem", sm: "1rem" }, ml: "auto", cursor: "pointer" }} />
-                  </Tooltip>
-                ) : (
-                  <Tooltip title={item.description || "Clique para ver detalhes da evidência"} arrow placement="top">
-                    <OpenInNew sx={{ color: "#12447f", fontSize: { xs: "0.9rem", sm: "1rem" }, ml: "auto", cursor: "pointer" }} />
-                  </Tooltip>
-                )}
-              </Box>
+              <EvidenceItem
+                id={item.id}
+                title={item.title}
+                description={item.description}
+                evidence={item.evidence}
+                evidenceLink={item.evidenceLink}
+                status={item.status}
+              />
             </Grid>
           ))}
         </Grid>
@@ -240,6 +229,7 @@ export default function MissionEvidenceCard({
           </Box>
         )}
       </Box>
+      </Box>
     </Paper>
   )
 }
@@ -255,7 +245,9 @@ MissionEvidenceCard.propTypes = {
       id: PropTypes.number.isRequired,
       title: PropTypes.string.isRequired,
       status: PropTypes.oneOf(['pending', 'completed']).isRequired,
-      description: PropTypes.string
+      description: PropTypes.string,
+      evidence: PropTypes.string,
+      evidenceLink: PropTypes.string
     })
   ).isRequired,
   viewOnly: PropTypes.bool

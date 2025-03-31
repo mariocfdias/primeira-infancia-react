@@ -1,4 +1,4 @@
-import { Box, Typography, Paper, Button, LinearProgress, useTheme, useMediaQuery } from "@mui/material"
+import { Box, Typography, Paper, Button, LinearProgress, useTheme, useMediaQuery, Chip } from "@mui/material"
 import { KeyboardArrowDown } from "@mui/icons-material"
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -8,9 +8,9 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
 
   const getCategoryColor = (category) => {
-    if (category.includes("AMPLIAÇÃO")) return "#1c434f"
-    if (category.includes("FORTALECIMENTO")) return "#27884a"
-    if (category.includes("MELHORIA")) return "#3f6087"
+    if (category.includes("AMPLIAÇÃO")) return "linear-gradient(to right, #1C434F, #0A5166)"
+    if (category.includes("FORTALECIMENTO")) return "linear-gradient(to right, #3D5E85, #5E7DA0)"
+    if (category.includes("MELHORIA")) return "linear-gradient(to right, #256F93, #5B97B5)"
     return "#333333"
   }
 
@@ -20,12 +20,12 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
     <Paper
       elevation={isSelected ? 6 : 2}
       sx={{
+        background: getCategoryColor(category),
         height: "100%",
         display: "flex",
         flexDirection: "column",
         border: isSelected ? "2px solid #12447f" : "1px solid #d3d3d3",
         borderRadius: 1,
-        overflow: "hidden",
         transition: "all 0.2s ease-in-out",
         transform: isSelected ? "scale(1.02)" : "scale(1)",
         opacity: isSelected ? 1 : 0.7,
@@ -34,35 +34,44 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
           boxShadow: isSelected ? 6 : 3,
           opacity: 1,
         },
+        position: "relative",
+        pt: 2,
+        overflow: "visible",
+        zIndex: isSelected ? 2 : 1,
+        marginBottom: 1.5,
       }}
     >
-      <Box
+      <Chip
+        label={category}
         sx={{
-          bgcolor: getCategoryColor(category),
+          position: "absolute",
+          top: -12,
+          left: 16,
           color: "white",
-          py: 0.5,
-          px: 1,
-          fontSize: { xs: "0.65rem", sm: "0.75rem" },
           fontWeight: "medium",
+          fontSize: { xs: "0.65rem", sm: "0.75rem" },
+          background: getCategoryColor(category),
+          "& .MuiChip-label": {
+            px: 1,
+          }
         }}
-      >
-        {category}
-      </Box>
-      <Box sx={{ p: { xs: 1.5, sm: 2 }, display: "flex", flexDirection: "column", flex: 1 }}>
+      />
+      <Box sx={{ p: { xs: 1.5, sm: 2 }, paddingBottom: { xs: 0, sm: 0 }, display: "flex", flexDirection: "column", flex: 1 }}>
         <Typography
           variant="body2"
           sx={{
             mb: 2,
             minHeight: { xs: 60, sm: 80 },
             flex: 1,
+            color: "white",
             fontSize: { xs: "0.75rem", sm: "0.875rem" },
             lineHeight: 1.5,
           }}
         >
           {title}
         </Typography>
-        <Box sx={{ mb: 1 }}>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 0.5 }}>
+        <Box sx={{ mb: 0, mx: -2, mt: 'auto' }}>
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 0.5, px: 2 }}>
             <LinearProgress
               variant="determinate"
               value={progressValue}
@@ -95,20 +104,26 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
               <KeyboardArrowDown
                 sx={{
                   transform: "rotate(180deg)",
-                  fontSize: isMobile ? "1rem" : "1.25rem",
+                  fontSize: isMobile ? "1.2rem" : "1.5rem",
                 }}
               />
             }
             sx={{
               color: "#12447f",
-              p: 0,
-              minWidth: "auto",
+              backgroundColor: "white",
+              width: "100%",
+              py: 1,
+              px: 2,
+              textAlign: "center",
+              justifyContent: "center",
               textTransform: "none",
-              fontSize: { xs: "0.75rem", sm: "0.875rem" },
-              fontWeight: "normal",
+              fontSize: { xs: "0.85rem", sm: "1rem" },
+              fontWeight: "500",
+              borderRadius: 0,
+              borderBottomLeftRadius: 1,
+              borderBottomRightRadius: 1,
               "&:hover": {
-                bgcolor: "transparent",
-                textDecoration: "underline",
+                backgroundColor: "#f5f5f5",
               },
             }}
             onClick={() => onViewMap(missionId)}

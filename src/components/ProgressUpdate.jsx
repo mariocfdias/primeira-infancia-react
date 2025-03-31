@@ -1,4 +1,4 @@
-import { Box, Typography, Paper, Chip } from "@mui/material"
+import { Box, Typography, Paper, Chip, Avatar } from "@mui/material"
 import { Star } from "@mui/icons-material"
 import PropTypes from 'prop-types'
 
@@ -8,9 +8,10 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
     <Paper
       elevation={2}
       sx={{
-        p: { xs: 1.5, sm: 2 },
+        p: { xs: 0.5, sm: 1 },
         border: "1px solid #d3d3d3",
         borderRadius: 1,
+        backgroundColor: "#F3F3F3",
         transition: "all 0.2s ease-in-out",
         "&:hover": {
           boxShadow: 3,
@@ -25,24 +26,22 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
           gap: { xs: 1.5, sm: 0 },
         }}
       >
-        <Box
+        <Avatar
+          variant="square"
           sx={{
-            width: { xs: 28, sm: 32 },
-            height: { xs: 28, sm: 32 },
             bgcolor: "#12447f",
             color: "white",
-            borderRadius: 1,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
             fontSize: { xs: "0.65rem", sm: "0.75rem" },
+            width: { xs: 28, sm: 32, md: 40 },
+            height: { xs: 28, sm: 32, md: 40 },
             mr: { xs: 0, sm: 1.5 },
             mt: { xs: 0, sm: 0.5 },
+            borderRadius: 1,
             flexShrink: 0,
           }}
         >
           {city.substring(0, 2).toUpperCase()}
-        </Box>
+        </Avatar>
         <Box sx={{ flex: 1 }}>
           <Typography
             variant="body2"
@@ -52,7 +51,7 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
               lineHeight: 1.5,
             }}
           >
-            <Box component="span" sx={{ fontWeight: "medium" }}>
+            <Box component="span" sx={{ fontWeight: "bold" }}>
               Prefeitura de {city}
             </Box>{" "}
             concluiu a missão "{mission}" e ganhou{" "}

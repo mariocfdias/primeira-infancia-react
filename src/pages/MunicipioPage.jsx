@@ -1,10 +1,11 @@
 import { Box, Typography, Container, Paper, Grid, Button, LinearProgress, useMediaQuery, useTheme, CircularProgress } from "@mui/material"
-import { ArrowBack, Star, KeyboardArrowUp } from "@mui/icons-material"
+import { ArrowBack, Star, KeyboardArrowUp, WorkspacePremium, StarRounded } from "@mui/icons-material"
 import { Link, useParams } from "react-router-dom"
 import { useState, useEffect } from "react"
 import MissionEvidenceCard from "../components/MissionEvidenceCard"
 import EmblemCard from "../components/EmblemCard"
 import { services } from "../api"
+import NumericIcon from "../components/NumericIcon"
 
 export default function MunicipioPage({ onBack, ibge }) {
   const theme = useTheme()
@@ -13,6 +14,8 @@ export default function MunicipioPage({ onBack, ibge }) {
   
   const [loading, setLoading] = useState(true)
   const [municipioData, setMunicipioData] = useState(null)
+  const [desempenhoData, setDesempenhoData] = useState(null)
+
   const [error, setError] = useState(null)
   
   useEffect(() => {
@@ -20,8 +23,17 @@ export default function MunicipioPage({ onBack, ibge }) {
       try {
         setLoading(true)
         const response = await services.municipiosService.getMunicipioByIbge(ibge)
-        // The response is already processed by axios interceptor, no need to use response.data
-        setMunicipioData(response.data)
+        
+        // Fetch desempenhos for this municipality
+        const desempenhosResponse = await services.desempenhosService.getDesempenhosByMunicipio(ibge)
+        
+        // Combine the data
+        const combinedData = {
+          ...response.data,
+          desempenhos: desempenhosResponse.data
+        }
+        setDesempenhoData(desempenhosResponse.data)
+        setMunicipioData(combinedData)
         setLoading(false)
       } catch (err) {
         console.error("Error fetching municipality data:", err)
@@ -34,6 +46,10 @@ export default function MunicipioPage({ onBack, ibge }) {
       fetchMunicipioData()
     }
   }, [ibge])
+
+  useEffect(() => {
+    console.log({desempenhoData})
+  }, [desempenhoData])
   
   // Add debug information
   console.log("Loading:", loading)
@@ -175,7 +191,7 @@ export default function MunicipioPage({ onBack, ibge }) {
                   }}
                 />
               </Paper>
-              <Box>
+              <Box sx={{width: "100%"}}>
                 <Typography
                   variant="h5"
                   component="h1"
@@ -197,7 +213,10 @@ export default function MunicipioPage({ onBack, ibge }) {
                 >
                   {municipioData.status || "Participante"}
                 </Typography>
-                <Typography
+                <Box sx={{width: "100%"}}>
+
+              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 0.5 }}>
+              <Typography
                   variant="body1"
                   sx={{
                     color: "#e79d0d",
@@ -209,23 +228,19 @@ export default function MunicipioPage({ onBack, ibge }) {
                 >
                   Nível {Math.floor(earnedPoints / 50) + 1 || 1}
                 </Typography>
-              </Box>
-            </Box>
-
-            <Box sx={{ mb: 3 }}>
-              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 0.5 }}>
-                <Typography
+              <Typography
                   variant="body2"
                   sx={{
-                    color: "#525252",
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                    color: "#FCBA38",
+                    fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "1rem" },
+                    fontWeight: "500",
+                    display: "flex",
+                    alignItems: "center",
                   }}
                 >
                   {earnedPoints}/{totalPointsAvailable}
+                  <StarRounded sx={{ color: "#FCBA38", fontSize: { xs: "1rem", sm: "1.25rem" } }} />
                 </Typography>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <Star sx={{ color: "#f5d664", fontSize: { xs: "1rem", sm: "1.25rem" } }} />
-                </Box>
               </Box>
               <LinearProgress
                 variant="determinate"
@@ -241,6 +256,12 @@ export default function MunicipioPage({ onBack, ibge }) {
                   },
                 }}
               />
+                </Box>
+              </Box>
+            </Box>
+
+            <Box sx={{ mb: 3 }}>
+
               <Typography
                 variant="body2"
                 sx={{
@@ -252,53 +273,19 @@ export default function MunicipioPage({ onBack, ibge }) {
               </Typography>
             </Box>
 
-            <Box sx={{ display: "flex", justifyContent: "space-around", mb: 4 }}>
-              <Box sx={{ textAlign: "center" }}>
-                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Star sx={{ color: "#f5d664", fontSize: { xs: "1.25rem", sm: "1.5rem" } }} />
-                </Box>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontWeight: "bold",
-                    fontSize: { xs: "1.25rem", sm: "1.5rem" },
-                  }}
-                >
-                  {earnedPoints}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "#525252",
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                  }}
-                >
-                  pontos
-                </Typography>
-              </Box>
-              <Box sx={{ textAlign: "center" }}>
-                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <img src="/placeholder.svg?height=24&width=24" alt="Emblemas" style={{ width: 24, height: 24 }} />
-                </Box>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontWeight: "bold",
-                    fontSize: { xs: "1.25rem", sm: "1.5rem" },
-                  }}
-                >
-                  {emblemCount}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "#525252",
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                  }}
-                >
-                  emblemas
-                </Typography>
-              </Box>
+            <Box sx={{ display: "flex", justifyContent: "space-around", mb: 4, }}>
+              <NumericIcon 
+                icon={<Star sx={{ color: "#f5d664", fontSize: { xs: "1.25rem", sm: "1.5rem", lg: "3rem" } }} />}
+                number={earnedPoints}
+                description="pontos"
+                sx={{backgroundColor: "#FDF9DE", borderRadius: 2, p: 1}}
+              />
+              <NumericIcon 
+                icon={<WorkspacePremium sx={{ color: "#0076B1", fontSize: { xs: "1.25rem", sm: "1.5rem", lg: "3rem" } }} />}
+                number={emblemCount}
+                description="emblemas"
+                sx={{backgroundColor: "#E7EEF8", borderRadius: 2, p: 1}}
+              />
             </Box>
           </Box>
 
@@ -382,10 +369,25 @@ export default function MunicipioPage({ onBack, ibge }) {
             {municipioData.desempenhos.map((desempenho) => {
               // Parse evidence items if they exist
               let evidenceItems = []
-              if (desempenho.missao.evidencias) {
+              
+              if (desempenho.evidence && Array.isArray(desempenho.evidence)) {
+                // If evidence is already an array, use it directly
+                evidenceItems = desempenho.evidence.map((item, index) => ({
+                  id: index + 1,
+                  title: item.titulo,
+                  description: item.descricao,
+                  evidenceLink: item.evidencia,
+                  status: desempenho.validation_status === "VALID" ? "completed" : "pending"
+                }))
+              } else if (desempenho.missao && desempenho.missao.evidencias) {
+                // If evidence is in missao.evidencias
                 try {
-                  const parsedEvidencias = JSON.parse(desempenho.missao.evidencias)
-                  evidenceItems = parsedEvidencias.map((item, index) => ({
+                  // Check if evidencias is already an array or needs parsing
+                  const evidenciasData = typeof desempenho.missao.evidencias === 'string' 
+                    ? JSON.parse(desempenho.missao.evidencias) 
+                    : desempenho.missao.evidencias;
+                    
+                  evidenceItems = evidenciasData.map((item, index) => ({
                     id: index + 1,
                     title: item.titulo,
                     description: item.descricao,

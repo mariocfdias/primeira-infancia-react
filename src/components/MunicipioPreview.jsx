@@ -16,6 +16,8 @@ import {
   Tooltip
 } from '@mui/material';
 import { InfoOutlined, StarOutlined, Star, OpenInNew, EmojiEventsOutlined } from '@mui/icons-material';
+import EvidenceItem from './EvidenceItem'
+import { useApiRequest, services } from '../api';
 
 const MunicipioPreview = ({ 
   municipioData, 
@@ -27,6 +29,9 @@ const MunicipioPreview = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [imgError, setImgError] = useState(false);
+  const { makeRequest, loading: fetchingMission } = useApiRequest();
+  const [missionInfo, setMissionInfo] = useState(null);
+  const [evidenceItems, setEvidenceItems] = useState([]);
 
   // Handle image load error
   const handleImageError = () => {
@@ -51,11 +56,61 @@ const MunicipioPreview = ({
     return imageUrl;
   };
 
+  // Fetch mission data when selectedMissionId changes
+  useEffect(() => {
+    const fetchMissionData = async () => {
+      if (!selectedMissionId || !municipio.codIbge) {
+        setMissionInfo(null);
+        setEvidenceItems([]);
+        return;
+      }
+      
+      try {
+        const response = await makeRequest(() => 
+          services.desempenhosService.getDesempenhoByMunicipioAndMissao(
+            municipio.codIbge,
+            selectedMissionId
+          )
+        );
+
+        console.log({response})
+
+        if (response && response.status === 'success' && response.data) {
+          // Set mission info
+          setMissionInfo(response.data);
+          
+          // Process evidence items
+          let items = [];
+          
+          try {
+            // Simply use the evidence array directly from the API response
+            if (response.data.evidence && Array.isArray(response.data.evidence)) {
+              items = response.data.evidence;
+            }
+          } catch (e) {
+            console.error("Failed to process evidence items:", e);
+          }
+          
+          setEvidenceItems(items);
+        } else {
+          setMissionInfo(null);
+          setEvidenceItems([]);
+        }
+      } catch (error) {
+        console.error("Error fetching mission data:", error);
+        setMissionInfo(null);
+        setEvidenceItems([]);
+      }
+    };
+
+    fetchMissionData();
+  }, [selectedMissionId, municipio.codIbge, makeRequest]);
+
   useEffect(() => {
     console.log({municipioData});
   }, [municipioData]);
 
-  if (loading) {
+  if (loading || fetchingMission) {
     return (
       <Paper
         elevation={2}
@@ -64,11 +119,10 @@ const MunicipioPreview = ({
           color: "white",
           p: { xs: 2, sm: 3 },
           borderRadius: 1,
-          height: "100%",
+          minHeight: 200,
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
-          minHeight: 200
+          justifyContent: "center"
         }}
       >
         <CircularProgress color="inherit" size={28} />
@@ -115,11 +169,16 @@ const MunicipioPreview = ({
           bgcolor: "#333333",
           color: "white",
           borderRadius: 1,
-          overflow: "hidden",
-          height: "100%",
+          minHeight: "fit-content"
         }}
       >
-        <Box p={{ xs: 2, sm: 3 }}>
+        <Box 
+          p={{ xs: 2, sm: 3 }}
+          sx={{
+            display: "flex", 
+            flexDirection: "column"
+          }}
+        >
           {/* Header with initial and title */}
           <Box display="flex" gap={2} mb={2}>
             <Box 
@@ -148,15 +207,6 @@ const MunicipioPreview = ({
                 {municipio.nome}
               </Typography>
               
-              <Box mt={1} mb={2}>
-                <Chip
-                  label="Não participante"
-                  sx={{
-                    bgcolor: "#f5f5f5",
-                    color: "#333333",
-                  }}
-                />
-              </Box>
               
               <Alert 
                 severity="info" 
@@ -188,10 +238,8 @@ const MunicipioPreview = ({
 
   // Get color based on level
   const getLevelColor = (points) => {
-    if (points >= 200) return "#12447F"; // Blue
-    if (points >= 101) return "#066829"; // Dark green
-    if (points >= 1) return "#50B755"; // Light green
-    return "#707070"; // Gray
+    if (points >= 1) return "#FFCA61"; 
+    return "#707070";
   };
 
   // Calculate progress for progress bar (max 100%)
@@ -201,27 +249,6 @@ const MunicipioPreview = ({
     if (points >= 1) return points / 2; // 0.5-50%
     return 0;
   };
-
-  // Get the most recent mission
-  const getRecentMission = () => {
-    if (!municipio.desempenhos || municipio.desempenhos.length === 0) return null;
-    
-    // If a mission ID is selected, try to find it first
-    if (selectedMissionId) {
-      const selectedMission = municipio.desempenhos.find(d => 
-        d.missao.id === selectedMissionId
-      );
-      if (selectedMission) return selectedMission;
-    }
-    
-    // Otherwise get the first mission with VALID status, or the first mission if none are valid
-    const validMission = municipio.desempenhos.find(d => d.validation_status === "VALID");
-    return validMission || municipio.desempenhos[0];
-  };
-
-  const recentMission = getRecentMission();
-  const evidenceItems = recentMission ? 
-    JSON.parse(recentMission.missao.evidencias) : [];
   
   // Safely access properties with default values
   const points = municipio.points || 0;
@@ -242,10 +269,16 @@ const MunicipioPreview = ({
         color: "white",
         borderRadius: 1,
         overflow: "hidden",
-        height: "100%",
+        minHeight: "fit-content"
       }}
     >
-      <Box p={{ xs: 2, sm: 3 }}>
+      <Box 
+        p={{ xs: 2, sm: 3 }} 
+        sx={{
+          display: "flex", 
+          flexDirection: "column"
+        }}
+      >
         {/* Header with image and title */}
         <Box display="flex" gap={2} mb={2}>
           <Box 
@@ -263,7 +296,7 @@ const MunicipioPreview = ({
               <Avatar
                 src={imageUrl}
                 alt={`${nome} logo`}
-                variant="square"
+                height={"100%"}
                 sx={{ 
                   width: "100%",
                   height: "100%"
@@ -347,22 +380,51 @@ const MunicipioPreview = ({
                   }
                 }}
               />
-              <Chip
-                label={status}
-                sx={{
-                  bgcolor: status === "Participante" ? "#e8f5e9" : "#f5f5f5",
-                  color: "#333333",
-                }}
-              />
             </Box>
           </Box>
-        </Box>
 
-        {/* Evidence section - only show if we have a selected mission and a recent mission */}
-        {selectedMissionId && recentMission && (
+
+        </Box>
+        <Typography variant="subtitle1" fontWeight="bold" mb={1}>
+        Missões
+        </Typography>
+        <Box display="flex" gap={1} justifyContent="space-between">
+              <Chip
+                avatar={<Avatar sx={{ bgcolor: "#1f5bb4", color: "#ffffff", fontSize: "0.75rem", width: 24, height: 24 }}>
+                  <Typography variant="body2" fontWeight="bold" color="#ffffff">{badges}</Typography>
+                </Avatar>}
+                label={`Concluídas`}
+                sx={{
+                  bgcolor: "#ffffff",
+                  color: "#333333"
+                }}
+              />
+              <Chip
+                avatar={<Avatar sx={{ bgcolor: "#27884A", color: "#ffffff", fontSize: "0.75rem", width: 24, height: 24 }}>
+                  <Typography variant="body2" fontWeight="bold" color="#ffffff">{badges}</Typography>
+                </Avatar>}
+                label={`Em ação`}
+                sx={{
+                  bgcolor: "#ffffff",
+                  color: "#333333"
+                }}
+              />
+              <Chip
+                avatar={<Avatar sx={{ bgcolor: "#000000", color: "#ffffff", fontSize: "0.75rem", width: 24, height: 24 }}>
+                  <Typography variant="body2" fontWeight="bold" color="#ffffff">{badges}</Typography>
+                </Avatar>}
+                label={`Pendentes`}
+                sx={{
+                  bgcolor: "#ffffff",
+                  color: "#333333"
+                }}
+              />
+          </Box>
+        {/* Evidence section - only show if we have mission data */}
+        {selectedMissionId && missionInfo && (
           <Box mt={3}>
             <Typography variant="subtitle1" fontWeight="bold" mb={1}>
-              {recentMission.missao.descricao_da_missao}
+              {missionInfo.missao?.descricao_da_missao}
             </Typography>
             <Divider sx={{ bgcolor: "rgba(255,255,255,0.1)", my: 1.5 }} />
             <Typography variant="body2" color="text.secondary" mb={2} sx={{ color: "#cccccc" }}>
@@ -370,38 +432,31 @@ const MunicipioPreview = ({
             </Typography>
             
             <Box display="flex" flexDirection="column" gap={1}>
-              {evidenceItems.map((item, index) => (
-                <Box
-                  key={index}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    bgcolor: "white",
-                    color: "black",
-                    borderRadius: "20px",
-                    py: 1,
-                    px: 2
-                  }}
-                >
-                  <Typography variant="body2" fontWeight="medium">
-                    {index + 1}. {item.titulo}
-                  </Typography>
-                  <Tooltip 
-                    title={item.descricao || "Evidência necessária para concluir a missão"} 
-                    arrow 
-                    placement="top"
-                  >
-                    <InfoOutlined
-                      sx={{
-                        ml: "auto",
-                        color: "#1f5bb4",
-                        fontSize: 18,
-                        cursor: "pointer"
-                      }}
+              {console.log({evidenceItems})}
+              {evidenceItems.length > 0 && (
+                evidenceItems.map((item, index) => {
+                  // Map API status to component status
+                  let itemStatus = "pending";
+                  if (missionInfo.validation_status === "VALID") {
+                    itemStatus = "completed";
+                  }
+                  return (
+                    <EvidenceItem
+                      key={index}
+                      id={index + 1}
+                      title={item.titulo}
+                      description={item.descricao}
+                      evidence={item.evidencia}
+                      status={itemStatus}
                     />
-                  </Tooltip>
-                </Box>
-              ))}
+                  );
+                })
+              )}
+              {evidenceItems.length === 0 && (
+                <Typography variant="body2" sx={{ color: "#999999" }}>
+                  Nenhuma evidência encontrada para esta missão.
+                </Typography>
+              )}
             </Box>
           </Box>
         )}
