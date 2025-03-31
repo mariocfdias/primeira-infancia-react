@@ -2,6 +2,12 @@ import { Box, Typography, Paper, Chip, Avatar } from "@mui/material"
 import { Star, StarRounded } from "@mui/icons-material"
 import PropTypes from 'prop-types'
 
+const getCategoryColor = (category) => {
+  if (category.includes("AMPLIAÇÃO")) return "linear-gradient(to right, #1C434F, #0A5166)"
+  if (category.includes("FORTALECIMENTO")) return "linear-gradient(to right, #3D5E85, #5E7DA0)"
+  if (category.includes("MELHORIA")) return "linear-gradient(to right, #256F93, #5B97B5)"
+  return "#333333"
+}
 
 export default function ProgressUpdate({ city, mission, points, badge, date, isMobile = false }) {
   return (
@@ -10,7 +16,7 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
       sx={{
         p: { xs: 0.5, sm: 1 },
         borderRadius: 1,
-        backgroundColor: "#F3F3F3",
+        backgroundColor: "#FAFAFA",
         transition: "all 0.2s ease-in-out",
         "&:hover": {
           boxShadow: 3,
@@ -77,7 +83,7 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
               label={badge}
               size="small"
               sx={{
-                bgcolor: "#27884a",
+                background: getCategoryColor(badge.toUpperCase()),
                 color: "white",
                 fontSize: { xs: "0.65rem", sm: "0.75rem", md: "16px" },
                 height: "auto",

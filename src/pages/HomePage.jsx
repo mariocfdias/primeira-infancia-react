@@ -882,9 +882,21 @@ export default function HomePage() {
             </Box>
           </Box>
     
-          <Box container spacing={2} display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
+          <Box container spacing={2} display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3,backgroundColor: "#FFFFFF" }}>
             <Box width={"30%"} sx={{minWidth: "150px"}}>
+              <InputLabel 
+                htmlFor="municipio-search" 
+                sx={{ 
+                  fontWeight: "400", 
+                  color: "#333333", 
+                  fontSize: { xs: "14px", sm: "16px", lg: "20px" },
+                  mb: 1
+                }}
+              >
+                Busque por município
+              </InputLabel>
               <TextField
+                id="municipio-search"
                 fullWidth
                 variant="outlined"
                 placeholder="Município"
@@ -897,6 +909,11 @@ export default function HomePage() {
                   ),
                 }}
                 sx={{
+                  '& input::placeholder': {
+                    color: 'black',
+                    opacity: 0.8,
+                    fontSize: { xs: "14px", sm: "16px", lg: "20px" },
+                  },
                   '.MuiTextField-notchedOutline': {
                     borderColor: 'pink',
                     color: '#000000',
@@ -977,10 +994,14 @@ export default function HomePage() {
                         backgroundColor: '#12447F',
                         borderRadius: '50%',
                         color: '#ffffff',
+                        margin: "4px",
+
                       },
                       '.MuiSelect-outlined': {
                         borderColor: '#000000',
                         color: '#000000',
+                        marginRight: "4px",
+
                       },
                       '&.MuiOutlinedInput-root': {
             '& fieldset': {
@@ -1004,7 +1025,7 @@ export default function HomePage() {
           </Box>
     
           {/* Pagination */}
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 4 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 4}}>
             {loadingEventos ? (
               <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
                 <CircularProgress />
