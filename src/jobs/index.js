@@ -53,10 +53,10 @@ function setupJobs(connection, config) {
     //     fetchMissaoDesempenho(connection, FETCH_MISSAO_DESEMPENHO_URL);
     // });
 
-    // // Run the jobs immediately on startup
-    // runJobsImmediately(connection, config).catch(err => {
-    //     console.error('Error running startup jobs:', err);
-    // });
+    // Run the jobs immediately on startup
+    runJobsImmediately(connection, config).catch(err => {
+        console.error('Error running startup jobs:', err);
+    });
 }
 
 /**
