@@ -332,7 +332,7 @@ const LeafletMap = ({ municipiosData, geoJsonData, isMobile, missionPanoramaData
       sx={{
         width: "100%",
         height: "100%",
-        maxHeight: isMobile ? "280px" : "600px",
+        maxHeight: isMobile ? "400px" : "600px",
         position: "relative",
         "& .leaflet-container": {
           width: "100%",
@@ -380,7 +380,7 @@ const LeafletMap = ({ municipiosData, geoJsonData, isMobile, missionPanoramaData
 
 export default function BrazilMap({ missionPanoramaData, selectedMunicipio, onMunicipioSelect }) {
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"))
   const [municipiosData, setMunicipiosData] = useState([])
   const [geoJsonData, setGeoJsonData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)

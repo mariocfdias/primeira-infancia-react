@@ -28,6 +28,8 @@ let theme = createTheme({
   },
   typography: {
     fontFamily: [
+      "Noto Sans",
+      "Atkinson Hyperlegible",
       "-apple-system",
       "BlinkMacSystemFont",
       '"Segoe UI"',
@@ -51,6 +53,24 @@ let theme = createTheme({
     },
   },
   components: {
+    MuiCssBaseline: {
+      styleOverrides: `
+        @font-face {
+          font-family: 'Atkinson Hyperlegible';
+          font-style: normal;
+          font-display: swap;
+          font-weight: 400;
+          src: url(https://fonts.gstatic.com/s/atkinsonhyperlegible/v11/9Bt23C1KxNDXMspQ1lPyU89-1h6ONRlW45G0.woff2) format('woff2');
+        }
+        .MuiTypography-root {
+          font-family: "Noto Sans", sans-serif;
+        }
+        .MuiTypography-root span:not([class]), 
+        .MuiTypography-root div:not([class]) > span:not([class]) {
+          font-family: 'Atkinson Hyperlegible', sans-serif;
+        }
+      `,
+    },
     MuiButton: {
       styleOverrides: {
         root: {

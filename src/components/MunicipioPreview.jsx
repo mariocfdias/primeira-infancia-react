@@ -33,6 +33,7 @@ const MunicipioPreview = ({
   const [missionInfo, setMissionInfo] = useState(null);
   const [evidenceItems, setEvidenceItems] = useState([]);
 
+  console.log({municipioData, selectedMissionId})
   // Handle image load error
   const handleImageError = () => {
     setImgError(true);
@@ -203,7 +204,7 @@ const MunicipioPreview = ({
             </Box>
 
             <Box flex={1}>
-              <Typography variant="h5" fontWeight="bold" mb={0.5}>
+              <Typography variant="h5" fontWeight="bold" mb={0.5} sx={{fontSize: { xs: "1.25rem", sm: "1.5rem", lg: "20px" }}}>
                 {municipio.nome}
               </Typography>
               
@@ -280,17 +281,16 @@ const MunicipioPreview = ({
         }}
       >
         {/* Header with image and title */}
-        <Box display="flex" gap={2} mb={2}>
+        <Box display="flex" gap={2} mb={2} >
           <Box 
             sx={{
               width: { xs: 80, sm: 100 },
-              height: { xs: 80, sm: 100 },
+              height: { xs: 80, sm: 100, lg: 140 },
               borderRadius: 1,
               overflow: "hidden",
               flexShrink: 0,
               bgcolor: "#444444",
-              position: "relative"
-            }}
+              position: "relative"                        }}
           >
             {imageUrl && !imgError ? (
               <Avatar
@@ -328,11 +328,14 @@ const MunicipioPreview = ({
             </Typography>
             
             <Box display="flex" justifyContent="space-between" alignItems="center">
-              <Typography color={levelColor} variant="subtitle1">
+              <Typography color={levelColor} fontFamily={"Atkinson Hyperlegible"} sx={{fontSize: { xs: "0.875rem", sm: "1rem", lg: "20px" }}}>
                 {level}
               </Typography>
               <Box display="flex" alignItems="center" gap={0.5}>
-                <Typography color={levelColor} variant="subtitle1" fontWeight="medium">
+                <Typography color={levelColor} variant="subtitle1" fontWeight="medium"                 
+                fontFamily={"Atkinson Hyperlegible"}
+                sx={{
+                  fontSize: { xs: "0.875rem", sm: "1rem", lg: "20px" }}}> 
                   {points}/100
                 </Typography>
                 <Star sx={{ color: levelColor }} />
@@ -345,8 +348,8 @@ const MunicipioPreview = ({
                 variant="determinate"
                 value={progressPercentage}
                 sx={{
-                  height: 8,
-                  borderRadius: 1,
+                  height: 16,
+                  borderRadius: 10,
                   bgcolor: "#dedede",
                   "& .MuiLinearProgress-bar": {
                     bgcolor: levelColor,
@@ -357,29 +360,22 @@ const MunicipioPreview = ({
             </Box>
 
             {/* Stats */}
-            <Box display="flex" gap={1} flexWrap="wrap">
-              <Chip
-                icon={<StarOutlined />}
-                label={`${points} pontos`}
-                sx={{
-                  bgcolor: "#fdf9de",
-                  color: "#333333",
-                  "& .MuiChip-icon": {
-                    color: "#fcba38"
-                  }
-                }}
-              />
-              <Chip
-                icon={<EmojiEventsOutlined />}
-                label={`${badges} emblemas`}
-                sx={{
-                  bgcolor: "#e7eef8",
-                  color: "#333333",
-                  "& .MuiChip-icon": {
-                    color: "#1f5bb4"
-                  }
-                }}
-              />
+            <Box display="flex" gap={1} flexWrap="wrap" alignItems="center">
+       
+              <Box display="flex" alignItems="center" gap={0.5} bgcolor="#FDF9DE" borderRadius={2} p={0.5}>
+              <StarOutlined sx={{ color: "#FCBA38", fontSize: "24px" }} />
+              </Box>
+              <Typography variant="body2" fontWeight="400" fontSize={"16px"} fontFamily={"Atkinson Hyperlegible"} color="#ffffff">
+                    {points} pontos
+                  </Typography>
+
+                  <Box display="flex" alignItems="center" gap={0.5} bgcolor="#E7EEF8" borderRadius={2} p={0.5}>
+              <EmojiEventsOutlined sx={{ color: "#0076B1", fontSize: "24px" }} />
+              </Box>
+              <Typography variant="body2" fontWeight="400" fontSize={"16px"} fontFamily={"Atkinson Hyperlegible"} color="#ffffff">
+              {badges} emblemas
+                  </Typography>
+              
             </Box>
           </Box>
 

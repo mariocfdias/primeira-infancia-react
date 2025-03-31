@@ -17,8 +17,9 @@ import {
   useMediaQuery,
   CircularProgress,
   Alert,
+  Divider,
 } from "@mui/material"
-import { FilterAlt, Search, KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material"
+import { FilterAlt, Search, KeyboardArrowLeft, KeyboardArrowRight, StarRounded } from "@mui/icons-material"
 import BrazilMap from "../components/BrazilMap"
 import MapLegend from "../components/MapLegend"
 import MissionCard from "../components/MissionCard"
@@ -27,7 +28,7 @@ import MunicipioPreview from "../components/MunicipioPreview"
 import MunicipioPage from "./MunicipioPage"
 import { useTheme } from "@mui/material/styles"
 import { useApiRequest, services } from "../api"
-
+import '@fontsource/atkinson-hyperlegible/400.css';
 export default function HomePage() {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
@@ -437,61 +438,40 @@ export default function HomePage() {
       ) : (
         <>
           {/* Header */}
-          <Typography
-            variant="h4"
-            component="h1"
-            sx={{
-              fontWeight: "bold",
-              color: "#333333",
-              fontSize: { xs: "1.75rem", sm: "2rem", md: "2.25rem" },
-            }}
-          >
-            Acompanhe o avanço das prefeituras
-          </Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              color: "#525252",
-              mt: 1,
-              mb: 3,
-              fontSize: { xs: "0.875rem", sm: "1rem" },
-            }}
-          >
-            Aqui você pode visualizar o progresso e o cumprimento das missões de cada prefeitura, além dos avanços mais
-            recentes.
-          </Typography>
-          
+
           {/* Stats */}
           <Paper
             elevation={1}
             sx={{
               display: "flex",
               flexDirection: { xs: "column", sm: "row" },
-              mb: 4,
-              border: "1px solid #d3d3d3",
+              mb: 6,
+              border: "1px solid #D3D3D3",
               borderRadius: 1,
               overflow: "hidden",
+              backgroundColor: "#fbfbfb",
             }}
           >
             <Box
               sx={{
                 flex: 1,
                 p: { xs: 2, sm: 3 },
-                borderRight: { xs: "none", sm: "1px solid #d3d3d3" },
                 borderBottom: { xs: "1px solid #d3d3d3", sm: "none" },
                 display: "flex",
                 alignItems: "center",
-                justifyContent: { xs: "center", sm: "flex-start" },
+                justifyContent: { xs: "center" },
               }}
             >
               <Typography
                 variant="h3"
                 component="span"
+                textAlign={"center"}
+                fontFamily={"Atkinson Hyperlegible"}
                 sx={{
-                  fontWeight: "bold",
+                  fontWeight: "600",
                   mr: 2,
                   color: "#12447f",
-                  fontSize: { xs: "2.5rem", sm: "3rem" },
+                  fontSize: { xs: "2.5rem", sm: "3rem", lg: "96px" },
                 }}
               >
                 {loading ? <CircularProgress size={24} /> : municipios.length || 82}
@@ -502,7 +482,9 @@ export default function HomePage() {
                   sx={{
                     fontWeight: "bold",
                     color: "#12447f",
-                    fontSize: { xs: "1rem", sm: "1.1rem" },
+                    fontSize: { xs: "1rem", sm: "1.1rem", lg: "36px" },
+                    mb: 0,
+                    letterSpacing: "0.02em"
                   }}
                 >
                   prefeituras
@@ -510,42 +492,49 @@ export default function HomePage() {
                 <Typography
                   variant="body2"
                   sx={{
-                    color: "#12447f",
-                    fontSize: { xs: "0.875rem", sm: "1rem" },
+                    color: "#333333",
+                    fontSize: { xs: "0.875rem", sm: "1rem", lg: "24px" },
+                    mt: -2,
+                    letterSpacing: "0.01em"
                   }}
                 >
                   aderiram ao Pacto
                 </Typography>
               </Box>
             </Box>
+            <Divider orientation="vertical" variant='middle' color="#acacac" flexItem  />
             <Box
               sx={{
                 flex: 1,
                 p: { xs: 2, sm: 3 },
                 display: "flex",
                 alignItems: "center",
-                justifyContent: { xs: "center", sm: "flex-start" },
+                justifyContent: { xs: "center" },
               }}
             >
               <Typography
                 variant="h3"
                 component="span"
+                textAlign={"center"}
+                fontFamily={"Atkinson Hyperlegible"}
                 sx={{
-                  fontWeight: "bold",
+                  fontWeight: "600",
                   mr: 2,
                   color: "#12447f",
-                  fontSize: { xs: "2.5rem", sm: "3rem" },
+                  fontSize: { xs: "2.5rem", sm: "3rem", lg: "96px" },
                 }}
               >
                 2%
               </Typography>
               <Box>
-                <Typography
+              <Typography
                   variant="subtitle1"
                   sx={{
                     fontWeight: "bold",
                     color: "#12447f",
-                    fontSize: { xs: "1rem", sm: "1.1rem" },
+                    fontSize: { xs: "1rem", sm: "1.1rem", lg: "36px" },
+                    mb: 0,
+                    letterSpacing: "0.02em"
                   }}
                 >
                   das missões
@@ -553,8 +542,10 @@ export default function HomePage() {
                 <Typography
                   variant="body2"
                   sx={{
-                    color: "#12447f",
-                    fontSize: { xs: "0.875rem", sm: "1rem" },
+                    color: "#333333",
+                    fontSize: { xs: "0.875rem", sm: "1rem", lg: "24px" },
+                    mt: -2,
+                    letterSpacing: "0.01em"
                   }}
                 >
                   foram concluídas
@@ -564,8 +555,37 @@ export default function HomePage() {
           </Paper>
     
           {/* Main Content */}
-          <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Typography
+            variant="h5"
+            component="h2"
+            sx={{
+              fontWeight: "600",
+              color: "#333333",
+              mb: 1,
+              fontSize: { xs: "1.25rem", sm: "1.5rem", lg: "32px" },
+            }}
+          >
+            Mapa interativo
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              color: "#525252",
+              mb: 2,
+              fontSize: { xs: "0.875rem", sm: "1rem", lg: "20px" },
+            }}
+          >
+            Acesse um município no mapa abaixo ou selecione-o na caixa ao lado para ver mais detalhes sobre a participação e
+            avanço de sua{" "}
+            <Box component="span" sx={{ fontWeight: "bold" }}>
+              prefeitura
+            </Box>
+            .
+          </Typography>
+          <Grid container spacing={3} sx={{ mb: 6 }}>
             {/* Map Section */}
+
+            
             <Grid item xs={12} md={8}>
               <Paper
                 elevation={1}
@@ -574,16 +594,25 @@ export default function HomePage() {
                   border: "1px solid #d3d3d3",
                   borderRadius: 1,
                   overflow: "hidden",
+                  alignItems: "center",
                 }}
               >
-                {console.log('Passing missionPanoramaById to BrazilMap:', missionPanoramaById)}
                 <BrazilMap 
                   missionPanoramaData={missionPanoramaById} 
                   selectedMunicipio={selectedMunicipio?.codIbge}
                   onMunicipioSelect={handleMapMunicipioSelect}
                 />
               </Paper>
+              
             </Grid>
+
+{isTablet && (
+  <Grid item xs={12} md={12}>
+    <MapLegend selectedMissao={selectedMissao} />
+  </Grid>
+)}
+
+
     
             {/* Municipality Details */}
             <Grid item xs={12} md={4}>
@@ -613,27 +642,66 @@ export default function HomePage() {
                 </Box>
               )}
     
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, mb: 2 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 1, mb: 2 }}>
+              <InputLabel htmlFor="my-input" sx={{ fontWeight: "500", color: "#333333", fontSize: { xs: "0.875rem", sm: "1rem", lg: "24px" } }}>Prefeituras</InputLabel>
                 <FormControl 
                   fullWidth 
                   variant="outlined" 
-                  sx={{ 
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: selectedMunicipio ? "#12447f" : "#d3d3d3",
-                      borderWidth: selectedMunicipio ? 2 : 1,
-                    },
-                    "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#12447f !important",
-                    },
-                  }}
                 >
-                  <InputLabel id="municipio-select-label">Selecione o município</InputLabel>
+                  <InputLabel id="municipio-select-label"
+                  sx={{
+                    '&.MuiInputLabel-root': {
+                      color: '#000000', // <------------------ label-color by default
+                      fontWeight: 500
+                    },
+                    '&.MuiInputLabel-root.Mui-focused': {
+                      color: '#000000', // <------------------ label-color on focus
+                    }
+                  }}
+                  >Selecione</InputLabel>
                   <Select
                     labelId="municipio-select-label"
                     id="municipio-select"
                     value={selectedMunicipio?.codIbge || ""}
                     onChange={handleMunicipioChange}
                     label="Selecione o município"
+                    labelStyle={{ color: '#ff0000' }}
+                    sx={{
+                      '.MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'pink',
+                        color: '#000000',
+                        borderWidth: "thin",
+                        fontSize: { xs: "0.875rem", sm: "1rem", lg: "24px" },
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#000000',
+                        color: '#000000',
+                      },
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#000000',
+                        color: '#000000',
+                      },
+                      '.MuiSvgIcon-root ': {
+                        backgroundColor: '#12447F',
+                        borderRadius: '50%',
+                        color: '#ffffff',
+                      },
+                      '.MuiSelect-outlined': {
+                        borderColor: '#000000',
+                        color: '#000000',
+                      },
+                      '&.MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: '#000000', // <------------------ outline-color by default
+            },
+            '&:hover fieldset': {
+              borderColor: '#000000', // <------------------ outline-color on hover
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#000000', // <------------------ outline-color on focus
+            },
+          },
+                    }}
                   >
                     <MenuItem value="">
                       <em>Selecione...</em>
@@ -673,36 +741,9 @@ export default function HomePage() {
           </Grid>
     
           {/* Mobile Legend - Only shows on mobile */}
-          <MapLegend selectedMissao={selectedMissao} />
     
           {/* Interactive Map */}
-          <Typography
-            variant="h5"
-            component="h2"
-            sx={{
-              fontWeight: "bold",
-              color: "#333333",
-              mb: 1,
-              fontSize: { xs: "1.25rem", sm: "1.5rem" },
-            }}
-          >
-            Mapa interativo
-          </Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              color: "#525252",
-              mb: 2,
-              fontSize: { xs: "0.875rem", sm: "1rem" },
-            }}
-          >
-            Acesse um município no mapa abaixo ou selecione-o na caixa ao lado para ver mais detalhes sobre a participação e
-            avanço de sua{" "}
-            <Box component="span" sx={{ fontWeight: "medium" }}>
-              prefeitura
-            </Box>
-            .
-          </Typography>
+         
     
           {error && (
             <Alert severity="error" sx={{ mb: 2 }}>
@@ -715,20 +756,19 @@ export default function HomePage() {
             variant="h5"
             component="h2"
             sx={{
-              fontWeight: "bold",
+              fontWeight: "600",
               color: "#333333",
               mb: 1,
-              fontSize: { xs: "1.25rem", sm: "1.5rem" },
+              fontSize: { xs: "1.25rem", sm: "1.5rem", lg: "32px" },
             }}
           >
             Panorama de missões
           </Typography>
           <Typography
-            variant="body1"
             sx={{
               color: "#525252",
               mb: 3,
-              fontSize: { xs: "0.875rem", sm: "1rem" },
+              fontSize: { xs: "0.875rem", sm: "1rem", lg: "20px" },
             }}
           >
             Cada card abaixo representa uma missão específica e mostra a quantidade de municípios que já a concluíram.
@@ -740,7 +780,7 @@ export default function HomePage() {
             missão.
           </Typography>
     
-          <Grid container spacing={4} sx={{ mb: { xs: 4, sm: 6 } }}>
+          <Grid container spacing={4} sx={{ mb: { xs: 4, sm: 6 }, mt: {xs: 1, sm: 2, md: 2} }}>
             {missionCardsGrid}
           </Grid>
     
@@ -749,20 +789,19 @@ export default function HomePage() {
             variant="h5"
             component="h2"
             sx={{
-              fontWeight: "bold",
+              fontWeight: "600",
               color: "#333333",
               mb: 1,
-              fontSize: { xs: "1.25rem", sm: "1.5rem" },
+              fontSize: { xs: "1.25rem", sm: "1.5rem", lg: "32px" },
             }}
           >
             Quem está avançando?
           </Typography>
           <Typography
-            variant="body1"
             sx={{
               color: "#525252",
               mb: 3,
-              fontSize: { xs: "0.875rem", sm: "1rem" },
+              fontSize: { xs: "0.875rem", sm: "1rem", lg: "20px" },
             }}
           >
             Veja as atualizações mais recentes sobre{" "}
@@ -780,19 +819,21 @@ export default function HomePage() {
             .
           </Typography>
     
-          <Box sx={{ mb: 3 }}>
+          <Box display="flex" flexDirection="row" alignItems="center" sx={{ mb: 3, display: "flex", flexDirection: "row", border: "1px solid #d3d3d3", borderRadius: 1, p: 2 }}>
+            <Box>
             <Typography
               variant="body2"
               component="span"
               sx={{
                 mr: 2,
-                fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                fontSize: { xs: "0.875rem", sm: "1rem", lg: "20px" },
                 display: { xs: "block", sm: "inline" },
                 mb: { xs: 1, sm: 0 },
               }}
             >
-              Mostrando:
+              Mostrando
             </Typography>
+            </Box>
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
               <Button
                 variant={eventFilter === "mission_completed" ? "contained" : "outlined"}
@@ -802,7 +843,8 @@ export default function HomePage() {
                   borderColor: "#d3d3d3",
                   color: eventFilter === "mission_completed" ? "white" : "#333333",
                   textTransform: "none",
-                  fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                  fontWeight: "semibold",
+                  fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "20px" },
                   "&:hover": {
                     bgcolor: eventFilter === "mission_completed" ? "#0d3666" : "rgba(0, 0, 0, 0.04)",
                     borderColor: eventFilter === "mission_completed" ? "transparent" : "#b3b3b3",
@@ -810,14 +852,7 @@ export default function HomePage() {
                   boxShadow: eventFilter === "mission_completed" ? 2 : 0,
                 }}
                 startIcon={
-                  <Box
-                    sx={{
-                      width: { xs: 10, sm: 12 },
-                      height: { xs: 10, sm: 12 },
-                      bgcolor: "#f5d664",
-                      borderRadius: "50%",
-                    }}
-                  />
+                  <StarRounded sx={{ color: "#FCBA38", fontSize: { xs: "16px", sm: "20px", lg: "48px" } }} />
                 }
                 onClick={() => handleEventFilterChange("mission_completed")}
               >
@@ -831,8 +866,9 @@ export default function HomePage() {
                   borderColor: "#d3d3d3",
                   color: eventFilter === "evidence_submitted" ? "white" : "#333333",
                   textTransform: "none",
-                  fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                  "&:hover": {
+                  fontWeight: "semibold",
+                  fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "20px" },
+                                    "&:hover": {
                     bgcolor: eventFilter === "evidence_submitted" ? "#0d3666" : "rgba(0, 0, 0, 0.04)",
                     borderColor: eventFilter === "evidence_submitted" ? "transparent" : "#b3b3b3",
                   },
@@ -845,11 +881,10 @@ export default function HomePage() {
             </Box>
           </Box>
     
-          <Grid container spacing={2} sx={{ mb: 3 }}>
-            <Grid item xs={12} md={8}>
+          <Box container spacing={2} display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
+            <Box item xs={12} md={8}>
               <TextField
-                fullWidth
-                placeholder="nome@example.com"
+                placeholder="Município"
                 variant="outlined"
                 size={isMobile ? "small" : "medium"}
                 InputProps={{
@@ -866,8 +901,8 @@ export default function HomePage() {
                   fontSize: { xs: "0.875rem", sm: "1rem" },
                 }}
               />
-            </Grid>
-            <Grid item xs={12} md={4}>
+            </Box>
+            <Box item xs={12} md={4}>
               <Box
                 sx={{
                   display: "flex",
@@ -880,7 +915,7 @@ export default function HomePage() {
                   variant="body2"
                   sx={{
                     mr: 1,
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                    fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "20px" },
                   }}
                 >
                   Ordenar por
@@ -897,10 +932,40 @@ export default function HomePage() {
                     defaultValue="recent"
                     displayEmpty
                     sx={{
-                      ".MuiOutlinedInput-notchedOutline": {
-                        borderColor: "#d3d3d3",
+                      '.MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'pink',
+                        color: '#000000',
+                        borderWidth: "thin",
+                        fontSize: { xs: "0.875rem", sm: "1rem", lg: "24px" },
                       },
-                      fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#000000',
+                        color: '#000000',
+                      },
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#000000',
+                        color: '#000000',
+                      },
+                      '.MuiSvgIcon-root ': {
+                        backgroundColor: '#12447F',
+                        borderRadius: '50%',
+                        color: '#ffffff',
+                      },
+                      '.MuiSelect-outlined': {
+                        borderColor: '#000000',
+                        color: '#000000',
+                      },
+                      '&.MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: '#000000', // <------------------ outline-color by default
+            },
+            '&:hover fieldset': {
+              borderColor: '#000000', // <------------------ outline-color on hover
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#000000', // <------------------ outline-color on focus
+            },
+          }
                     }}
                   >
                     <MenuItem value="recent">Mais recente</MenuItem>
@@ -908,8 +973,8 @@ export default function HomePage() {
                   </Select>
                 </FormControl>
               </Box>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
     
           {/* Pagination */}
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 4 }}>

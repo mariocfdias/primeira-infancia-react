@@ -1,5 +1,5 @@
 import { Box, Typography, Paper, Button, LinearProgress, useTheme, useMediaQuery, Chip } from "@mui/material"
-import { KeyboardArrowDown } from "@mui/icons-material"
+import { ArrowUpward, KeyboardArrowDown, Star, StarRounded } from "@mui/icons-material"
 import PropTypes from 'prop-types'
 import React from 'react'
 
@@ -25,10 +25,9 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
         display: "flex",
         flexDirection: "column",
         border: isSelected ? "2px solid #12447f" : "1px solid #d3d3d3",
-        borderRadius: 1,
+        borderRadius: 2,
         transition: "all 0.2s ease-in-out",
         transform: isSelected ? "scale(1.02)" : "scale(1)",
-        opacity: isSelected ? 1 : 0.7,
         "&:hover": {
           transform: isSelected ? "scale(1.02)" : "translateY(-4px)",
           boxShadow: isSelected ? 6 : 3,
@@ -48,8 +47,9 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
           top: -12,
           left: 16,
           color: "white",
-          fontWeight: "medium",
-          fontSize: { xs: "0.65rem", sm: "0.75rem" },
+          fontWeight: "500",
+          letterSpacing: 2,
+          fontSize: { xs: "0.65rem", sm: "0.75rem", lg: "14px" },
           background: getCategoryColor(category),
           "& .MuiChip-label": {
             px: 1,
@@ -60,40 +60,54 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
         <Typography
           variant="body2"
           sx={{
-            mb: 2,
+            mb: 0.5,
             minHeight: { xs: 60, sm: 80 },
             flex: 1,
             color: "white",
-            fontSize: { xs: "0.75rem", sm: "0.875rem" },
+            fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "20px" },
             lineHeight: 1.5,
           }}
         >
           {title}
         </Typography>
         <Box sx={{ mb: 0, mx: -2, mt: 'auto' }}>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 0.5, px: 2 }}>
-            <LinearProgress
-              variant="determinate"
-              value={progressValue}
-              sx={{
-                height: { xs: 6, sm: 8 },
-                borderRadius: 4,
-                bgcolor: "#eeeeee",
-                width: "100%",
-                mr: 1,
-                ".MuiLinearProgress-bar": {
-                  bgcolor: "#50b755",
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2, px: 2 }}>
+            <Box sx={{ position: 'relative', width: '100%', mr: 1 }}>
+              <LinearProgress
+                variant="determinate"
+                value={progressValue}
+                sx={{
+                  height: { xs: 12, sm: 16, lg: 22 },
                   borderRadius: 4,
-                },
-              }}
-            />
+                  border: "1px solid #ffffff",
+                  bgcolor: "#eeeeee",
+                  width: "100%",
+                  ".MuiLinearProgress-bar": {
+                    bgcolor: "#50b755",
+                    borderRadius: 4,
+                  },
+                }}
+              />
+              <StarRounded 
+                sx={{
+                  position: 'absolute',
+                  right: `${100 - progressValue}%`,
+                  top: '50%',
+                  transform: 'translate(50%, -50%)',
+                  color: '#E79D0D',
+                  fontSize: { xs: 16, sm: 20, lg: 48 },
+                  filter: 'drop-shadow(0px 0px 2px rgba(0,0,0,0.3))'
+                }}
+              />
+            </Box>
             <Typography
               variant="caption"
+              fontFamily={"Atkinson Hyperlegible"}
               sx={{
-                color: "#525252",
+                color: "#ffffff",
                 minWidth: 40,
                 textAlign: "right",
-                fontSize: { xs: "0.65rem", sm: "0.75rem" },
+                fontSize: { xs: "0.65rem", sm: "0.75rem", lg: "18px" },
               }}
             >
               {progress}
@@ -101,10 +115,8 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
           </Box>
           <Button
             endIcon={
-              <KeyboardArrowDown
-                sx={{
-                  transform: "rotate(180deg)",
-                  fontSize: isMobile ? "1.2rem" : "1.5rem",
+              <ArrowUpward
+                sx={{                  fontSize: isMobile ? "1.2rem" : "1.5rem",
                 }}
               />
             }
@@ -117,7 +129,7 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
               textAlign: "center",
               justifyContent: "center",
               textTransform: "none",
-              fontSize: { xs: "0.85rem", sm: "1rem" },
+              fontSize: { xs: "0.85rem", sm: "1rem", md: "20px" },
               fontWeight: "500",
               borderRadius: 0,
               borderBottomLeftRadius: 1,

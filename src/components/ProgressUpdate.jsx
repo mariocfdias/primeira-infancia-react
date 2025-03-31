@@ -1,5 +1,5 @@
 import { Box, Typography, Paper, Chip, Avatar } from "@mui/material"
-import { Star } from "@mui/icons-material"
+import { Star, StarRounded } from "@mui/icons-material"
 import PropTypes from 'prop-types'
 
 
@@ -44,30 +44,30 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
         </Avatar>
         <Box sx={{ flex: 1 }}>
           <Typography
-            variant="body2"
             sx={{
               mb: 0.5,
-              fontSize: { xs: "0.75rem", sm: "0.875rem" },
+              fontSize: { xs: "0.75rem", sm: "0.875rem", md: "16px" },
               lineHeight: 1.5,
             }}
           >
-            <Box component="span" sx={{ fontWeight: "bold" }}>
-              Prefeitura de {city}
-            </Box>{" "}
+            Prefeitura de {" "}
+            <Typography component="span" sx={{ fontWeight: "bold", fontSize: { xs: "0.75rem", sm: "0.875rem", md: "20px" } }}>
+              {city}
+            </Typography>{" "}
             concluiu a missão "{mission}" e ganhou{" "}
             <Box
               component="span"
               sx={{
-                color: "#e79d0d",
+                color: "#E79D0D",
                 fontWeight: "medium",
                 display: "inline-flex",
                 alignItems: "center",
+                fontSize: { xs: "0.75rem", sm: "0.875rem", md: "20px" },
               }}
             >
-              <Star
+              <StarRounded
                 sx={{
-                  color: "#f5d664",
-                  fontSize: isMobile ? "0.875rem" : "1rem",
+                  color: "#E79D0D",
                   mr: 0.25,
                 }}
               />
@@ -80,7 +80,7 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
               sx={{
                 bgcolor: "#27884a",
                 color: "white",
-                fontSize: { xs: "0.65rem", sm: "0.75rem" },
+                fontSize: { xs: "0.65rem", sm: "0.75rem", md: "16px" },
                 height: "auto",
                 py: 0.25,
                 fontWeight: "medium",
@@ -94,7 +94,7 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
               color: "#8d8d8d",
               display: "block",
               textAlign: "right",
-              fontSize: { xs: "0.65rem", sm: "0.75rem" },
+              fontSize: { xs: "0.65rem", sm: "0.75rem", md: "16px" },
             }}
           >
             {date}

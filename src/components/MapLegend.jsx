@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 export default function MapLegend({ selectedMissao }) {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   
   // Only render the legend outside the map on mobile
   if (!isMobile) return null;
