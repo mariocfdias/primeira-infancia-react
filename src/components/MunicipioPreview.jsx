@@ -381,10 +381,10 @@ const MunicipioPreview = ({
 
 
         </Box>
-        <Typography variant="subtitle1" fontWeight="bold" mb={1}>
+        <Typography variant="subtitle1" fontWeight="bold" mb={1} sx={{fontSize: { xs: "12px", sm: "14px", lg: "20px" }}}>
         Missões
         </Typography>
-        <Box display="flex" gap={1} justifyContent="space-between">
+        <Box display="flex"  gap={1} justifyContent="flex-start">
               <Chip
                 avatar={<Avatar sx={{ bgcolor: "#1f5bb4", color: "#ffffff", fontSize: "0.75rem", width: 24, height: 24 }}>
                   <Typography variant="body2" fontWeight="bold" color="#ffffff">{badges}</Typography>
@@ -419,12 +419,12 @@ const MunicipioPreview = ({
         {/* Evidence section - only show if we have mission data */}
         {selectedMissionId && missionInfo && (
           <Box mt={3}>
-            <Typography variant="subtitle1" fontWeight="bold" mb={1}>
+            <Typography variant="subtitle1" fontWeight="bold" mb={1} sx={{fontSize: { xs: "12px", sm: "14px", lg: "18px", letterSpacing: "0.5px" }}}>
               {missionInfo.missao?.descricao_da_missao}
             </Typography>
             <Divider sx={{ bgcolor: "rgba(255,255,255,0.1)", my: 1.5 }} />
-            <Typography variant="body2" color="text.secondary" mb={2} sx={{ color: "#cccccc" }}>
-              Evidências necessárias:
+            <Typography variant="body2" color="text.secondary" mb={2} sx={{ color: "#ffffff", fontWeight: "400", fontSize: { xs: "12px", sm: "14px", lg: "20px" } }}>
+              Evidências desta missão:
             </Typography>
             
             <Box display="flex" flexDirection="column" gap={1}>
@@ -475,7 +475,9 @@ const MunicipioPreview = ({
           }}
           endIcon={<OpenInNew />}
         >
-          VER PERFIL
+          <Typography  fontWeight="bold" fontSize={"16px"} sx={{letterSpacing: "2px"}} color="#ffffff">
+            VER PERFIL
+          </Typography>
         </Button>
       </Box>
     </Paper>

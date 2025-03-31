@@ -9,7 +9,6 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
       elevation={2}
       sx={{
         p: { xs: 0.5, sm: 1 },
-        border: "1px solid #d3d3d3",
         borderRadius: 1,
         backgroundColor: "#F3F3F3",
         transition: "all 0.2s ease-in-out",

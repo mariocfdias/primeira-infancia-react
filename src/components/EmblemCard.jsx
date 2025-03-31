@@ -29,11 +29,13 @@ export default function EmblemCard({ title, categoryId, stars, color }) {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          p: 1,
           position: "relative",
-          mb: 1,
           overflow: "hidden",
           transition: "transform 0.2s ease-in-out",
+          width: { xs: 80, sm: 120, lg: 160 },
+          height: { xs: 80, sm: 120, lg: 160 },
+          m: 0,
+          p: 0,
           opacity: stars === 0 ? 0.7 : 1,
           "&:hover": {
             transform: "scale(1.05)",
@@ -43,27 +45,29 @@ export default function EmblemCard({ title, categoryId, stars, color }) {
         <img
           src={getCategoryIcon(categoryId)}
           alt={title}
+          width={useMediaQuery(theme.breakpoints.down("sm")) ? 80 : 120}
+          height={useMediaQuery(theme.breakpoints.down("sm")) ? 80 : 120}
           style={{
-            maxWidth: "80%",
-            maxHeight: "80%",
             objectFit: "contain",
+            m: 0,
+            p: 0,
           }}
         />
         {stars >= 0 && (
           <Box
             sx={{
               position: "relative",
-              bottom: 30,
-              left: 30,
+              bottom: 40,
+              left: 40,
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               bgcolor: "#213B7B",
               color: "#FFFFFF",
               borderRadius: 300,
-              width: { xs: 20, sm: 34 },
-              height: { xs: 20, sm: 34 },
-              fontSize: { xs: "0.75rem", sm: "1rem" },
+              width: { xs: 20, sm: 34, lg: 40 },
+              height: { xs: 20, sm: 34, lg: 40 },
+              fontSize: { xs: "0.75rem", sm: "1rem", lg: "1.5rem" },
               fontWeight: "bold",
             }}
           >
@@ -75,9 +79,10 @@ export default function EmblemCard({ title, categoryId, stars, color }) {
         variant="caption"
         sx={{
           color: "#525252",
-          fontSize: { xs: "0.65rem", sm: "0.7rem", lg: "1rem" },
+          position: "relative",
+          top: -30,
+          fontSize: { xs: "0.65rem", sm: "0.7rem", lg: "20px" },
           fontWeight: "400",
-          display: "block",
           lineHeight: 1.2,
         }}
       >

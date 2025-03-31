@@ -76,7 +76,7 @@ export default function MunicipioPage({ onBack, ibge }) {
           variant="contained"
           sx={{
             mt: 2,
-            bgcolor: "#12447f",
+            bgcolor: "#1F5BB4",
             "&:hover": {
               bgcolor: "#0d3666",
             },
@@ -166,16 +166,15 @@ export default function MunicipioPage({ onBack, ibge }) {
           </Button>
 
           {/* Municipality Card */}
-          <Box sx={{ mb: 4 }}>
-            <Box sx={{ display: "flex", alignItems: "flex-start", mb: 2 }}>
-              <Paper
+          <Box display={"flex"} flexDirection={"row"} sx={{ mb: 4 }}>
+          <Paper
                 elevation={2}
                 sx={{
-                  width: { xs: 80, sm: 120 },
-                  height: { xs: 80, sm: 120 },
+                  width: { xs: 80, sm: 120, lg: 240 },
+                  height: { xs: 80, sm: 120, lg: 240 },
                   mr: 2,
+                  p: 0,
                   overflow: "hidden",
-                  bgcolor: "#ffea00",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -187,10 +186,14 @@ export default function MunicipioPage({ onBack, ibge }) {
                   style={{
                     width: "100%",
                     height: "100%",
+                    padding: 0,
+                    margin: 0,
                     objectFit: "contain",
                   }}
                 />
               </Paper>
+            <Box sx={{ display: "flex",flexDirection: "column", alignItems: "flex-start", mb: 2,width: "100%" }}>
+
               <Box sx={{width: "100%"}}>
                 <Typography
                   variant="h5"
@@ -198,7 +201,7 @@ export default function MunicipioPage({ onBack, ibge }) {
                   sx={{
                     fontWeight: "bold",
                     color: "#333333",
-                    fontSize: { xs: "1.5rem", sm: "1.75rem" },
+                    fontSize: { xs: "1.5rem", sm: "1.75rem", lg: "46px" },
                   }}
                 >
                   {municipioData.nome}
@@ -207,7 +210,7 @@ export default function MunicipioPage({ onBack, ibge }) {
                   variant="body1"
                   sx={{
                     color: "#525252",
-                    fontSize: { xs: "0.875rem", sm: "1rem" },
+                    fontSize: { xs: "0.875rem", sm: "1rem", lg: "24px" },
                     mb: 1,
                   }}
                 >
@@ -221,7 +224,7 @@ export default function MunicipioPage({ onBack, ibge }) {
                   sx={{
                     color: "#e79d0d",
                     fontWeight: "bold",
-                    fontSize: { xs: "1rem", sm: "1.25rem" },
+                    fontSize: { xs: "1rem", sm: "1.25rem", lg: "24px" },
                     display: "flex",
                     alignItems: "center",
                   }}
@@ -232,48 +235,44 @@ export default function MunicipioPage({ onBack, ibge }) {
                   variant="body2"
                   sx={{
                     color: "#FCBA38",
-                    fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "1rem" },
+                    fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "24px" },
                     fontWeight: "500",
                     display: "flex",
                     alignItems: "center",
                   }}
                 >
-                  {earnedPoints}/{totalPointsAvailable}
+                  {earnedPoints}/100
                   <StarRounded sx={{ color: "#FCBA38", fontSize: { xs: "1rem", sm: "1.25rem" } }} />
                 </Typography>
               </Box>
               <LinearProgress
                 variant="determinate"
                 value={totalPointsAvailable > 0 ? (earnedPoints / totalPointsAvailable) * 100 : 0}
+                
                 sx={{
                   height: 10,
                   borderRadius: 5,
+                  height: 16,
                   bgcolor: "#eeeeee",
                   mb: 1,
                   ".MuiLinearProgress-bar": {
-                    bgcolor: "#e79d0d",
+                    background: "linear-gradient(to right, #FFDD9A, #FCBA38)",
                     borderRadius: 5,
                   },
                 }}
               />
-                </Box>
-              </Box>
-            </Box>
-
-            <Box sx={{ mb: 3 }}>
-
-              <Typography
+                 <Typography
                 variant="body2"
                 sx={{
                   color: "#525252",
-                  fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                  fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "14px" },
                 }}
               >
                 Complete missões para subir de nível.
               </Typography>
-            </Box>
-
-            <Box sx={{ display: "flex", justifyContent: "space-around", mb: 4, }}>
+                </Box>
+              </Box>
+              <Box sx={{ display: "flex", justifyContent: "space-around", mb: 4, pt: 1 }}>
               <NumericIcon 
                 icon={<Star sx={{ color: "#f5d664", fontSize: { xs: "1.25rem", sm: "1.5rem", lg: "3rem" } }} />}
                 number={earnedPoints}
@@ -287,6 +286,14 @@ export default function MunicipioPage({ onBack, ibge }) {
                 sx={{backgroundColor: "#E7EEF8", borderRadius: 2, p: 1}}
               />
             </Box>
+            </Box>
+
+            <Box sx={{ mb: 3 }}>
+            
+           
+            </Box>
+
+
           </Box>
 
           {/* Emblems Section */}
@@ -296,8 +303,7 @@ export default function MunicipioPage({ onBack, ibge }) {
             sx={{
               fontWeight: "bold",
               color: "#333333",
-              fontSize: { xs: "1.125rem", sm: "1.25rem" },
-              mb: 1,
+              fontSize: { xs: "1.125rem", sm: "1.25rem", lg: "36px" },
             }}
           >
             Emblemas
@@ -306,14 +312,13 @@ export default function MunicipioPage({ onBack, ibge }) {
             variant="body2"
             sx={{
               color: "#525252",
-              fontSize: { xs: "0.75rem", sm: "0.875rem" },
-              mb: 2,
+              fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "18px" },
             }}
           >
             Complete missões para ganhar novos emblemas.
           </Typography>
 
-          <Grid container spacing={2}>
+          <Grid container spacing={1}>
             {categoriasList.map((categoria, index) => {
               const allComplete = categoria.missoes.every(missao => missao.validation_status === "VALID")
               const stars = allComplete ? 3 : categoria.missoes.filter(missao => missao.validation_status === "VALID").length
@@ -326,7 +331,7 @@ export default function MunicipioPage({ onBack, ibge }) {
               }
               
               return (
-                <Grid item xs={4} key={categoria.id}>
+                <Grid item md={4} xs={12} key={categoria.id}>
                   <EmblemCard
                     title={categoria.nome}
                     categoryId={categoria.id}
@@ -347,7 +352,7 @@ export default function MunicipioPage({ onBack, ibge }) {
             sx={{
               fontWeight: "bold",
               color: "#333333",
-              fontSize: { xs: "1.5rem", sm: "1.75rem" },
+              fontSize: { xs: "1.5rem", sm: "1.75rem", lg: "30px" },
               mb: 1,
             }}
           >
@@ -357,7 +362,7 @@ export default function MunicipioPage({ onBack, ibge }) {
             variant="body1"
             sx={{
               color: "#525252",
-              fontSize: { xs: "0.875rem", sm: "1rem" },
+              fontSize: { xs: "0.875rem", sm: "1rem", lg: "22px" },
               mb: 3,
             }}
           >

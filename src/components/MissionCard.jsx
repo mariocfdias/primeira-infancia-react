@@ -18,18 +18,20 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
 
   return (
     <Paper
-      elevation={isSelected ? 6 : 2}
+      elevation={isSelected ? 12 : 2}
       sx={{
         background: getCategoryColor(category),
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        border: isSelected ? "2px solid #12447f" : "1px solid #d3d3d3",
+        border: isSelected ? "16px solid #FFDE9D" : "3px solid #12447f",
+        opacity: isSelected ? 1 : 0.8,
         borderRadius: 2,
         transition: "all 0.2s ease-in-out",
-        transform: isSelected ? "scale(1.02)" : "scale(1)",
+        transform: isSelected ? "scale(1.18)" : "scale(1)",
+        zIndex: isSelected ? 1000 : 1,
         "&:hover": {
-          transform: isSelected ? "scale(1.02)" : "translateY(-4px)",
+          transform: isSelected ? "scale(1.02)" : "scale(1) translateY(-4px)",
           boxShadow: isSelected ? 6 : 3,
           opacity: 1,
         },
@@ -49,7 +51,7 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
           color: "white",
           fontWeight: "500",
           letterSpacing: 2,
-          fontSize: { xs: "0.65rem", sm: "0.75rem", lg: "14px" },
+          fontSize: { xs: "10px", sm: "12px", lg: "14px" },
           background: getCategoryColor(category),
           "& .MuiChip-label": {
             px: 1,
@@ -64,7 +66,7 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
             minHeight: { xs: 60, sm: 80 },
             flex: 1,
             color: "white",
-            fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "20px" },
+            fontSize: { xs: "12px", sm: "14px", lg: "20px" },
             lineHeight: 1.5,
           }}
         >
@@ -95,7 +97,7 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
                   top: '50%',
                   transform: 'translate(50%, -50%)',
                   color: '#E79D0D',
-                  fontSize: { xs: 16, sm: 20, lg: 48 },
+                  fontSize: { xs: 16, sm: 24, lg: 48 },
                   filter: 'drop-shadow(0px 0px 2px rgba(0,0,0,0.3))'
                 }}
               />
@@ -107,7 +109,7 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
                 color: "#ffffff",
                 minWidth: 40,
                 textAlign: "right",
-                fontSize: { xs: "0.65rem", sm: "0.75rem", lg: "18px" },
+                fontSize: { xs: "10px", sm: "12px", lg: "18px" },
               }}
             >
               {progress}
@@ -116,7 +118,8 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
           <Button
             endIcon={
               <ArrowUpward
-                sx={{                  fontSize: isMobile ? "1.2rem" : "1.5rem",
+                sx={{                  
+                fontSize: isMobile ? "19px" : "24px",
                 }}
               />
             }
@@ -129,7 +132,7 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
               textAlign: "center",
               justifyContent: "center",
               textTransform: "none",
-              fontSize: { xs: "0.85rem", sm: "1rem", md: "20px" },
+              fontSize: { xs: "14px", sm: "16px", md: "20px" },
               fontWeight: "500",
               borderRadius: 0,
               borderBottomLeftRadius: 1,

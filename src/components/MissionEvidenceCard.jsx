@@ -1,5 +1,5 @@
 import { Box, Typography, Paper, Button, Chip, Grid, Divider, useTheme, useMediaQuery, Tooltip } from "@mui/material"
-import { CheckCircle, OpenInNew, Info } from "@mui/icons-material"
+import { CheckCircle, OpenInNew, Info, StarRounded } from "@mui/icons-material"
 import PropTypes from 'prop-types'
 import EvidenceItem from './EvidenceItem'
 
@@ -28,9 +28,9 @@ export default function MissionEvidenceCard({
     return "/placeholder.svg"
   }
   const getCategoryColor = (category) => {
-    if (category.includes("AMPLIAÇÃO")) return "linear-gradient(to right, #1C434F, #0A5166)"
-    if (category.includes("FORTALECIMENTO")) return "linear-gradient(to right, #3D5E85, #5E7DA0)"
-    if (category.includes("MELHORIA")) return "linear-gradient(to right, #256F93, #5B97B5)"
+    if (category.includes("AMPLIAÇÃO")) return "linear-gradient(45deg, #1C434F, #0A5166)"
+    if (category.includes("FORTALECIMENTO")) return "linear-gradient(45deg, #3D5E85, #5E7DA0)"
+    if (category.includes("MELHORIA")) return "linear-gradient(45deg, #256F93, #5B97B5)"
     return "#333333"
   }
 
@@ -71,7 +71,7 @@ export default function MissionEvidenceCard({
         label={config.label}
         sx={{
           ...config.style,
-          fontSize: { xs: "0.65rem", sm: "0.75rem" },
+          fontSize: { xs: "0.65rem", sm: "0.75rem", lg: "18px" },
           height: 24,
           "& .MuiChip-icon": {
             color: "white",
@@ -111,8 +111,9 @@ export default function MissionEvidenceCard({
           overflow: "visible",
           zIndex: 1000,
           color: "white",
-          fontWeight: "medium",
-          fontSize: { xs: "0.65rem", sm: "0.75rem" },
+          fontWeight: "500",
+          letterSpacing: 2,
+          fontSize: { xs: "10px", sm: "12px", lg: "14px" },
           background: getCategoryColor(category),
           "& .MuiChip-label": {
             px: 1,
@@ -123,9 +124,10 @@ export default function MissionEvidenceCard({
         <Box sx={{ display: "flex", alignItems: "flex-start", mb: 2 }}>
           <Box
             sx={{
-              width: { xs: 40, sm: 50 },
-              height: { xs: 40, sm: 50 },
+              width: { xs: 40, sm: 60, lg: 80 },
+              height: { xs: 40, sm: 60, lg: 80 },
               mr: 2,
+              ml: { xs: 1, sm: 2, lg: 1 },
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -135,9 +137,9 @@ export default function MissionEvidenceCard({
             <img
               src={getCategoryIcon(categoryId)}
               alt="Mission icon"
+              width={useMediaQuery(theme.breakpoints.down("sm")) ? 40 : 60}
+              height={useMediaQuery(theme.breakpoints.down("sm")) ? 40 : 60}
               style={{
-                width: "100%",
-                height: "100%",
                 objectFit: "contain",
               }}
             />
@@ -147,26 +149,37 @@ export default function MissionEvidenceCard({
               variant="body1"
               sx={{
                 fontWeight: "400",
-                fontSize: { xs: "0.875rem", sm: "1.2rem" },
+                color: "white",
+                fontSize: { xs: "12px", sm: "14px", lg: "20px" },
                 mb: 1,
               }}
             >
               {title}
             </Typography>
-            <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 2 }}>
+            <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center"}}>
               {getStatusChip()}
               <Typography
                 variant="body2"
+                fontFamily="Atkinson Hyperlegible"
                 sx={{
                   color: "#e79d0d",
                   fontWeight: "bold",
-                  fontSize: { xs: "0.875rem", sm: "1rem" },
+                  fontSize: { xs: "0.875rem", sm: "1rem", lg: "24px" },
                   display: "flex",
                   alignItems: "center",
+                  ml: 2,
                 }}
               >
-                +{points} <span style={{ fontSize: "1.25em", marginLeft: "2px" }}>⭐</span>
+                +{points} 
               </Typography>
+              <StarRounded sx={{ 
+                 color: "#e79d0d",
+                 fontWeight: "bold",
+                 fontSize: { xs: "0.875rem", sm: "1rem", lg: "36px" },
+                 display: "flex",
+                 alignItems: "center",
+              }} />
+              
             </Box>
           </Box>
         </Box>
@@ -178,17 +191,16 @@ export default function MissionEvidenceCard({
           variant="body2"
           sx={{
             fontWeight: "medium",
-            fontSize: { xs: "0.75rem", sm: "0.875rem" },
-            mb: 1.5,
+            fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "24px" },
+            color: "#000000",
           }}
         >
           Evidências
         </Typography>
         <Typography
-          variant="body2"
           sx={{
-            color: "#525252",
-            fontSize: { xs: "0.7rem", sm: "0.8rem" },
+            color: "#000000",
+            fontSize: { xs: "0.7rem", sm: "0.8rem", lg: "16px" },
             mb: 2,
           }}
         >
@@ -214,14 +226,16 @@ export default function MissionEvidenceCard({
           <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Button
               variant="contained"
+              size="medium"
               endIcon={<OpenInNew />}
               sx={{
                 bgcolor: "#12447f",
                 "&:hover": {
-                  bgcolor: "#0d3666",
+                  bgcolor: "#1F5BB4",
                 },
                 textTransform: "none",
-                fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "18px" },
+                height: { xs: 30, sm: 40, lg: 50 },
               }}
             >
               Enviar evidências

@@ -14,9 +14,10 @@ export default function NumericIcon({ icon, number, description, sx }) {
       <Box>
         <Typography
           variant="h4"
+          fontFamily={"Atkinson Hyperlegible"}
           sx={{
             fontWeight: "bold",
-            fontSize: { xs: "1.25rem", sm: "1.5rem" },
+            fontSize: { xs: "1.25rem", sm: "1.5rem", lg: "24px" },
             lineHeight: 1
           }}
         >
@@ -26,7 +27,7 @@ export default function NumericIcon({ icon, number, description, sx }) {
           variant="body2"
           sx={{
             color: "#525252",
-            fontSize: { xs: "0.75rem", sm: "0.875rem" },
+            fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "16px" },
           }}
         >
           {description}

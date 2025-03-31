@@ -33,7 +33,7 @@ export default function EvidenceItem({
       return (
         <OpenInNew sx={{ 
           color: "#12447f", 
-          fontSize: { xs: "0.9rem", sm: "1rem" }, 
+          fontSize: { xs: "0.9rem", sm: "1rem", lg: "24px" }, 
           ml: "auto",
           cursor: "pointer" 
         }} />
@@ -43,7 +43,7 @@ export default function EvidenceItem({
     return (
       <Info sx={{ 
         color: "#12447f", 
-        fontSize: { xs: "0.9rem", sm: "1rem" }, 
+        fontSize: { xs: "0.9rem", sm: "1rem", lg: "28px" }, 
         ml: "auto", 
         cursor: "pointer" 
       }} />
@@ -76,13 +76,14 @@ export default function EvidenceItem({
       <Typography
         variant="body2"
         sx={{
-          fontSize: { xs: "0.7rem", sm: "0.8rem" },
+          fontSize: { xs: "0.7rem", sm: "0.8rem", lg: "20px" },
           mr: 1,
         }}
       >
         {title}
       </Typography>
-      <Tooltip color={(evidenceLink || evidence) ? "white" : "#333333"} title={getTooltipTitle()} arrow placement="top">
+      <Tooltip color={(evidenceLink || evidence) ? "white" : "#333333"} title={<Typography sx={{fontSize: { xs: "0.7rem", sm: "0.8rem", lg: "20px", width: {xs: "200px", lg: "360px"} }}}>{getTooltipTitle()}</Typography>} arrow placement="top">
+
         {getIcon()}
       </Tooltip>
     </Box>

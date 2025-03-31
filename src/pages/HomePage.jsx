@@ -468,10 +468,10 @@ export default function HomePage() {
                 textAlign={"center"}
                 fontFamily={"Atkinson Hyperlegible"}
                 sx={{
-                  fontWeight: "600",
+                  fontWeight: "800",
                   mr: 2,
                   color: "#12447f",
-                  fontSize: { xs: "2.5rem", sm: "3rem", lg: "96px" },
+                  fontSize: { xs: "40px", sm: "48px", lg: "96px" },
                 }}
               >
                 {loading ? <CircularProgress size={24} /> : municipios.length || 82}
@@ -482,9 +482,9 @@ export default function HomePage() {
                   sx={{
                     fontWeight: "bold",
                     color: "#12447f",
-                    fontSize: { xs: "1rem", sm: "1.1rem", lg: "36px" },
-                    mb: 0,
-                    letterSpacing: "0.02em"
+                    fontSize: { xs: "16px", sm: "18px", lg: "48px" },
+                    letterSpacing: "0.02em",
+                    mt: -1
                   }}
                 >
                   prefeituras
@@ -493,8 +493,8 @@ export default function HomePage() {
                   variant="body2"
                   sx={{
                     color: "#333333",
-                    fontSize: { xs: "0.875rem", sm: "1rem", lg: "24px" },
-                    mt: -2,
+                    fontSize: { xs: "14px", sm: "16px", lg: "36px" },
+                    mt: -3.4,
                     letterSpacing: "0.01em"
                   }}
                 >
@@ -521,7 +521,7 @@ export default function HomePage() {
                   fontWeight: "600",
                   mr: 2,
                   color: "#12447f",
-                  fontSize: { xs: "2.5rem", sm: "3rem", lg: "96px" },
+                  fontSize: { xs: "40px", sm: "48px", lg: "96px" },
                 }}
               >
                 2%
@@ -532,8 +532,9 @@ export default function HomePage() {
                   sx={{
                     fontWeight: "bold",
                     color: "#12447f",
-                    fontSize: { xs: "1rem", sm: "1.1rem", lg: "36px" },
+                    fontSize: { xs: "16px", sm: "18px", lg: "48px" },
                     mb: 0,
+                    mt: -3,
                     letterSpacing: "0.02em"
                   }}
                 >
@@ -543,8 +544,8 @@ export default function HomePage() {
                   variant="body2"
                   sx={{
                     color: "#333333",
-                    fontSize: { xs: "0.875rem", sm: "1rem", lg: "24px" },
-                    mt: -2,
+                    fontSize: { xs: "14px", sm: "16px", lg: "36px" },
+                    mt: -3.4,
                     letterSpacing: "0.01em"
                   }}
                 >
@@ -562,7 +563,7 @@ export default function HomePage() {
               fontWeight: "600",
               color: "#333333",
               mb: 1,
-              fontSize: { xs: "1.25rem", sm: "1.5rem", lg: "32px" },
+              fontSize: { xs: "20px", sm: "24px", lg: "32px" },
             }}
           >
             Mapa interativo
@@ -572,7 +573,7 @@ export default function HomePage() {
             sx={{
               color: "#525252",
               mb: 2,
-              fontSize: { xs: "0.875rem", sm: "1rem", lg: "20px" },
+              fontSize: { xs: "14px", sm: "16px", lg: "20px" },
             }}
           >
             Acesse um município no mapa abaixo ou selecione-o na caixa ao lado para ver mais detalhes sobre a participação e
@@ -643,7 +644,7 @@ export default function HomePage() {
               )}
     
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 1, mb: 2 }}>
-              <InputLabel htmlFor="my-input" sx={{ fontWeight: "500", color: "#333333", fontSize: { xs: "0.875rem", sm: "1rem", lg: "24px" } }}>Prefeituras</InputLabel>
+              <InputLabel htmlFor="my-input" sx={{ fontWeight: "500", color: "#333333", fontSize: { xs: "14px", sm: "16px", lg: "24px" } }}>Prefeituras</InputLabel>
                 <FormControl 
                   fullWidth 
                   variant="outlined" 
@@ -671,7 +672,7 @@ export default function HomePage() {
                         borderColor: 'pink',
                         color: '#000000',
                         borderWidth: "thin",
-                        fontSize: { xs: "0.875rem", sm: "1rem", lg: "24px" },
+                        fontSize: { xs: "14px", sm: "16px", lg: "24px" },
                       },
                       '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                         borderColor: '#000000',
@@ -759,7 +760,7 @@ export default function HomePage() {
               fontWeight: "600",
               color: "#333333",
               mb: 1,
-              fontSize: { xs: "1.25rem", sm: "1.5rem", lg: "32px" },
+              fontSize: { xs: "20px", sm: "24px", lg: "32px" },
             }}
           >
             Panorama de missões
@@ -768,7 +769,7 @@ export default function HomePage() {
             sx={{
               color: "#525252",
               mb: 3,
-              fontSize: { xs: "0.875rem", sm: "1rem", lg: "20px" },
+              fontSize: { xs: "14px", sm: "16px", lg: "20px" },
             }}
           >
             Cada card abaixo representa uma missão específica e mostra a quantidade de municípios que já a concluíram.
@@ -792,7 +793,7 @@ export default function HomePage() {
               fontWeight: "600",
               color: "#333333",
               mb: 1,
-              fontSize: { xs: "1.25rem", sm: "1.5rem", lg: "32px" },
+              fontSize: { xs: "20px", sm: "24px", lg: "32px" },
             }}
           >
             Quem está avançando?
@@ -801,7 +802,7 @@ export default function HomePage() {
             sx={{
               color: "#525252",
               mb: 3,
-              fontSize: { xs: "0.875rem", sm: "1rem", lg: "20px" },
+              fontSize: { xs: "14px", sm: "16px", lg: "20px" },
             }}
           >
             Veja as atualizações mais recentes sobre{" "}
@@ -826,7 +827,7 @@ export default function HomePage() {
               component="span"
               sx={{
                 mr: 2,
-                fontSize: { xs: "0.875rem", sm: "1rem", lg: "20px" },
+                fontSize: { xs: "14px", sm: "16px", lg: "20px" },
                 display: { xs: "block", sm: "inline" },
                 mb: { xs: 1, sm: 0 },
               }}
@@ -844,7 +845,7 @@ export default function HomePage() {
                   color: eventFilter === "mission_completed" ? "white" : "#333333",
                   textTransform: "none",
                   fontWeight: "semibold",
-                  fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "20px" },
+                  fontSize: { xs: "12px", sm: "14px", lg: "20px" },
                   "&:hover": {
                     bgcolor: eventFilter === "mission_completed" ? "#0d3666" : "rgba(0, 0, 0, 0.04)",
                     borderColor: eventFilter === "mission_completed" ? "transparent" : "#b3b3b3",
@@ -867,7 +868,7 @@ export default function HomePage() {
                   color: eventFilter === "evidence_submitted" ? "white" : "#333333",
                   textTransform: "none",
                   fontWeight: "semibold",
-                  fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "20px" },
+                  fontSize: { xs: "12px", sm: "14px", lg: "20px" },
                                     "&:hover": {
                     bgcolor: eventFilter === "evidence_submitted" ? "#0d3666" : "rgba(0, 0, 0, 0.04)",
                     borderColor: eventFilter === "evidence_submitted" ? "transparent" : "#b3b3b3",
@@ -882,23 +883,49 @@ export default function HomePage() {
           </Box>
     
           <Box container spacing={2} display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
-            <Box item xs={12} md={8}>
+            <Box width={"30%"} sx={{minWidth: "150px"}}>
               <TextField
-                placeholder="Município"
+                fullWidth
                 variant="outlined"
+                placeholder="Município"
                 size={isMobile ? "small" : "medium"}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Search sx={{ color: "#9f9f9f", fontSize: isMobile ? "1rem" : "1.25rem" }} />
+                      <Search sx={{ color: "#9f9f9f", fontSize: isMobile ? "1rem" : "20px" }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
-                  ".MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#d3d3d3",
+                  '.MuiTextField-notchedOutline': {
+                    borderColor: 'pink',
+                    color: '#000000',
+                    borderWidth: "thin",
+                    fontSize: { xs: "14px", sm: "16px", lg: "24px" },
                   },
-                  fontSize: { xs: "0.875rem", sm: "1rem" },
+                  '&.Mui-focused .MuiTextField-notchedOutline': {
+                    borderColor: '#000000',
+                    color: '#000000',
+                  },
+                  '&:hover .MuiTextField-notchedOutline': {
+                    borderColor: '#000000',
+                    color: '#000000',
+                  },
+                  '.MuiTextField-outlined': {
+                    borderColor: '#000000',
+                    color: '#000000',
+                  },
+                  '&.MuiTextField-root': {
+        '& fieldset': {
+          borderColor: '#000000', // <------------------ outline-color by default
+        },
+        '&:hover fieldset': {
+          borderColor: '#000000', // <------------------ outline-color on hover
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: '#000000', // <------------------ outline-color on focus
+        },
+      }
                 }}
               />
             </Box>
@@ -915,7 +942,7 @@ export default function HomePage() {
                   variant="body2"
                   sx={{
                     mr: 1,
-                    fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "20px" },
+                    fontSize: { xs: "12px", sm: "14px", lg: "20px" },
                   }}
                 >
                   Ordenar por
@@ -936,7 +963,7 @@ export default function HomePage() {
                         borderColor: 'pink',
                         color: '#000000',
                         borderWidth: "thin",
-                        fontSize: { xs: "0.875rem", sm: "1rem", lg: "24px" },
+                        fontSize: { xs: "14px", sm: "16px", lg: "24px" },
                       },
                       '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                         borderColor: '#000000',
@@ -1031,7 +1058,7 @@ export default function HomePage() {
                     },
                     border: "1px solid #d3d3d3",
                     borderRadius: 0,
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                    fontSize: { xs: "12px", sm: "14px" },
                   }}
                 />
               )}
