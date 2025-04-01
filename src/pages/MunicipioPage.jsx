@@ -1,6 +1,6 @@
 import { Box, Typography, Container, Paper, Grid, Button, LinearProgress, useMediaQuery, useTheme, CircularProgress } from "@mui/material"
 import { ArrowBack, Star, KeyboardArrowUp, WorkspacePremium, StarRounded } from "@mui/icons-material"
-import { Link, useParams } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import { useState, useEffect } from "react"
 import MissionEvidenceCard from "../components/MissionEvidenceCard"
 import EmblemCard from "../components/EmblemCard"
@@ -10,13 +10,19 @@ import NumericIcon from "../components/NumericIcon"
 export default function MunicipioPage({ onBack, ibge }) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
-  console.log({ibge})
+  const location = useLocation();
+  const urlParams = new URLSearchParams(location.search);
+  const codIbge = urlParams.get('codIbge');
   
   const [loading, setLoading] = useState(true)
   const [municipioData, setMunicipioData] = useState(null)
   const [desempenhoData, setDesempenhoData] = useState(null)
 
   const [error, setError] = useState(null)
+
+  useEffect(() => {
+    console.log({codIbge})
+  }, [codIbge])
   
   useEffect(() => {
     const fetchMunicipioData = async () => {
@@ -70,21 +76,23 @@ export default function MunicipioPage({ onBack, ibge }) {
         <Typography color="error" variant="h6">
           Erro ao carregar dados: {error}
         </Typography>
-        <Button
-          onClick={onBack}
-          startIcon={<ArrowBack />}
-          variant="contained"
-          sx={{
-            mt: 2,
-            bgcolor: "#1F5BB4",
-            "&:hover": {
-              bgcolor: "#0d3666",
-            },
-            textTransform: "none",
-          }}
-        >
-          Voltar para o mapa
-        </Button>
+        {!codIbge && (
+          <Button
+            onClick={onBack}
+            startIcon={<ArrowBack />}
+            variant="contained"
+            sx={{
+              mt: 2,
+              bgcolor: "#1F5BB4",
+              "&:hover": {
+                bgcolor: "#0d3666",
+              },
+              textTransform: "none",
+            }}
+          >
+            Voltar para o mapa
+          </Button>
+        )}
       </Container>
     )
   }
@@ -96,21 +104,23 @@ export default function MunicipioPage({ onBack, ibge }) {
         <Typography color="error" variant="h6">
           Nenhum dado encontrado para este município
         </Typography>
-        <Button
-          onClick={onBack}
-          startIcon={<ArrowBack />}
-          variant="contained"
-          sx={{
-            mt: 2,
-            bgcolor: "#12447f",
-            "&:hover": {
-              bgcolor: "#0d3666",
-            },
-            textTransform: "none",
-          }}
-        >
-          Voltar para o mapa
-        </Button>
+        {!codIbge && (
+          <Button
+            onClick={onBack}
+            startIcon={<ArrowBack />}
+            variant="contained"
+            sx={{
+              mt: 2,
+              bgcolor: "#12447f",
+              "&:hover": {
+                bgcolor: "#0d3666",
+              },
+              textTransform: "none",
+            }}
+          >
+            Voltar para o mapa
+          </Button>
+        )}
       </Container>
     )
   }
@@ -149,21 +159,23 @@ export default function MunicipioPage({ onBack, ibge }) {
       <Grid container spacing={4}>
         {/* Left Column */}
         <Grid item xs={12} md={5} lg={4}>
-          <Button
-            onClick={onBack}
-            startIcon={<ArrowBack />}
-            variant="contained"
-            sx={{
-              mb: 3,
-              bgcolor: "#12447f",
-              "&:hover": {
-                bgcolor: "#0d3666",
-              },
-              textTransform: "none",
-            }}
-          >
-            Voltar para o mapa
-          </Button>
+          {!codIbge && (
+            <Button
+              onClick={onBack}
+              startIcon={<ArrowBack />}
+              variant="contained"
+              sx={{
+                mb: 3,
+                bgcolor: "#12447f",
+                "&:hover": {
+                  bgcolor: "#0d3666",
+                },
+                textTransform: "none",
+              }}
+            >
+              Voltar para o mapa
+            </Button>
+          )}
 
           {/* Municipality Card */}
           <Box display={"flex"} flexDirection={"row"} sx={{ mb: 4 }}>

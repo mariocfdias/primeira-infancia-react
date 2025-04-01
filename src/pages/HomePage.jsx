@@ -29,8 +29,14 @@ import MunicipioPage from "./MunicipioPage"
 import { useTheme } from "@mui/material/styles"
 import { useApiRequest, services } from "../api"
 import '@fontsource/atkinson-hyperlegible/400.css';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 export default function HomePage() {
   const theme = useTheme()
+  const location = useLocation();
+  const urlParams = new URLSearchParams(location.search);
+  const codIbgeParam = urlParams.get('codIbge');
+  
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const isTablet = useMediaQuery(theme.breakpoints.down("md"))
   const { makeRequest, loading, error, data } = useApiRequest()
@@ -73,6 +79,24 @@ export default function HomePage() {
 
   // State to hold non-participant municipality data for display
   const [nonParticipantMunicipio, setNonParticipantMunicipio] = useState(null);
+
+  // Check URL parameter on component mount
+  useEffect(() => {
+    if (codIbgeParam) {
+      setShowMunicipioPage(true);
+      
+      // Find the municipio in our list if it exists
+      const municipio = municipios.find(m => m.codIbge === codIbgeParam);
+      if (municipio) {
+        setSelectedMunicipio(municipio);
+        
+        // Check if we need to fetch more data for this municipality
+        if (!municipioCache[codIbgeParam]) {
+          makeRequestMunicipio(() => services.municipiosService.getMunicipioByIbge(codIbgeParam));
+        }
+      }
+    }
+  }, [codIbgeParam, municipios, municipioCache, makeRequestMunicipio]);
 
   // Add useEffect to track changes to missionPanoramaById
   useEffect(() => {
@@ -323,7 +347,14 @@ export default function HomePage() {
 
   // Handle "Ver perfil" button click
   const handleViewProfile = () => {
+    // Just set the state to show the profile page
     setShowMunicipioPage(true);
+  }
+
+  // Handle back button from MunicipioPage
+  const handleBackFromMunicipioPage = () => {
+    // Just set the state to hide the profile page
+    setShowMunicipioPage(false);
   }
 
   // Handle pagination change
@@ -415,25 +446,19 @@ export default function HomePage() {
     
     return (
       <MunicipioPreview
-        municipioData={
-          nonParticipantMunicipio 
-            ? { status: 'success', data: nonParticipantMunicipio } 
-            : (municipioData?.status === 'success' ? municipioData : null)
-        }
-        loading={loadingMunicipio && !nonParticipantMunicipio}
-        selectedMissionId={selectedMissao}
-        isNonParticipant={!!nonParticipantMunicipio}
+        codIbge={selectedMunicipio.codIbge}
+        missaoId={selectedMissao}
         onViewProfile={handleViewProfile}
       />
     );
-  }, [selectedMunicipio, municipioData, nonParticipantMunicipio, loadingMunicipio, selectedMissao]);
+  }, [selectedMunicipio, selectedMissao]);
 
   return (
     <Container maxWidth={false} sx={{ py: { xs: 2, sm: 3, md: 4 }, width: '100%' }}>
-      {showMunicipioPage ? (
+      {showMunicipioPage || codIbgeParam ? (
         <MunicipioPage 
-          ibge={selectedMunicipio?.codIbge}
-          onBack={() => setShowMunicipioPage(false)}
+          ibge={selectedMunicipio?.codIbge || codIbgeParam}
+          onBack={handleBackFromMunicipioPage}
         />
       ) : (
         <>

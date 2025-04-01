@@ -20,27 +20,21 @@ import EvidenceItem from './EvidenceItem'
 import { useApiRequest, services } from '../api';
 
 const MunicipioPreview = ({ 
-  municipioData, 
-  loading = false, 
-  selectedMissionId = null, 
-  isNonParticipant = false,
+  codIbge,
+  missaoId,
   onViewProfile = () => {}
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [imgError, setImgError] = useState(false);
-  const { makeRequest, loading: fetchingMission } = useApiRequest();
-  const [missionInfo, setMissionInfo] = useState(null);
-  const [evidenceItems, setEvidenceItems] = useState([]);
+  const { makeRequest, loading } = useApiRequest();
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
 
-  console.log({municipioData, selectedMissionId})
   // Handle image load error
   const handleImageError = () => {
     setImgError(true);
   };
-
-  // Extract municipio data correctly
-  const municipio = municipioData?.data || {};
 
   // Format Google Drive image URL if it's a drive URL
   const formatImageUrl = (imageUrl) => {
@@ -57,61 +51,50 @@ const MunicipioPreview = ({
     return imageUrl;
   };
 
-  // Fetch mission data when selectedMissionId changes
+  // Fetch data when codIbge or missaoId changes
   useEffect(() => {
-    const fetchMissionData = async () => {
-      if (!selectedMissionId || !municipio.codIbge) {
-        setMissionInfo(null);
-        setEvidenceItems([]);
+    const fetchData = async () => {
+      if (!codIbge) {
+        setData(null);
+        setError(null);
         return;
       }
       
       try {
-        const response = await makeRequest(() => 
-          services.desempenhosService.getDesempenhoByMunicipioAndMissao(
-            municipio.codIbge,
-            selectedMissionId
-          )
-        );
-
-        console.log({response})
+        let response;
+        if (missaoId) {
+          // Fetch mission-specific data
+          response = await makeRequest(() => 
+            services.desempenhosService.getDesempenhoByMunicipioAndMissao(
+              codIbge,
+              missaoId
+            )
+          );
+        } else {
+          // Fetch general panorama data
+          response = await makeRequest(() => 
+            services.dashboardService.getMapPanoramaByIbge(codIbge)
+          );
+        }
 
         if (response && response.status === 'success' && response.data) {
-          // Set mission info
-          setMissionInfo(response.data);
-          
-          // Process evidence items
-          let items = [];
-          
-          try {
-            // Simply use the evidence array directly from the API response
-            if (response.data.evidence && Array.isArray(response.data.evidence)) {
-              items = response.data.evidence;
-            }
-          } catch (e) {
-            console.error("Failed to process evidence items:", e);
-          }
-          
-          setEvidenceItems(items);
+          setData(response.data);
+          setError(null);
         } else {
-          setMissionInfo(null);
-          setEvidenceItems([]);
+          setData(null);
+          setError('Failed to fetch data');
         }
       } catch (error) {
-        console.error("Error fetching mission data:", error);
-        setMissionInfo(null);
-        setEvidenceItems([]);
+        console.error("Error fetching data:", error);
+        setData(null);
+        setError(error.message);
       }
     };
 
-    fetchMissionData();
-  }, [selectedMissionId, municipio.codIbge, makeRequest]);
+    fetchData();
+  }, [codIbge, missaoId, makeRequest]);
 
-  useEffect(() => {
-    console.log({municipioData});
-  }, [municipioData]);
-
-  if (loading || fetchingMission) {
+  if (loading) {
     return (
       <Paper
         elevation={2}
@@ -134,7 +117,25 @@ const MunicipioPreview = ({
     );
   }
 
-  if (!municipioData) {
+  if (error) {
+    return (
+      <Paper
+        elevation={2}
+        sx={{
+          bgcolor: "#333333",
+          color: "white",
+          p: { xs: 2, sm: 3 },
+          borderRadius: 1,
+        }}
+      >
+        <Alert severity="error">
+          Erro ao carregar dados: {error}
+        </Alert>
+      </Paper>
+    );
+  }
+
+  if (!codIbge) {
     return (
       <Paper
         elevation={2}
@@ -160,73 +161,26 @@ const MunicipioPreview = ({
       </Paper>
     );
   }
-  
-  // Special render for non-participating municipalities
-  if (isNonParticipant || municipio.status === "Não participante") {
-    return (
-      <Paper
-        elevation={2}
-        sx={{
-          bgcolor: "#333333",
-          color: "white",
-          borderRadius: 1,
-          minHeight: "fit-content"
-        }}
-      >
-        <Box 
-          p={{ xs: 2, sm: 3 }}
-          sx={{
-            display: "flex", 
-            flexDirection: "column"
-          }}
-        >
-          {/* Header with initial and title */}
-          <Box display="flex" gap={2} mb={2}>
-            <Box 
-              sx={{
-                width: { xs: 80, sm: 100 },
-                height: { xs: 80, sm: 100 },
-                borderRadius: 1,
-                overflow: "hidden",
-                flexShrink: 0,
-                bgcolor: "#555555",
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: { xs: "2rem", sm: "2.5rem" },
-                fontWeight: "bold",
-                color: "#ffffff",
-                opacity: 0.7
-              }}
-            >
-              {municipio.nome ? municipio.nome.charAt(0) : "?"}
-            </Box>
 
-            <Box flex={1}>
-              <Typography variant="h5" fontWeight="bold" mb={0.5} sx={{fontSize: { xs: "1.25rem", sm: "1.5rem", lg: "20px" }}}>
-                {municipio.nome}
-              </Typography>
-              
-              
-              <Alert 
-                severity="info" 
-                sx={{ 
-                  mt: 2,
-                  "& .MuiAlert-icon": {
-                    color: "#ffffff"
-                  },
-                  bgcolor: "rgba(255, 255, 255, 0.1)",
-                  color: "#ffffff"
-                }}
-              >
-                Este município ainda não aderiu ao Pacto pela Primeira Infância. 
-              </Alert>
-            </Box>
-          </Box>
-        </Box>
-      </Paper>
-    );
+  // Extract data based on the type of response
+  let municipio, evidence, missao, points, badges, status, nome;
+  
+  if (missaoId) {
+    // Mission-specific data
+    municipio = data?.municipio || {};
+    evidence = data?.evidence || [];
+    missao = data?.missao || {};
+    points = municipio?.points || 0;
+    badges = municipio?.badges || 0;
+    status = municipio?.status || "Desconhecido";
+    nome = municipio?.nome || "Município";
+  } else {
+    // General panorama data
+    municipio = data?.mapPanorama?.municipio || {};
+    points = data?.totalPoints || 0;
+    badges = municipio?.badges || 0;
+    status = municipio?.status || "Desconhecido";
+    nome = municipio?.nome || "Município";
   }
 
   // Calculate level based on points
@@ -250,12 +204,6 @@ const MunicipioPreview = ({
     if (points >= 1) return points / 2; // 0.5-50%
     return 0;
   };
-  
-  // Safely access properties with default values
-  const points = municipio.points || 0;
-  const badges = municipio.badges || 0;
-  const status = municipio.status || "Desconhecido";
-  const nome = municipio.nome || "Município";
   
   const level = getLevel(points);
   const levelColor = getLevelColor(points);
@@ -290,7 +238,8 @@ const MunicipioPreview = ({
               overflow: "hidden",
               flexShrink: 0,
               bgcolor: "#444444",
-              position: "relative"                        }}
+              position: "relative"
+            }}
           >
             {imageUrl && !imgError ? (
               <Avatar
@@ -361,66 +310,64 @@ const MunicipioPreview = ({
 
             {/* Stats */}
             <Box display="flex" gap={1} flexWrap="wrap" alignItems="center">
-       
               <Box display="flex" alignItems="center" gap={0.5} bgcolor="#FDF9DE" borderRadius={2} p={0.5}>
-              <StarOutlined sx={{ color: "#FCBA38", fontSize: "24px" }} />
+                <StarOutlined sx={{ color: "#FCBA38", fontSize: "24px" }} />
               </Box>
               <Typography variant="body2" fontWeight="400" fontSize={"16px"} fontFamily={"Atkinson Hyperlegible"} color="#ffffff">
-                    {points} pontos
-                  </Typography>
+                {points} pontos
+              </Typography>
 
-                  <Box display="flex" alignItems="center" gap={0.5} bgcolor="#E7EEF8" borderRadius={2} p={0.5}>
-              <EmojiEventsOutlined sx={{ color: "#0076B1", fontSize: "24px" }} />
+              <Box display="flex" alignItems="center" gap={0.5} bgcolor="#E7EEF8" borderRadius={2} p={0.5}>
+                <EmojiEventsOutlined sx={{ color: "#0076B1", fontSize: "24px" }} />
               </Box>
               <Typography variant="body2" fontWeight="400" fontSize={"16px"} fontFamily={"Atkinson Hyperlegible"} color="#ffffff">
-              {badges} emblemas
-                  </Typography>
-              
+                {badges} emblemas
+              </Typography>
             </Box>
           </Box>
-
-
         </Box>
+
         <Typography variant="subtitle1" fontWeight="bold" mb={1} sx={{fontSize: { xs: "12px", sm: "14px", lg: "20px" }}}>
-        Missões
+          Missões
         </Typography>
-        <Box display="flex"  gap={1} justifyContent="flex-start">
-              <Chip
-                avatar={<Avatar sx={{ bgcolor: "#1f5bb4", color: "#ffffff", fontSize: "0.75rem", width: 24, height: 24 }}>
-                  <Typography variant="body2" fontWeight="bold" color="#ffffff">{badges}</Typography>
-                </Avatar>}
-                label={`Concluídas`}
-                sx={{
-                  bgcolor: "#ffffff",
-                  color: "#333333"
-                }}
-              />
-              <Chip
-                avatar={<Avatar sx={{ bgcolor: "#27884A", color: "#ffffff", fontSize: "0.75rem", width: 24, height: 24 }}>
-                  <Typography variant="body2" fontWeight="bold" color="#ffffff">{badges}</Typography>
-                </Avatar>}
-                label={`Em ação`}
-                sx={{
-                  bgcolor: "#ffffff",
-                  color: "#333333"
-                }}
-              />
-              <Chip
-                avatar={<Avatar sx={{ bgcolor: "#000000", color: "#ffffff", fontSize: "0.75rem", width: 24, height: 24 }}>
-                  <Typography variant="body2" fontWeight="bold" color="#ffffff">{badges}</Typography>
-                </Avatar>}
-                label={`Pendentes`}
-                sx={{
-                  bgcolor: "#ffffff",
-                  color: "#333333"
-                }}
-              />
-          </Box>
+        <Box display="flex" gap={1} justifyContent="flex-start">
+          <Chip
+            avatar={<Avatar sx={{ bgcolor: "#1f5bb4", color: "#ffffff", fontSize: "0.75rem", width: 24, height: 24 }}>
+              <Typography variant="body2" fontWeight="bold" color="#ffffff">{data?.mapPanorama?.countValid || 0}</Typography>
+            </Avatar>}
+            label={`Concluídas`}
+            sx={{
+              bgcolor: "#ffffff",
+              color: "#333333"
+            }}
+          />
+          <Chip
+            avatar={<Avatar sx={{ bgcolor: "#27884A", color: "#ffffff", fontSize: "0.75rem", width: 24, height: 24 }}>
+              <Typography variant="body2" fontWeight="bold" color="#ffffff">{data?.mapPanorama?.countStarted || 0}</Typography>
+            </Avatar>}
+            label={`Em ação`}
+            sx={{
+              bgcolor: "#ffffff",
+              color: "#333333"
+            }}
+          />
+          <Chip
+            avatar={<Avatar sx={{ bgcolor: "#000000", color: "#ffffff", fontSize: "0.75rem", width: 24, height: 24 }}>
+              <Typography variant="body2" fontWeight="bold" color="#ffffff">{data?.mapPanorama?.countPending || 0}</Typography>
+            </Avatar>}
+            label={`Pendentes`}
+            sx={{
+              bgcolor: "#ffffff",
+              color: "#333333"
+            }}
+          />
+        </Box>
+
         {/* Evidence section - only show if we have mission data */}
-        {selectedMissionId && missionInfo && (
+        {missaoId && missao && evidence && (
           <Box mt={3}>
             <Typography variant="subtitle1" fontWeight="bold" mb={1} sx={{fontSize: { xs: "12px", sm: "14px", lg: "18px", letterSpacing: "0.5px" }}}>
-              {missionInfo.missao?.descricao_da_missao}
+              {missao.descricao_da_missao}
             </Typography>
             <Divider sx={{ bgcolor: "rgba(255,255,255,0.1)", my: 1.5 }} />
             <Typography variant="body2" color="text.secondary" mb={2} sx={{ color: "#ffffff", fontWeight: "400", fontSize: { xs: "12px", sm: "14px", lg: "20px" } }}>
@@ -428,12 +375,11 @@ const MunicipioPreview = ({
             </Typography>
             
             <Box display="flex" flexDirection="column" gap={1}>
-              {console.log({evidenceItems})}
-              {evidenceItems.length > 0 && (
-                evidenceItems.map((item, index) => {
+              {evidence.length > 0 && (
+                evidence.map((item, index) => {
                   // Map API status to component status
                   let itemStatus = "pending";
-                  if (missionInfo.validation_status === "VALID") {
+                  if (data.validation_status === "VALID") {
                     itemStatus = "completed";
                   }
                   return (
@@ -448,7 +394,7 @@ const MunicipioPreview = ({
                   );
                 })
               )}
-              {evidenceItems.length === 0 && (
+              {evidence.length === 0 && (
                 <Typography variant="body2" sx={{ color: "#999999" }}>
                   Nenhuma evidência encontrada para esta missão.
                 </Typography>
@@ -475,7 +421,7 @@ const MunicipioPreview = ({
           }}
           endIcon={<OpenInNew />}
         >
-          <Typography  fontWeight="bold" fontSize={"16px"} sx={{letterSpacing: "2px"}} color="#ffffff">
+          <Typography fontWeight="bold" fontSize={"16px"} sx={{letterSpacing: "2px"}} color="#ffffff">
             VER PERFIL
           </Typography>
         </Button>
@@ -487,12 +433,10 @@ const MunicipioPreview = ({
 // Use React.memo with a custom comparison function to optimize re-renders
 export default React.memo(MunicipioPreview, (prevProps, nextProps) => {
   // Only re-render if relevant props have changed
-  const dataChanged = prevProps.municipioData?.data?.codIbge !== nextProps.municipioData?.data?.codIbge;
-  const loadingChanged = prevProps.loading !== nextProps.loading;
-  const missionChanged = prevProps.selectedMissionId !== nextProps.selectedMissionId;
-  const participantStatusChanged = prevProps.isNonParticipant !== nextProps.isNonParticipant;
+  const codIbgeChanged = prevProps.codIbge !== nextProps.codIbge;
+  const missaoIdChanged = prevProps.missaoId !== nextProps.missaoId;
   const viewProfileChanged = prevProps.onViewProfile !== nextProps.onViewProfile;
   
   // If any important prop changed, we should re-render
-  return !(dataChanged || loadingChanged || missionChanged || participantStatusChanged || viewProfileChanged);
+  return !(codIbgeChanged || missaoIdChanged || viewProfileChanged);
 }); 
