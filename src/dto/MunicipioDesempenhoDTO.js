@@ -62,7 +62,10 @@ class MunicipioDesempenhoDTO {
             dto.withMunicipio({
                 codIbge: entity.municipio.codIbge,
                 nome: entity.municipio.nome,
-                status: entity.municipio.status
+                status: entity.municipio.status,
+                points: entity.municipio.points,
+                badges: entity.municipio.badges,
+                imagemAvatar: entity.municipio.imagemAvatar
             });
         }
         

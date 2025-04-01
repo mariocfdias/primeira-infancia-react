@@ -10,12 +10,13 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Job configuration
+const SCRIPT_URL = process.env.SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbx0vtDoD-B0vq4vNlpPkQ69e8scixftZfqTFzAMmMFRQX4tqux9fIvKlNdcDKDrfwuM/exec';
 const jobConfig = {
-    FETCH_MUNICIPIOS_URL: process.env.FETCH_MUNICIPIOS_URL || 'https://script.google.com/macros/s/AKfycbxAzecewMjM7-oGGwy1zOImLpQX4TeyJXuKl2jbA6GGDXnLW2RebCAybku2uiMI3hmC/exec',
-    UPDATE_JSON_URL: process.env.UPDATE_JSON_URL || 'https://script.google.com/macros/s/AKfycbxAzecewMjM7-oGGwy1zOImLpQX4TeyJXuKl2jbA6GGDXnLW2RebCAybku2uiMI3hmC/exec',
-    FETCH_EVENTOS_URL: process.env.FETCH_EVENTOS_URL || 'https://script.google.com/macros/s/AKfycbxAzecewMjM7-oGGwy1zOImLpQX4TeyJXuKl2jbA6GGDXnLW2RebCAybku2uiMI3hmC/exec',
+    FETCH_MUNICIPIOS_URL: SCRIPT_URL,
+    UPDATE_JSON_URL: SCRIPT_URL,
+    FETCH_EVENTOS_URL: SCRIPT_URL,
     AUTOFETCH_URL: process.env.AUTOFETCH_URL || 'https://primeira-infancia-backend.onrender.com/api/municipios',
-    FETCH_MISSOES_URL: process.env.FETCH_MISSOES_URL || 'https://script.google.com/macros/s/AKfycbwC6X0BrzwzByMYVVOXdi-sGkytrYm7-6F1VBhvNoMJJWZsHyW_V0X1syzSUkyuheM/exec',
+    FETCH_MISSOES_URL: SCRIPT_URL,
     FETCH_MISSAO_DESEMPENHO_URL: process.env.FETCH_MISSAO_DESEMPENHO_URL || 'https://script.google.com/macros/s/AKfycbxcTV4SrjXBnYOaTr47bFmYTbHyePKB-BdR6fddMXdZVMnsM9Qy_E8knZEIsMgjdZHJ/exec'
 };
 

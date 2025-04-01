@@ -47,6 +47,18 @@ async function fetchEventos(connection, url) {
             // Process and save each new event
             for (const eventData of newEvents) {
                 try {
+                    // Check if the event already exists in the database
+                    const queryBuilder = eventosRepository.repository.createQueryBuilder("eventos")
+                        .where("eventos.event = :event", { event: eventData.event })
+                        .andWhere("eventos.cod_ibge = :codIbge", { codIbge: eventData.cod_ibge });
+                    
+                    const existingEvent = await queryBuilder.getOne();
+                    
+                    if (existingEvent) {
+                        console.log(`Event already exists: ${eventData.event} for municipality ${eventData.cod_ibge}`);
+                        continue; // Skip this event and move to the next one
+                    }
+                    
                     // Create a DTO from the received data
                     const eventoDTO = EventosDTO.builder()
                         .withDataAlteracao(eventData.data_alteracao || new Date())
