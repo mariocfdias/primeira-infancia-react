@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react'
+import React, { useEffect, useState, useMemo, useRef, useCallback } from 'react'
 import {
   Box,
   Typography,
@@ -66,6 +66,9 @@ export default function HomePage() {
   const [currentPage, setCurrentPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const [eventFilter, setEventFilter] = useState("mission_completed")
+  const [municipioSearch, setMunicipioSearch] = useState("")
+  const [debouncedSearch, setDebouncedSearch] = useState("")
+  const [sortDirection, setSortDirection] = useState("DESC")
   const [showMunicipioPage, setShowMunicipioPage] = useState(false)
   const [nonParticipantMunicipio, setNonParticipantMunicipio] = useState(null);
   
@@ -90,6 +93,9 @@ export default function HomePage() {
     municipio: null,
     missionPanoramaById: null
   });
+  
+  // Ref for debounce timer
+  const searchTimerRef = useRef(null);
   
   // Helper function to update loading state
   const setLoading = (key, isLoading) => {
@@ -144,10 +150,30 @@ export default function HomePage() {
     fetchMapPanorama();
   }, []);
 
+  // Debounce municipio search
+  useEffect(() => {
+    // Clear any existing timer
+    if (searchTimerRef.current) {
+      clearTimeout(searchTimerRef.current);
+    }
+    
+    // Set a new timer
+    searchTimerRef.current = setTimeout(() => {
+      setDebouncedSearch(municipioSearch);
+    }, 800); // 500ms delay
+    
+    // Cleanup function
+    return () => {
+      if (searchTimerRef.current) {
+        clearTimeout(searchTimerRef.current);
+      }
+    };
+  }, [municipioSearch]);
+
   // Fetch eventos based on filters and pagination
   useEffect(() => {
     fetchEventos();
-  }, [currentPage, eventFilter]);
+  }, [currentPage, eventFilter, debouncedSearch, sortDirection]);
 
   // Fetch municipios function
   const fetchMunicipios = async () => {
@@ -230,8 +256,13 @@ export default function HomePage() {
         page: currentPage,
         limit: 100,
         event: eventFilter,
-        sortDirection: "DESC"
+        sortDirection: sortDirection
       };
+      
+      // Add municipio search if provided
+      if (debouncedSearch.trim()) {
+        params.municipioSearch = debouncedSearch.trim();
+      }
       
       const response = await makeRequest(() => services.eventosService.getEventos(params));
       setLoading('eventos', false);
@@ -961,22 +992,22 @@ export default function HomePage() {
                 Missões concluídas
               </Button>
               <Button
-                variant={eventFilter === "evidence_submitted" ? "contained" : "outlined"}
+                variant={eventFilter === "mission_started" ? "contained" : "outlined"}
                 size={isMobile ? "small" : "medium"}
                 sx={{
-                  bgcolor: eventFilter === "evidence_submitted" ? "#12447f" : "transparent",
+                  bgcolor: eventFilter === "mission_started" ? "#12447f" : "transparent",
                   borderColor: "#d3d3d3",
-                  color: eventFilter === "evidence_submitted" ? "white" : "#333333",
+                  color: eventFilter === "mission_started" ? "white" : "#333333",
                   textTransform: "none",
                   fontWeight: "semibold",
                   fontSize: { xs: "12px", sm: "14px", lg: "20px" },
                                     "&:hover": {
-                    bgcolor: eventFilter === "evidence_submitted" ? "#0d3666" : "rgba(0, 0, 0, 0.04)",
-                    borderColor: eventFilter === "evidence_submitted" ? "transparent" : "#b3b3b3",
+                    bgcolor: eventFilter === "mission_started" ? "#0d3666" : "rgba(0, 0, 0, 0.04)",
+                    borderColor: eventFilter === "mission_started" ? "transparent" : "#b3b3b3",
                   },
-                  boxShadow: eventFilter === "evidence_submitted" ? 2 : 0,
+                  boxShadow: eventFilter === "mission_started" ? 2 : 0,
                 }}
-                onClick={() => handleEventFilterChange("evidence_submitted")}
+                onClick={() => handleEventFilterChange("mission_started")}
               >
                 Envio de evidências
               </Button>
@@ -1002,6 +1033,11 @@ export default function HomePage() {
                 variant="outlined"
                 placeholder="Município"
                 size={isMobile ? "small" : "medium"}
+                value={municipioSearch}
+                onChange={(e) => {
+                  setMunicipioSearch(e.target.value);
+                  setCurrentPage(0); // Reset to first page when searching
+                }}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -1074,7 +1110,12 @@ export default function HomePage() {
                   }}
                 >
                   <Select
-                    defaultValue="recent"
+                    value={sortDirection === "DESC" ? "recent" : "oldest"}
+                    onChange={(e) => {
+                      const newSortDirection = e.target.value === "recent" ? "DESC" : "ASC";
+                      setSortDirection(newSortDirection);
+                      setCurrentPage(0); // Reset to first page when changing sort
+                    }}
                     displayEmpty
                     sx={{
                       '.MuiOutlinedInput-notchedOutline': {
