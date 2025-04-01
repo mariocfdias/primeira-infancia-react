@@ -20,6 +20,27 @@ export default function MunicipioPage({ onBack, ibge }) {
 
   const [error, setError] = useState(null)
 
+  const formatImageUrl = (imageUrl) => {
+    if (!imageUrl) return null;
+    
+    // Check if it's a Google Drive link (file/d/ format)
+    const driveMatch = imageUrl.match(/drive\.google\.com\/file\/d\/(.*?)\/view/);
+    if (driveMatch && driveMatch[1]) {
+      const imageId = driveMatch[1];
+      return `https://lh3.google.com/u/0/d/${imageId}`;
+    }
+    
+    // Check if it's a Google Drive link (uc?export=view&id= format)
+    const ucMatch = imageUrl.match(/drive\.google\.com\/uc\?export=view&id=(.*?)(?:&|$)/);
+    if (ucMatch && ucMatch[1]) {
+      const imageId = ucMatch[1];
+      return `https://lh3.google.com/u/0/d/${imageId}`;
+    }
+    
+    // If not a Drive URL, return the original URL
+    return imageUrl;
+  };
+  
   useEffect(() => {
     console.log({codIbge})
   }, [codIbge])
@@ -238,7 +259,7 @@ export default function MunicipioPage({ onBack, ibge }) {
                 }}
               >
                 <img
-                  src={municipioData.imagemAvatar || "/placeholder.svg"}
+                  src={formatImageUrl(municipioData.imagemAvatar) || "/placeholder.svg"}
                   alt={municipioData.nome}
                   style={{
                     width: "100%",
