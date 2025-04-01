@@ -17,12 +17,14 @@
     "@types/react": "^17.0.53",
     "@types/react-dom": "^17.0.19",
     "axios": "^1.8.4",
+    "core-js": "^3.35.1",
     "leaflet": "^1.7.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-leaflet": "^3.1.0",
     "react-router-dom": "^6.22.1",
     "react-scripts": "5.0.1",
+    "regenerator-runtime": "^0.14.0",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
@@ -79,6 +81,13 @@
       "removeComments": false
     },
     "sourceMaps": false,
-    "externalJsEnabled": false
+    "externalJsEnabled": false,
+    "inlineCss": false,
+    "preloadImages": false,
+    "cacheAjaxRequests": false,
+    "removeBlobs": false,
+    "fixWebpackChunksIssue": "CRA2",
+    "fixInsertRule": true,
+    "asyncScriptTags": true
   }
 }
