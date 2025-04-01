@@ -61,6 +61,12 @@ export default function HomePage() {
     loading: loadingMissionPanorama, 
     data: missionPanoramaData 
   } = useApiRequest()
+  const {
+    makeRequest: makeRequestMapPanorama,
+    loading: loadingMapPanorama,
+    error: mapPanoramaError,
+    data: mapPanoramaData
+  } = useApiRequest()
   const [municipios, setMunicipios] = useState([])
   const [selectedMunicipio, setSelectedMunicipio] = useState(null)
   const [selectedMissao, setSelectedMissao] = useState(null)
@@ -70,6 +76,7 @@ export default function HomePage() {
   const [eventos, setEventos] = useState([])
   const [missoes, setMissoes] = useState([])
   const [missionPanorama, setMissionPanorama] = useState([])
+  const [mapPanorama, setMapPanorama] = useState(null)
   const [currentPage, setCurrentPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const [eventFilter, setEventFilter] = useState("mission_completed")
@@ -176,6 +183,23 @@ export default function HomePage() {
 
     fetchEventos()
   }, [currentPage, eventFilter])
+
+  // Fetch map panorama data
+  useEffect(() => {
+    const fetchMapPanorama = async () => {
+      try {
+        const response = await makeRequestMapPanorama(services.dashboardService.getMapPanorama)
+        if (response && response.status === 'success' && response.data) {
+          console.log('Map panorama data:', response.data);
+          setMapPanorama(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching map panorama:", error)
+      }
+    }
+
+    fetchMapPanorama()
+  }, [])
 
   // Handle view mission on map
   const handleViewMissionOnMap = async (missionId) => {
@@ -497,7 +521,7 @@ export default function HomePage() {
                   fontSize: { xs: "40px", sm: "48px", lg: "96px" },
                 }}
               >
-                {loading ? <CircularProgress size={24} /> : municipios.length || 82}
+                {loadingMapPanorama ? <CircularProgress size={24} /> : (mapPanorama?.totalParticipatingPrefeituras || municipios.length || 0)}
               </Typography>
               <Box>
                 <Typography
@@ -547,7 +571,7 @@ export default function HomePage() {
                   fontSize: { xs: "40px", sm: "48px", lg: "96px" },
                 }}
               >
-                2%
+                {loadingMapPanorama ? <CircularProgress size={24} /> : `${(mapPanorama?.percentageFinishedMissions || 0).toFixed(1)}%`}
               </Typography>
               <Box>
               <Typography
@@ -625,6 +649,7 @@ export default function HomePage() {
                   missionPanoramaData={missionPanoramaById} 
                   selectedMunicipio={selectedMunicipio?.codIbge}
                   onMunicipioSelect={handleMapMunicipioSelect}
+                  levelDistribution={mapPanorama?.desempenho?.levelDistribution}
                 />
               </Paper>
               
@@ -632,7 +657,10 @@ export default function HomePage() {
 
 {isTablet && (
   <Grid item xs={12} md={12}>
-    <MapLegend selectedMissao={selectedMissao} />
+    <MapLegend 
+      selectedMissao={selectedMissao}
+      levelDistribution={mapPanorama?.desempenho?.levelDistribution} 
+    />
   </Grid>
 )}
 

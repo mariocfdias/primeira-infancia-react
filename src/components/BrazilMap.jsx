@@ -48,7 +48,7 @@ const LegendDescription = ({ backgroundColor, color, description, number, title 
 };
 
 // Map Legend component for non-mobile
-const MapLegendInternal = ({ selectedMissao }) => {
+const MapLegendInternal = ({ selectedMissao, levelDistribution }) => {
   return (
     <Paper
       elevation={1}
@@ -133,7 +133,7 @@ const MapLegendInternal = ({ selectedMissao }) => {
   );
 };
 
-const LeafletMap = ({ municipiosData, geoJsonData, isMobile, missionPanoramaData, selectedMunicipioCode, onMunicipioSelect }) => {
+const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunicipioCode, onMunicipioSelect, levelDistribution }) => {
   const mapRef = useRef(null)
   const geoJsonRef = useRef(null)
 
@@ -158,167 +158,210 @@ const LeafletMap = ({ municipiosData, geoJsonData, isMobile, missionPanoramaData
       if (missionPanoramaData.pendingMunicipios?.length > 0) {
         console.log('Sample pendingMunicipios item:', missionPanoramaData.pendingMunicipios[0]);
       }
-      
-      // Check if they have a codIbge property as expected by the style function
-      const hasCorrectStructure = 
-        (missionPanoramaData.completedMunicipios?.length > 0 && 'codIbge' in missionPanoramaData.completedMunicipios[0]) ||
-        (missionPanoramaData.startedMunicipios?.length > 0 && 'codIbge' in missionPanoramaData.startedMunicipios[0]) ||
-        (missionPanoramaData.pendingMunicipios?.length > 0 && 'codIbge' in missionPanoramaData.pendingMunicipios[0]);
-      
-      console.log('Data has correct structure with codIbge property?', hasCorrectStructure);
-      
-      // If structure doesn't match, log what we received
-      if (!hasCorrectStructure) {
-        console.warn('Mission panorama data structure doesn\'t match what the style function expects!');
-        console.log('Full data received:', missionPanoramaData);
-      }
     }
   }, [missionPanoramaData]);
 
+  // Check if a municipality is in a specific level group
+  const isMunicipioInLevel = (codIbge, levelData) => {
+    if (!levelData || !levelData.municipios) return false;
+    return levelData.municipios.includes(codIbge);
+  };
+
+  // Get municipality name by IBGE code
+  const getMunicipioName = (codIbge, feature) => {
+    // Use the name from the GeoJSON feature properties
+    return feature.properties.name || `Município ${codIbge}`;
+  };
+
+  // Get mission status for a municipality
+  const getMissionStatus = (codIbge) => {
+    if (!missionPanoramaData) return "Não disponível";
+    
+    if (missionPanoramaData.completedMunicipios?.some(m => m.codIbge === codIbge)) {
+      return "Concluída";
+    } 
+    if (missionPanoramaData.startedMunicipios?.some(m => m.codIbge === codIbge)) {
+      return "Em andamento";
+    } 
+    if (missionPanoramaData.pendingMunicipios?.some(m => m.codIbge === codIbge)) {
+      return "Pendente";
+    }
+    
+    return "Não iniciada";
+  };
+
+  // Get level for a municipality
+  const getMunicipioLevel = (codIbge) => {
+    if (!levelDistribution) return null;
+    
+    for (const level of levelDistribution) {
+      if (isMunicipioInLevel(codIbge, level)) {
+        return level.level;
+      }
+    }
+    
+    return null;
+  };
+
   // Style function for the GeoJSON features
   const getFeatureStyle = (feature) => {
-    const codIbge = feature.properties.id
-    const municipio = municipiosData.find((m) => m.codIbge === codIbge)
+    const codIbge = feature.properties.id;
     
-    // Default style for municipalities not in our data
-    let fillColor = "#cccccc"
-    let weight = 1
-    let fillOpacity = 0.7
+    // Default style
+    let fillColor = "#cccccc";
+    let weight = 1;
+    let fillOpacity = 0.7;
     
     // Check if this is the selected municipality
-    const isSelected = selectedMunicipioCode === codIbge
-    
+    const isSelected = selectedMunicipioCode === codIbge;
+    console.log({missionPanoramaData, levelDistribution})
+
     // If showing mission panorama, color municipalities based on mission status
     if (missionPanoramaData) {
-      
       // Default color for municipalities not in the panorama
-      fillColor = "#cccccc"
+      fillColor = "#cccccc";
       
       // Check if the municipality is in completed municipalities
       if (missionPanoramaData.completedMunicipios?.some(m => m.codIbge === codIbge)) {
-        fillColor = "#12447F" // Blue for completed missions
+        fillColor = "#12447F"; // Blue for completed missions
       } 
       // Check if the municipality is in started municipalities
       else if (missionPanoramaData.startedMunicipios?.some(m => m.codIbge === codIbge)) {
-        fillColor = "#72C576" // Light green for started missions
+        fillColor = "#72C576"; // Light green for started missions
       } 
       // Check if the municipality is in pending municipalities
       else if (missionPanoramaData.pendingMunicipios?.some(m => m.codIbge === codIbge)) {
-        fillColor = "#9F9F9F" // Gray for pending missions
+        fillColor = "#9F9F9F"; // Gray for pending missions
       }
     }
-    // Otherwise, use the default styling based on points and participation
-    else if (municipio) {
-      // Style based on points and participation status
-      if (municipio.status === "Não participante") {
-        fillColor = "#FFFFFF" // White for non-participating
-      } else if (municipio.points >= 200) {
-        fillColor = "#12447F" // Blue for 200+ points
-      } else if (municipio.points >= 101) {
-        fillColor = "#066829" // Dark green for 101-199 points
-      } else if (municipio.points >= 1) {
-        fillColor = "#50B755" // Light green for 1-100 points
-      } else {
-        fillColor = "#707070" // Gray for zero points
-      }
+    // Check if we have levelDistribution data to use
+    else if (levelDistribution) {
+      // Get the level for this municipality
+      const level = getMunicipioLevel(codIbge);
       
-      // Highlight municipalities with badges
-      if (municipio.badges > 0) {
-        weight = 2
+      if (level === "NP") {
+        fillColor = "#FFFFFF"; // White for non-participating
+      } else if (level === 3) {
+        fillColor = "#12447F"; // Blue for level 3 (highest)
+      } else if (level === 2) {
+        fillColor = "#066829"; // Dark green for level 2
+      } else if (level === 1) {
+        fillColor = "#50B755"; // Light green for level 1
+      } else if (level === 0) {
+        fillColor = "#707070"; // Gray for level 0 (no points)
       }
     }
     
     // Increase opacity and weight when selected
     if (isSelected) {
-      weight = 3
-      fillOpacity = 1.0
+      weight = 3;
+      fillOpacity = 1.0;
     }
     
     return {
       fillColor,
       weight,
       opacity: 1,
-      color: isSelected ? "#FF8000" : "#ffffff", // Orange border for selected
+      color: isSelected ? "#FF8000" : "#333333", // Orange border for selected
       fillOpacity,
       dashArray: isSelected ? "3" : null // Dashed line for selected
-    }
-  }
+    };
+  };
 
   // Function to handle feature interactions
   const onEachFeature = (feature, layer) => {
-    const codIbge = feature.properties.id
-    const municipio = municipiosData.find((m) => m.codIbge === codIbge)
+    const codIbge = feature.properties.id;
+    const municipioName = getMunicipioName(codIbge, feature);
     
     // Create tooltip content
-    if (municipio) {
+    if (missionPanoramaData) {
       // If showing mission panorama, include mission status in tooltip
-      if (missionPanoramaData) {
-        let missionStatus = "Não iniciada"
+      const missionStatus = getMissionStatus(codIbge);
+      
+      layer.bindTooltip(`
+        <div>
+          <strong>${municipioName}</strong>
+          <br />
+          Status da missão: ${missionStatus}
+        </div>
+      `);
+    } else if (levelDistribution) {
+      // If showing level distribution, include level information
+      const level = getMunicipioLevel(codIbge);
+      let status = "Não disponível";
+      let points = "0";
+      
+      if (level === "NP") {
+        status = "Não participante";
+      } else if (level !== null) {
+        status = "Participante";
         
-        if (missionPanoramaData.completedMunicipios?.some(m => m.codIbge === codIbge)) {
-          missionStatus = "Concluída"
-        } else if (missionPanoramaData.startedMunicipios?.some(m => m.codIbge === codIbge)) {
-          missionStatus = "Em andamento"
-        } else if (missionPanoramaData.pendingMunicipios?.some(m => m.codIbge === codIbge)) {
-          missionStatus = "Pendente"
+        // Show points range based on level
+        if (level === 0) {
+          points = "0";
+        } else if (level === 1) {
+          points = "1-100";
+        } else if (level === 2) {
+          points = "101-200";
+        } else if (level === 3) {
+          points = "201+";
         }
-        
-        layer.bindTooltip(`
-          <div>
-            <strong>${municipio.nome}</strong>
-            <br />
-            Status da missão: ${missionStatus}
-          </div>
-        `)
-      } else {
-        layer.bindTooltip(`
-          <div>
-            <strong>${municipio.nome}</strong>
-            <br />
-            Status: ${municipio.status}
-            <br />
-            Badges: ${municipio.badges}
-            <br />
-            Pontos: ${municipio.points}
-          </div>
-        `)
       }
+      
+      layer.bindTooltip(`
+        <div>
+          <strong>${municipioName}</strong>
+          <br />
+          Status: ${status}
+          <br />
+          Pontos: ${points}
+        </div>
+      `);
     } else {
-      layer.bindTooltip(feature.properties.name || "")
+      // Fallback tooltip with just the name
+      layer.bindTooltip(municipioName);
     }
     
     // Add click handler to select a municipality
     layer.on({
       click: () => {
         if (onMunicipioSelect) {
-          // Use the codIbge directly from feature properties
-          // This allows selection of all municipalities, even if not in municipiosData
           onMunicipioSelect(codIbge);
-          
-          // Remove zoom to clicked municipality functionality
         }
       }
     });
-  }
+  };
 
   // Refresh GeoJSON when selected municipality changes
   useEffect(() => {
     if (geoJsonRef.current) {
       console.log('Refreshing GeoJSON styles for municipality selection');
       geoJsonRef.current.setStyle(getFeatureStyle);
-      
-      // Remove zoom to selected municipality functionality
     }
   }, [selectedMunicipioCode]);
 
-  // This effect ensures GeoJSON is redrawn when mission data changes
+  // This effect ensures GeoJSON is redrawn when mission data changes or levelDistribution changes
   useEffect(() => {
-    if (geoJsonRef.current && missionPanoramaData) {
-      console.log('Mission panorama data changed - refreshing map styles');
+    if (geoJsonRef.current) {
+      console.log('Mission panorama data or level distribution changed - refreshing map styles');
+      // When mission data becomes null, log it explicitly
+      if (missionPanoramaData === null) {
+        console.log('Mission panorama data is null - reverting to level distribution view');
+      }
       // Explicitly redraw everything with a new style function to ensure closure variables are updated
       geoJsonRef.current.setStyle(feature => getFeatureStyle(feature));
     }
-  }, [missionPanoramaData, municipiosData, selectedMunicipioCode]);
+  }, [missionPanoramaData, selectedMunicipioCode, levelDistribution]);
+
+  // Add a specific effect to handle when missionPanoramaData is set to null
+  useEffect(() => {
+    if (geoJsonRef.current && missionPanoramaData === null && levelDistribution) {
+      console.log('Mission panorama data reset to null - reverting to level distribution view' + {levelDistribution});
+      
+      // Force a redraw to show level distribution data
+      geoJsonRef.current.setStyle(feature => getFeatureStyle(feature));
+    }
+  }, [missionPanoramaData, levelDistribution]);
 
   // Fit map to GeoJSON bounds when data is loaded or screen size changes
   useEffect(() => {
@@ -362,7 +405,7 @@ const LeafletMap = ({ municipiosData, geoJsonData, isMobile, missionPanoramaData
           crossOrigin={true}
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        {geoJsonData && municipiosData.length > 0 && (
+        {geoJsonData && (
           <GeoJSON 
             data={geoJsonData} 
             style={getFeatureStyle}
@@ -373,23 +416,28 @@ const LeafletMap = ({ municipiosData, geoJsonData, isMobile, missionPanoramaData
       </MapContainer>
       
       {/* Show legend inside the map for non-mobile */}
-      {!isMobile && <MapLegendInternal selectedMissao={missionPanoramaData ? true : null} />}
+      {!isMobile && <MapLegendInternal selectedMissao={missionPanoramaData ? true : null} levelDistribution={levelDistribution} />}
     </Box>
-  )
-}
+  );
+};
 
-export default function BrazilMap({ missionPanoramaData, selectedMunicipio, onMunicipioSelect }) {
+export default function BrazilMap({ missionPanoramaData, selectedMunicipio, onMunicipioSelect, levelDistribution }) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("md"))
-  const [municipiosData, setMunicipiosData] = useState([])
   const [geoJsonData, setGeoJsonData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [hasWindow, setHasWindow] = useState(false)
 
-  // Log mission panorama data when it changes
+  // Log mission panorama data and level distribution when they change
   useEffect(() => {
     console.log('BrazilMap received missionPanoramaData:', missionPanoramaData);
-  }, [missionPanoramaData]);
+    console.log('BrazilMap received levelDistribution:', levelDistribution);
+    
+    // Log when reverting from mission panorama to level distribution view
+    if (missionPanoramaData === null && levelDistribution) {
+      console.log('Reverting from mission view to level distribution view');
+    }
+  }, [missionPanoramaData, levelDistribution]);
 
   // Check if window is available
   useEffect(() => {
@@ -397,19 +445,6 @@ export default function BrazilMap({ missionPanoramaData, selectedMunicipio, onMu
   }, [])
 
   useEffect(() => {
-    // Create sample data for testing
-    const sampleMunicipios = [
-      { codIbge: "2300101", nome: "Abaiara", status: "Participante", badges: 2, points: 75 },
-      { codIbge: "2300200", nome: "Acaraú", status: "Participante", badges: 1, points: 150 },
-      { codIbge: "2300309", nome: "Acopiara", status: "Participante", badges: 3, points: 210 },
-      { codIbge: "2300408", nome: "Aiuaba", status: "Participante", badges: 0, points: 0 },
-      { codIbge: "2300507", nome: "Alcântaras", status: "Não participante", badges: 0, points: 0 },
-      { codIbge: "2300606", nome: "Altaneira", status: "Participante", badges: 1, points: 45 },
-      // Additional municipalities can be added here
-    ];
-    
-    setMunicipiosData(sampleMunicipios);
-    
     // Fetch GeoJSON data
     fetch("/ceara_municipalities.json")
       .then((response) => response.json())
@@ -483,12 +518,12 @@ export default function BrazilMap({ missionPanoramaData, selectedMunicipio, onMu
             </Typography>
           </Box>
           <LeafletMap 
-            municipiosData={municipiosData} 
             geoJsonData={geoJsonData} 
             isMobile={isMobile}
             missionPanoramaData={missionPanoramaData}
             selectedMunicipioCode={selectedMunicipio}
             onMunicipioSelect={onMunicipioSelect}
+            levelDistribution={levelDistribution}
           />
         </>
       )}

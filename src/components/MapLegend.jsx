@@ -1,254 +1,148 @@
 import React from 'react';
-import { Box, Typography, Paper, useTheme, useMediaQuery } from "@mui/material";
-import PropTypes from 'prop-types';
+import { Box, Typography, Paper } from '@mui/material';
 
-export default function MapLegend({ selectedMissao }) {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  
-  // Only render the legend outside the map on mobile
-  if (!isMobile) return null;
-  
+const LegendItem = ({ backgroundColor, count, title, description }) => {
+  return (
+    <Box sx={{ display: "flex", alignItems: "flex-start", mb: 1.5 }}>
+      <Box
+        sx={{
+          width: 30,
+          height: 30,
+          bgcolor: backgroundColor,
+          color: backgroundColor === "white" ? "#525252" : "white",
+          border: backgroundColor === "white" ? "1px solid #d3d3d3" : "none",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          mr: 1.5,
+          boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+          fontSize: "0.8rem"
+        }}
+      >
+        {count}
+      </Box>
+      <Box>
+        <Typography 
+          variant="subtitle2" 
+          sx={{ 
+            fontWeight: "bold", 
+            fontSize: "0.9rem",
+            lineHeight: 1.2,
+            mb: 0.5
+          }}
+        >
+          {title}
+        </Typography>
+        <Typography 
+          variant="caption" 
+          component="p" 
+          sx={{ 
+            fontSize: "0.8rem",
+            lineHeight: 1.2,
+            color: "#525252"
+          }}
+        >
+          {description}
+        </Typography>
+      </Box>
+    </Box>
+  );
+};
+
+export default function MapLegend({ selectedMissao, levelDistribution }) {
+  // Get counts from levelDistribution if available
+  const getLevelCount = (level) => {
+    if (!levelDistribution) return 0;
+    const levelData = levelDistribution.find(l => l.level === level);
+    return levelData ? levelData.count : 0;
+  };
+
+  const npCount = getLevelCount("NP");
+  const level0Count = getLevelCount(0);
+  const level1Count = getLevelCount(1);
+  const level2Count = getLevelCount(2);
+  const level3Count = getLevelCount(3);
+
   return (
     <Paper
-      elevation={1}
+      elevation={0}
       sx={{
-        p: { xs: 1.5, sm: 2 },
-        maxWidth: { xs: "100%", sm: 400 },
-        mb: 4,
+        p: 2,
         border: "1px solid #d3d3d3",
         borderRadius: 1,
+        bgcolor: "white",
+        width: "100%",
+        mb: 3
       }}
     >
       <Typography
-        variant="body1"
+        variant="subtitle1"
         sx={{
-          fontWeight: "medium",
-          mb: 1,
-          fontSize: { xs: "0.875rem", sm: "1rem" },
+          fontWeight: "bold",
+          mb: 2,
+          fontSize: "1rem"
         }}
       >
-        {selectedMissao ? "Legenda de Missão" : "Legenda"}
+        {selectedMissao ? "Status da Missão" : "Níveis de participação"}
       </Typography>
+      
       {selectedMissao ? (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: { xs: 20, sm: 24 },
-                height: { xs: 20, sm: 24 },
-                bgcolor: "#12447F",
-                mr: 1,
-              }}
-            />
-            <Typography variant="body2" sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}>
-              Missão Concluída
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: { xs: 20, sm: 24 },
-                height: { xs: 20, sm: 24 },
-                bgcolor: "#72C576",
-                mr: 1,
-              }}
-            />
-            <Typography variant="body2" sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}>
-              Missão em Andamento
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: { xs: 20, sm: 24 },
-                height: { xs: 20, sm: 24 },
-                bgcolor: "#9F9F9F",
-                mr: 1,
-              }}
-            />
-            <Typography variant="body2" sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}>
-              Missão Pendente
-            </Typography>
-          </Box>
+        // Mission specific legend
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <LegendItem
+            backgroundColor="#12447f"
+            count="" 
+            title="Concluída"
+            description="Todas etapas foram finalizadas"
+          />
+          <LegendItem
+            backgroundColor="#72C576"
+            count=""
+            title="Em Andamento"
+            description="Missão está em progresso"
+          />
+          <LegendItem
+            backgroundColor="#9F9F9F"
+            count=""
+            title="Pendente"
+            description="Missão ainda não iniciada"
+          />
         </Box>
       ) : (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: { xs: 20, sm: 24 },
-                height: { xs: 20, sm: 24 },
-                bgcolor: "#707070",
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.75rem",
-                mr: 1,
-              }}
-            >
-              89
-            </Box>
-            <Typography
-              variant="body2"
-              sx={{
-                fontSize: { xs: "0.75rem", sm: "0.875rem" },
-              }}
-            >
-              Não iniciado (0 pontos)
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: { xs: 20, sm: 24 },
-                height: { xs: 20, sm: 24 },
-                bgcolor: "#50B755",
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.75rem",
-                mr: 1,
-              }}
-            >
-              135
-            </Box>
-            <Box>
-              <Typography
-                variant="body2"
-                sx={{
-                  fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                }}
-              >
-                Nível 1
-              </Typography>
-              <Typography
-                variant="caption"
-                sx={{
-                  color: "#525252",
-                  fontSize: { xs: "0.65rem", sm: "0.75rem" },
-                }}
-              >
-                1 até 100 pontos
-              </Typography>
-            </Box>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: { xs: 20, sm: 24 },
-                height: { xs: 20, sm: 24 },
-                bgcolor: "#066829",
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.75rem",
-                mr: 1,
-              }}
-            >
-              30
-            </Box>
-            <Box>
-              <Typography
-                variant="body2"
-                sx={{
-                  fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                }}
-              >
-                Nível 2
-              </Typography>
-              <Typography
-                variant="caption"
-                sx={{
-                  color: "#525252",
-                  fontSize: { xs: "0.65rem", sm: "0.75rem" },
-                }}
-              >
-                101 a 199 pontos
-              </Typography>
-            </Box>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: { xs: 20, sm: 24 },
-                height: { xs: 20, sm: 24 },
-                bgcolor: "#12447f",
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.75rem",
-                mr: 1,
-              }}
-            >
-              2
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography
-                variant="body2"
-                sx={{
-                  mr: 0.5,
-                  fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                }}
-              >
-                Concluído
-              </Typography>
-              <Box
-                sx={{
-                  width: { xs: 10, sm: 12 },
-                  height: { xs: 10, sm: 12 },
-                  bgcolor: "#f5d664",
-                  borderRadius: "50%",
-                }}
-              />
-              <Typography
-                variant="caption"
-                sx={{
-                  color: "#525252",
-                  ml: 0.5,
-                  fontSize: { xs: "0.65rem", sm: "0.75rem" },
-                }}
-              >
-                200+ pontos
-              </Typography>
-            </Box>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: { xs: 20, sm: 24 },
-                height: { xs: 20, sm: 24 },
-                bgcolor: "white",
-                border: "1px solid #d3d3d3",
-                color: "#525252",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.75rem",
-                mr: 1,
-              }}
-            >
-              10
-            </Box>
-            <Typography
-              variant="body2"
-              sx={{
-                fontSize: { xs: "0.75rem", sm: "0.875rem" },
-              }}
-            >
-              Não aderiu o Pacto
-            </Typography>
-          </Box>
+        // General performance legend
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <LegendItem
+            backgroundColor="#707070"
+            count={level0Count}
+            title="Não iniciado"
+            description="Município sem pontos"
+          />
+          <LegendItem
+            backgroundColor="#50B755"
+            count={level1Count}
+            title="Nível 1"
+            description="Entre 1 e 100 pontos"
+          />
+          <LegendItem
+            backgroundColor="#066829"
+            count={level2Count}
+            title="Nível 2"
+            description="Entre 101 e 200 pontos"
+          />
+          <LegendItem
+            backgroundColor="#12447f"
+            count={level3Count}
+            title="Nível 3"
+            description="201 pontos ou mais"
+          />
+          <LegendItem
+            backgroundColor="white"
+            count={npCount}
+            title="Não aderiu"
+            description="Município não participante"
+          />
         </Box>
       )}
     </Paper>
   );
-}
-
-MapLegend.propTypes = {
-  selectedMissao: PropTypes.string
-}; 
+} 
