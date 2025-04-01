@@ -4,6 +4,7 @@ const { setupRoutes } = require('./routes');
 const { setupSwagger } = require('./swagger');
 const { setupJobs } = require('./jobs');
 const seedMunicipios = require('./service/MunicipioSeed');
+const { seedMunicipioDesempenho } = require('./service/MunicipioDesempenhoSeed');
 const swaggerJsdoc = require('swagger-jsdoc');
 
 const app = express();
@@ -27,7 +28,9 @@ async function startServer() {
         const connection = await connectDB();
         app.use(require('cors')());
 
+        // Run seeds in sequence
         await seedMunicipios(connection);
+        await seedMunicipioDesempenho(connection);
         
         // Raw JSON endpoint (before Swagger setup to avoid middleware conflict)
         app.get('/raw-swagger.json', (req, res) => {

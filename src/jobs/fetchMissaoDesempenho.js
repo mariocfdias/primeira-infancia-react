@@ -3,6 +3,7 @@ const MunicipioDesempenhoService = require('../service/MunicipioDesempenhoServic
 const { MunicipioDesempenhoDTO } = require('../dto/MunicipioDesempenhoDTO');
 const MissoesService = require('../service/MissoesService');
 const MunicipioService = require('../service/MunicipioService');
+const { ORG_IBGE_CODES } = require('../service/MunicipioDesempenhoSeed');
 
 /**
  * Fetches the latest mission performance data from external API based on the most recent updated_at
@@ -42,6 +43,12 @@ async function fetchMissaoDesempenho(connection, url) {
                     // Process and save each performance record
                     for (const desempenhoData of data.data) {
                         try {
+                            // Skip organizations that are in the ORG_IBGE_CODES list
+                            if (ORG_IBGE_CODES.includes(desempenhoData.codIbge)) {
+                                console.log(`Skipping organization ${desempenhoData.codIbge} for mission ${desempenhoData.missaoId} - using seeded data instead`);
+                                continue;
+                            }
+                            
                             // Check if a record with the same codIbge and missaoId already exists
                             const existingDesempenhos = await municipioDesempenhoService.findByIbgeCode(desempenhoData.codIbge);
                             const existingDesempenho = existingDesempenhos.find(d => d.missaoId === desempenhoData.missaoId);

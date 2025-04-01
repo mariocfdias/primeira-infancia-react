@@ -93,6 +93,14 @@ class MunicipioDesempenhoService {
         return { success: true, message: `MunicipioDesempenho with id ${id} deleted successfully` };
     }
 
+    async deleteByIbgeCode(codIbge) {
+        const desempenhos = await this.municipioDesempenhoRepository.findByIbgeCode(codIbge);
+        if (desempenhos.length > 0) {
+            await this.municipioDesempenhoRepository.deleteByIbgeCode(codIbge);
+        }
+        return { success: true, message: `All desempenhos for municipality ${codIbge} deleted successfully` };
+    }
+
     async findByIbgeCodeAndMissaoId(codIbge, missaoId) {
         const desempenho = await this.municipioDesempenhoRepository.findByIbgeCodeAndMissaoId(codIbge, missaoId);
         if (!desempenho) {

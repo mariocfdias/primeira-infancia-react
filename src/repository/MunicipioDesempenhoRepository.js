@@ -53,6 +53,14 @@ class MunicipioDesempenhoRepository {
         return await this.repository.delete(id);
     }
 
+    async deleteByIbgeCode(codIbge) {
+        return await this.repository
+            .createQueryBuilder()
+            .delete()
+            .where("codIbge = :codIbge", { codIbge })
+            .execute();
+    }
+
     async findByIbgeCodeAndMissaoId(codIbge, missaoId) {
         const result = await this.repository
             .createQueryBuilder("desempenho")

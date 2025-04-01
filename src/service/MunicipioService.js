@@ -10,7 +10,14 @@ class MunicipioService {
         return await this.municipioRepository.findAll();
     }
 
-    
+    async findById(codIbge) {
+        const municipio = await this.municipioRepository.findOne(codIbge);
+        if (!municipio) {
+            throw new Error(`Municipio with codIbge ${codIbge} not found`);
+        }
+        return municipio;
+    }
+
     async findParticipantes() {
         return await this.municipioRepository.findParticipantes();
     }
@@ -35,11 +42,11 @@ class MunicipioService {
 
     async saveMunicipio(municipioData) {
         const municipio = {
-            codIbge: municipioData.codIbge.toString(),
+            codIbge: (municipioData.codIbge || municipioData.cod_ibge).toString(),
             nome: municipioData.nome,
             status: municipioData.status,
-            dataAlteracao: municipioData.dataAlteracao || null,
-            imagemAvatar: municipioData.imagemAvatar || null,
+            dataAlteracao: municipioData.dataAlteracao || municipioData.data_alteracao || null,
+            imagemAvatar: municipioData.imagemAvatar || municipioData.imagem_avatar || null,
             badges: municipioData.badges || 0,
             points: municipioData.points || 0,
             orgao: municipioData.orgao || false

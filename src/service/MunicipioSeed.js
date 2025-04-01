@@ -48,20 +48,25 @@ async function seedMunicipios(connection) {
     ];
 
     try {
-        // Verificar se já existem municípios no banco
-        const existingMunicipios = await municipioService.findAll();
+        // Verificar se já existem os municipios específicos no banco
+        const results = [];
         
-        if (existingMunicipios.length === 0) {
-            // Se não existirem municípios, adicionar os dados de seed
-            const promises = municipiosData.map(municipioData => {
-                return municipioService.saveMunicipio(municipioData);
-            });
+        for (const municipioData of municipiosData) {
+            const existingMunicipio = await municipioService.findParticipantes(municipioData.cod_ibge);
+
+            console.log({existingMunicipio});
             
-            await Promise.all(promises);
-            console.log(`Seed completed: ${municipiosData.length} municipios added`);
-        } else {
-            console.log('Seed skipped: Database already contains municipios');
+            if (!existingMunicipio) {
+                // Se o município não existir, adiciona-o
+                const savedMunicipio = await municipioService.saveMunicipio(municipioData);
+                results.push(savedMunicipio);
+                console.log(`Added municipio: ${municipioData.nome}`);
+            } else {
+                console.log(`Skipped: ${municipioData.nome} already exists`);
+            }
         }
+        
+        console.log(`Seed completed: ${results.length} new municipios added`);
     } catch (error) {
         console.error('Error in municipios seed:', error.message);
     }
