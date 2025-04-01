@@ -215,16 +215,15 @@ export default function MunicipioPage({ onBack, ibge }) {
   
   // Calculate number of emblems earned (categories with all missions completed)
   const categoriasList = Object.values(categorias)
-  const emblemCount = categoriasList.reduce((count, categoria) => {
-    const allComplete = categoria.missoes.every(missao => missao.validation_status === "VALID")
-    return allComplete ? count + 1 : count
-  }, 0)
+  const emblemCount = municipioData?.desempenhos?.filter(desempenho => 
+    desempenho.validation_status === "VALID"
+  ).length || 0
 
   return (
     <Container maxWidth={false} sx={{ py: { xs: 2, sm: 3, md: 4 }, width: '100%' }}>
-      <Grid container spacing={4}>
+      <Grid container spacing={12}>
         {/* Left Column */}
-        <Grid item xs={12} md={5} lg={4}>
+        <Grid item xs={12} md={6} lg={5} >
           {!codIbge && (
             <Button
               onClick={onBack}
@@ -248,8 +247,8 @@ export default function MunicipioPage({ onBack, ibge }) {
           <Paper
                 elevation={2}
                 sx={{
-                  width: { xs: 80, sm: 120, lg: 240 },
-                  height: { xs: 80, sm: 120, lg: 240 },
+                  width: { xs: 80, sm: 120, lg: 260 },
+                  height: { xs: 80, sm: 120, lg: 260 },
                   mr: 2,
                   p: 0,
                   overflow: "hidden",
@@ -319,7 +318,7 @@ export default function MunicipioPage({ onBack, ibge }) {
                     alignItems: "center",
                   }}
                 >
-                  {earnedPoints}/100
+                  {earnedPoints % 100}/100
                   <StarRounded sx={{ color: "#FCBA38", fontSize: { xs: "1rem", sm: "1.25rem" } }} />
                 </Typography>
               </Box>
@@ -350,7 +349,7 @@ export default function MunicipioPage({ onBack, ibge }) {
               </Typography>
                 </Box>
               </Box>
-              <Box sx={{ display: "flex", justifyContent: "space-around", mb: 4, pt: 1 }}>
+              <Box sx={{ display: "flex", justifyContent: "space-around", mb: 4, pt: 1, gap: 4 }}>
               <NumericIcon 
                 icon={<Star sx={{ color: "#f5d664", fontSize: { xs: "1.25rem", sm: "1.5rem", lg: "3rem" } }} />}
                 number={earnedPoints}
@@ -398,9 +397,11 @@ export default function MunicipioPage({ onBack, ibge }) {
 
           <Grid container spacing={1}>
             {categoriasList.map((categoria, index) => {
-              const allComplete = categoria.missoes.every(missao => missao.validation_status === "VALID")
-              const stars = allComplete ? 3 : categoria.missoes.filter(missao => missao.validation_status === "VALID").length
-              
+              // Contar quantas missões desta categoria estão válidas
+              const validMissoes = categoria.missoes.filter(missao => missao.validation_status === "VALID").length
+              const totalMissoes = categoria.missoes.length
+              const stars = validMissoes > 0 ? Math.min(Math.ceil((validMissoes / totalMissoes) * 3), 3) : 0
+              console.log({categoria})
               // Define a map of colors for each category
               const categoryColors = {
                 "CTG1": "#1c434f", // Ampliação e Qualificação dos Serviços
@@ -423,7 +424,7 @@ export default function MunicipioPage({ onBack, ibge }) {
         </Grid>
 
         {/* Right Column */}
-        <Grid item xs={12} md={7} lg={8}>
+        <Grid item mt={{lg: 8, md: 8, xs: 0	}} xs={12} md={6} lg={7}>
           <Typography
             variant="h5"
             component="h2"

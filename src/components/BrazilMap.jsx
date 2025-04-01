@@ -25,8 +25,9 @@ const LegendDescription = ({ backgroundColor, color, description, number, title 
           color: color || "white",
           display: "flex",
           alignItems: "center",
+          borderRadius: 1,
           justifyContent: "center",
-          fontSize: "0.7rem",
+          fontSize: "1rem",
           mr: 1,
           border: backgroundColor === "white" ? "1px solid #d3d3d3" : "none",
         }}
@@ -73,7 +74,7 @@ const MapLegendInternal = ({ selectedMissao, levelDistribution }) => {
         p: 1.5,
         width: "250px",
         border: "1px solid #d3d3d3",
-        borderRadius: 1,
+        borderRadius: 3,
         bgcolor: "rgba(255, 255, 255, 1)",
         fontSize: "1rem",
       }}
@@ -399,11 +400,19 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
     >
       <MapContainer 
         center={[-5.5, -39.3]} // Default center (will be overridden by bounds)
-        zoom={7} // Default zoom (will be overridden by bounds)
+        zoom={7.3} // Default zoom (will be overridden by bounds)
         style={{ width: "100%", height: "100%" }}
+        zoomDelta={0.25}
+        zoomSnap={0.25}
+        zoomScale={1.25}
+        zoomScaleDelta={0.25}
+        zoomScaleMax={1.25}
+        zoomScaleMin={0.25}
+        zoomScaleStep={0.25}
+
         attributionControl={false}
         ref={mapRef}
-        zoomControl={false}
+        zoomControl={true}
         dragging={false}
         touchZoom={false}
         doubleClickZoom={false}
@@ -416,7 +425,6 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
           subdomains={['a', 'b', 'c', 'd']}
           opacity={0.5}
           crossOrigin={true}
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         {geoJsonData && (
           <GeoJSON 
