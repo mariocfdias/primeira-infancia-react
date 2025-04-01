@@ -3,12 +3,22 @@
 # dependencies
 /node_modules
 
+# testing
+/coverage
+
+# production
+# /build  <- Certifique-se de que a pasta build não está sendo ignorada se você precisa dela
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
 # next.js
 /.next/
 /out/
-
-# production
-/build
 
 # debug
 npm-debug.log*
@@ -17,6 +27,7 @@ yarn-error.log*
 .pnpm-debug.log*
 .yarn-lock.yml
 package-lock.json
+build
 
 # env files
 .env*
