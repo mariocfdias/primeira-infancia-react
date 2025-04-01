@@ -65,11 +65,11 @@ class DashboardController {
      * @swagger
      * /dashboard/map-panorama:
      *   get:
-     *     summary: Retorna um panorama de municípios com contagem de status de missões e pontos
+     *     summary: Retorna o panorama do mapa com distribuição de níveis
      *     tags: [Dashboard]
      *     responses:
      *       200:
-     *         description: Panorama de municípios e distribuição de desempenho
+     *         description: Panorama do mapa
      *         content:
      *           application/json:
      *             schema:
@@ -81,39 +81,6 @@ class DashboardController {
      *                 data:
      *                   type: object
      *                   properties:
-     *                     mapPanorama:
-     *                       type: array
-     *                       items:
-     *                         type: object
-     *                         properties:
-     *                           municipio:
-     *                             type: object
-     *                             properties:
-     *                               codIbge:
-     *                                 type: string
-     *                               nome:
-     *                                 type: string
-     *                               status:
-     *                                 type: string
-     *                               dataAlteracao:
-     *                                 type: string
-     *                                 format: date-time
-     *                               imagemAvatar:
-     *                                 type: string
-     *                               badges:
-     *                                 type: integer
-     *                               points:
-     *                                 type: integer
-     *                           countValid:
-     *                             type: integer
-     *                           countPending:
-     *                             type: integer
-     *                           countStarted:
-     *                             type: integer
-     *                           totalMissoes:
-     *                             type: integer
-     *                           points:
-     *                             type: integer
      *                     desempenho:
      *                       type: object
      *                       properties:
@@ -130,32 +97,32 @@ class DashboardController {
      *                                 type: integer
      *                               count:
      *                                 type: integer
+     *                               municipios:
+     *                                 type: array
+     *                                 items:
+     *                                   type: string
      *                         totalMunicipios:
      *                           type: integer
      *                     totalParticipatingPrefeituras:
      *                       type: integer
-     *                       description: Número de prefeituras participantes no pacto
      *                     percentageFinishedMissions:
      *                       type: number
-     *                       format: float
-     *                       description: Porcentagem de missões concluídas (0-100)
      *       500:
      *         description: Erro no servidor
-     *         content:
-     *           application/json:
-     *             schema:
-     *               type: object
-     *               properties:
-     *                 status:
-     *                   type: string
-     *                   example: error
-     *                 message:
-     *                   type: string
      */
     async getMapPanorama(req, res) {
         try {
             const data = await this.dashboardService.getMapPanorama();
-            return res.json({ status: 'success', data });
+            // Only return the desempenho and related data, excluding mapPanorama
+            const { desempenho, totalParticipatingPrefeituras, percentageFinishedMissions } = data;
+            return res.json({ 
+                status: 'success', 
+                data: { 
+                    desempenho, 
+                    totalParticipatingPrefeituras, 
+                    percentageFinishedMissions 
+                } 
+            });
         } catch (error) {
             return res.status(500).json({ status: 'error', message: error.message });
         }
