@@ -441,12 +441,10 @@ export default function HomePage() {
   }, [missoes, selectedMissao, loading, loadingPanorama, error, panoramaError, missionPanorama, getMissionProgress]);
 
   // Memoize the MunicipioPreview component
-  const memoizedMunicipioPreview = useMemo(() => {
-    if (!selectedMunicipio) return null;
-    
+  const memoizedMunicipioPreview = useMemo(() => {    
     return (
       <MunicipioPreview
-        codIbge={selectedMunicipio.codIbge}
+        codIbge={selectedMunicipio?.codIbge}
         missaoId={selectedMissao}
         onViewProfile={handleViewProfile}
       />

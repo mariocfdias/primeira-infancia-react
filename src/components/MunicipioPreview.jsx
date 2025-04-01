@@ -32,7 +32,8 @@ const MunicipioPreview = ({
   const [error, setError] = useState(null);
 
   // Handle image load error
-  const handleImageError = () => {
+  const handleImageError = (e) => {
+    console.error("Image loading error:", e.target.src, e);
     setImgError(true);
   };
 
@@ -40,11 +41,19 @@ const MunicipioPreview = ({
   const formatImageUrl = (imageUrl) => {
     if (!imageUrl) return null;
     
-    // Check if it's a Google Drive link
+    // Check if it's a Google Drive link (file/d/ format)
     const driveMatch = imageUrl.match(/drive\.google\.com\/file\/d\/(.*?)\/view/);
     if (driveMatch && driveMatch[1]) {
       const imageId = driveMatch[1];
-      return `https://drive.google.com/thumbnail?id=${imageId}`;
+      return `https://lh3.google.com/u/0/d/${imageId}`;
+    }
+    
+    // Check if it's a Google Drive link (uc?export=view&id= format)
+    const ucMatch = imageUrl.match(/drive\.google\.com\/uc\?export=view&id=(.*?)(?:&|$)/);
+    if (ucMatch && ucMatch[1]) {
+      const imageId = ucMatch[1];
+      console.log({imageId})
+      return `https://lh3.google.com/u/0/d/${imageId}`;
     }
     
     // If not a Drive URL, return the original URL
@@ -146,18 +155,21 @@ const MunicipioPreview = ({
           borderRadius: 1,
         }}
       >
-        <Typography
-          variant="body2"
-          sx={{
-            fontSize: { xs: "0.75rem", sm: "0.875rem" },
-          }}
-        >
-          Selecione o município para visualizar os detalhes da{" "}
-          <Box component="span" sx={{ fontWeight: "medium" }}>
-            prefeitura
-          </Box>
-          .
-        </Typography>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", py: 2 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              fontSize: { xs: "1rem", sm: "1.2rem", lg: "1.5rem" },
+              textAlign: "center"
+            }}
+          >
+            Selecione o município para visualizar os detalhes da{" "}
+            <Box component="span" sx={{ fontWeight: "bold" }}>
+              prefeitura
+            </Box>
+            .
+          </Typography>
+        </Box>
       </Paper>
     );
   }
@@ -208,7 +220,7 @@ const MunicipioPreview = ({
   const level = getLevel(points);
   const levelColor = getLevelColor(points);
   const progressPercentage = getProgressPercentage(points);
-  const imageUrl = formatImageUrl(municipio.imagemAvatar);
+  const imageUrl = formatImageUrl(municipio?.imagemAvatar);
 
   return (
     <Paper
@@ -228,7 +240,9 @@ const MunicipioPreview = ({
           flexDirection: "column"
         }}
       >
-        {/* Header with image and title */}
+        {
+          console.log({imgError, imageUrl})
+        }
         <Box display="flex" gap={2} mb={2} >
           <Box 
             sx={{
@@ -241,7 +255,7 @@ const MunicipioPreview = ({
               position: "relative"
             }}
           >
-            {imageUrl && !imgError ? (
+            {imageUrl ? (
               <Avatar
                 src={imageUrl}
                 alt={`${nome} logo`}
@@ -377,7 +391,7 @@ const MunicipioPreview = ({
             <Box display="flex" flexDirection="column" gap={1}>
               {evidence.length > 0 && (
                 evidence.map((item, index) => {
-                  // Map API status to component status
+                  console.log({item})
                   let itemStatus = "pending";
                   if (data.validation_status === "VALID") {
                     itemStatus = "completed";
@@ -388,7 +402,7 @@ const MunicipioPreview = ({
                       id={index + 1}
                       title={item.titulo}
                       description={item.descricao}
-                      evidence={item.evidencia}
+                      evidence={item.evidence}
                       status={itemStatus}
                     />
                   );

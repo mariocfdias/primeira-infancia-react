@@ -7,11 +7,10 @@ export default function EvidenceItem({
   title,
   description,
   evidence,
-  evidenceLink,
   status = "pending",
   showId = true
 }) {
-  console.log({evidenceLink, evidence})
+  console.log({evidence})
   const handleEvidenceClick = (url) => {
     console.log({url})
     if (!url) return;
@@ -25,14 +24,14 @@ export default function EvidenceItem({
       : "Evidência necessária para concluir a missão";
   };
 
-  const getIcon = () => {
+  const getIcon = (evidence) => {
     // Use evidenceLink if provided, otherwise fall back to evidence
-    const hasLink = evidenceLink || evidence;
+    const hasLink = evidence;
     
     if (hasLink) {
       return (
         <OpenInNew sx={{ 
-          color: "#12447f", 
+          color: "#ffffff", 
           fontSize: { xs: "0.9rem", sm: "1rem", lg: "24px" }, 
           ml: "auto",
           cursor: "pointer" 
@@ -53,8 +52,8 @@ export default function EvidenceItem({
   return (
     <Box
       onClick={(e) => {
-        console.log({title, evidenceLink, evidence, description})
-        const linkToOpen = evidenceLink || evidence;
+        console.log({title, evidence, description})
+        const linkToOpen =  evidence;
         linkToOpen && handleEvidenceClick(linkToOpen);
       }}
       sx={{
@@ -63,11 +62,11 @@ export default function EvidenceItem({
         p: 1,
         border: "1px solid #d3d3d3",
         borderRadius: 5,
-        backgroundColor: (evidenceLink || evidence) ? "#12447F" : "#FFFFFF",
-        color: (evidenceLink || evidence) ? "white" : "#333333",
-        cursor: (evidenceLink || evidence) ? "pointer" : "default",
+        backgroundColor: (evidence) ? "#12447F" : "#FFFFFF",
+        color: (evidence) ? "white" : "#333333",
+        cursor: (evidence) ? "pointer" : "default",
         transition: "all 0.2s ease",
-        "&:hover": (evidenceLink || evidence) ? {
+        "&:hover": (evidence) ? {
           opacity: 0.9,
           boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)'
         } : {},
@@ -82,9 +81,8 @@ export default function EvidenceItem({
       >
         {title}
       </Typography>
-      <Tooltip color={(evidenceLink || evidence) ? "white" : "#333333"} title={<Typography sx={{fontSize: { xs: "0.7rem", sm: "0.8rem", lg: "20px", width: {xs: "200px", lg: "360px"} }}}>{getTooltipTitle()}</Typography>} arrow placement="top">
-
-        {getIcon()}
+      <Tooltip color={(evidence) ? "#ffffff" : "#333333"} title={<Typography sx={{fontSize: { xs: "0.7rem", sm: "0.8rem", lg: "20px", width: {xs: "200px", lg: "360px"} }}}>{getTooltipTitle()}</Typography>} arrow placement="top">
+        {getIcon(evidence)}
       </Tooltip>
     </Box>
   );
@@ -95,7 +93,6 @@ EvidenceItem.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
   evidence: PropTypes.string,
-  evidenceLink: PropTypes.string,
   status: PropTypes.oneOf(['pending', 'completed']),
   showId: PropTypes.bool
 }; 

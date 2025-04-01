@@ -16,6 +16,8 @@ export default function MissionEvidenceCard({
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
 
+  console.log({evidenceItems})
+
   const getCategoryIcon = (categoryId) => {
     // Try to extract CTG pattern from iconUrl or title
 
@@ -210,12 +212,12 @@ export default function MissionEvidenceCard({
         <Grid container spacing={1}  sx={{ mb: status !== "completed" ? 2 : 0 }}>
           {evidenceItems.map((item) => (
             <Grid item xs={12} sm={6} key={item.id}>
+              {console.log({item})}
               <EvidenceItem
                 id={item.id}
-                title={item.title}
-                description={item.description}
+                title={item.titulo}
+                description={item.descricao}
                 evidence={item.evidence}
-                evidenceLink={item.evidenceLink}
                 status={item.status}
               />
             </Grid>

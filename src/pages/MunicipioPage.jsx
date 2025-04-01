@@ -33,12 +33,53 @@ export default function MunicipioPage({ onBack, ibge }) {
         // Fetch desempenhos for this municipality
         const desempenhosResponse = await services.desempenhosService.getDesempenhosByMunicipio(ibge)
         
+        // Process the evidence items directly after fetching
+        const processedDesempenhos = desempenhosResponse.data.map(desempenho => {
+          let evidenceItems = []
+          
+          if (desempenho.evidence && Array.isArray(desempenho.evidence)) {
+            // If evidence is already an array, use it directly
+            evidenceItems = desempenho.evidence.map((item, index) => ({
+              id: index + 1,
+              title: item.titulo,
+              description: item.descricao,
+              evidenceLink: item.evidencia,
+              status: desempenho.validation_status === "VALID" ? "completed" : "pending"
+            }))
+          } else if (desempenho.missao && desempenho.missao.evidencias) {
+            // If evidence is in missao.evidencias
+            try {
+              // Check if evidencias is already an array or needs parsing
+              const evidenciasData = typeof desempenho.missao.evidencias === 'string' 
+                ? JSON.parse(desempenho.missao.evidencias) 
+                : desempenho.missao.evidencias;
+                
+              evidenceItems = evidenciasData.map((item, index) => ({
+                id: index + 1,
+                title: item.titulo,
+                description: item.descricao,
+                status: desempenho.validation_status === "VALID" ? "completed" : "pending"
+              }))
+            } catch (e) {
+              console.error("Failed to parse evidencias:", e)
+            }
+          }
+          
+          // Return the processed desempenho with evidence items
+          return {
+            ...desempenho,
+            processedEvidence: evidenceItems
+          }
+        })
+        
         // Combine the data
         const combinedData = {
           ...response.data,
-          desempenhos: desempenhosResponse.data
+          desempenhos: processedDesempenhos
         }
-        setDesempenhoData(desempenhosResponse.data)
+        
+        console.log({combinedData})
+        setDesempenhoData(processedDesempenhos)
         setMunicipioData(combinedData)
         setLoading(false)
       } catch (err) {
@@ -56,6 +97,10 @@ export default function MunicipioPage({ onBack, ibge }) {
   useEffect(() => {
     console.log({desempenhoData})
   }, [desempenhoData])
+
+  useEffect(() => {
+    console.log({municipioData})
+  }, [municipioData])
   
   // Add debug information
   console.log("Loading:", loading)
@@ -384,36 +429,7 @@ export default function MunicipioPage({ onBack, ibge }) {
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
             {/* Map through all missions and render MissionEvidenceCard for each */}
             {municipioData.desempenhos.map((desempenho) => {
-              // Parse evidence items if they exist
-              let evidenceItems = []
-              
-              if (desempenho.evidence && Array.isArray(desempenho.evidence)) {
-                // If evidence is already an array, use it directly
-                evidenceItems = desempenho.evidence.map((item, index) => ({
-                  id: index + 1,
-                  title: item.titulo,
-                  description: item.descricao,
-                  evidenceLink: item.evidencia,
-                  status: desempenho.validation_status === "VALID" ? "completed" : "pending"
-                }))
-              } else if (desempenho.missao && desempenho.missao.evidencias) {
-                // If evidence is in missao.evidencias
-                try {
-                  // Check if evidencias is already an array or needs parsing
-                  const evidenciasData = typeof desempenho.missao.evidencias === 'string' 
-                    ? JSON.parse(desempenho.missao.evidencias) 
-                    : desempenho.missao.evidencias;
-                    
-                  evidenceItems = evidenciasData.map((item, index) => ({
-                    id: index + 1,
-                    title: item.titulo,
-                    description: item.descricao,
-                    status: desempenho.validation_status === "VALID" ? "completed" : "pending"
-                  }))
-                } catch (e) {
-                  console.error("Failed to parse evidencias:", e)
-                }
-              }
+              // Use the pre-processed evidence items
               
               // Map API status to component status
               let status = "not-started"
@@ -432,7 +448,7 @@ export default function MunicipioPage({ onBack, ibge }) {
                   status={status}
                   points={parseInt(desempenho.missao.qnt_pontos)}
                   iconUrl={desempenho.missao.emblema_da_categoria || "/placeholder.svg?height=60&width=60"}
-                  evidenceItems={evidenceItems}
+                  evidenceItems={desempenho.evidence ||[]}
                   viewOnly={desempenho.validation_status === "VALID"}
                 />
               )
