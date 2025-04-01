@@ -130,27 +130,62 @@ export default function HomePage() {
     console.log('missionPanoramaById updated:', missionPanoramaById);
   }, [missionPanoramaById]);
 
-  // Fetch municipios on component mount
+  // Fetch all initial data in parallel
   useEffect(() => {
-    fetchMunicipios();
+    const fetchInitialData = async () => {
+      try {
+        // Iniciar todas as requisições em paralelo
+        const municipiosPromise = makeRequest(services.municipiosService.getAllMunicipios);
+        const missoesPromise = makeRequest(services.missoesService.getAllMissoes);
+        const missionPanoramaPromise = makeRequest(services.dashboardService.getMissionPanorama);
+        const mapPanoramaPromise = makeRequest(services.dashboardService.getMapPanorama);
+        
+        // Definir estados de carregamento
+        setLoading('municipios', true);
+        setLoading('missoes', true);
+        setLoading('missionPanorama', true);
+        setLoading('mapPanorama', true);
+        
+        // Aguardar todas as requisições serem concluídas
+        const [municipiosResponse, missoesResponse, missionPanoramaResponse, mapPanoramaResponse] = 
+          await Promise.all([municipiosPromise, missoesPromise, missionPanoramaPromise, mapPanoramaPromise]);
+        
+        // Processar respostas e atualizar estados
+        if (municipiosResponse && municipiosResponse.status === 'success' && Array.isArray(municipiosResponse.data)) {
+          setMunicipios(municipiosResponse.data);
+          dataRef.current.municipios = municipiosResponse.data;
+        }
+        
+        if (missoesResponse && missoesResponse.status === 'success' && Array.isArray(missoesResponse.data)) {
+          setMissoes(missoesResponse.data);
+          dataRef.current.missoes = missoesResponse.data;
+        }
+        
+        if (missionPanoramaResponse && missionPanoramaResponse.status === 'success' && Array.isArray(missionPanoramaResponse.data)) {
+          setMissionPanorama(missionPanoramaResponse.data);
+          dataRef.current.missionPanorama = missionPanoramaResponse.data;
+        }
+        
+        if (mapPanoramaResponse && mapPanoramaResponse.status === 'success' && mapPanoramaResponse.data) {
+          console.log('Map panorama data:', mapPanoramaResponse.data);
+          setMapPanorama(mapPanoramaResponse.data);
+          dataRef.current.mapPanorama = mapPanoramaResponse.data;
+        }
+      } catch (error) {
+        console.error("Erro ao carregar dados iniciais:", error);
+      } finally {
+        // Finalizar estados de carregamento
+        setLoading('municipios', false);
+        setLoading('missoes', false);
+        setLoading('missionPanorama', false);
+        setLoading('mapPanorama', false);
+      }
+    };
+    
+    fetchInitialData();
   }, []);
 
-  // Fetch missoes data on component mount
-  useEffect(() => {
-    fetchMissoes();
-  }, []);
-
-  // Fetch mission panorama data
-  useEffect(() => {
-    fetchMissionPanorama();
-  }, []);
-
-  // Fetch map panorama data
-  useEffect(() => {
-    fetchMapPanorama();
-  }, []);
-
-  // Debounce municipio search
+  // Manter os useEffects para debounce e eventos
   useEffect(() => {
     // Clear any existing timer
     if (searchTimerRef.current) {
