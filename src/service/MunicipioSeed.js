@@ -20,7 +20,7 @@ async function seedMunicipios(connection) {
             nome: "Governo do Estado do Ceará",
             status: "Participante",
             data_alteracao: new Date(0).toISOString(),
-            imagem_avatar: "https://drive.google.com/file/d/13L40cl7VagIjuQtvStsH39omSGaLovvS/view?usp=sharing",
+            imagem_avatar: "https://drive.google.com/file/d/1SPWjwDyovW7DskedzhH_iqSfZQrV1HzC/view?usp=sharing",
             badges: 0,
             points: 0,
             orgao: true
@@ -30,7 +30,7 @@ async function seedMunicipios(connection) {
             nome: "TCE Ceará",
             status: "Participante",
             data_alteracao: new Date(0).toISOString(),
-            imagem_avatar: "https://drive.google.com/file/d/13L40cl7VagIjuQtvStsH39omSGaLovvS/view?usp=sharing",
+            imagem_avatar: "https://drive.google.com/file/d/1TN-m1leyK6sblCbGYG1G2kPoHq9awG4O/view?usp=sharing",
             badges: 0,
             points: 0,
             orgao: true
@@ -40,7 +40,7 @@ async function seedMunicipios(connection) {
             nome: "Poder Legislativo do Estado do Ceará",
             status: "Participante",
             data_alteracao: new Date(0).toISOString(),
-            imagem_avatar: "https://drive.google.com/file/d/13L40cl7VagIjuQtvStsH39omSGaLovvS/view?usp=sharing",
+            imagem_avatar: "https://drive.google.com/file/d/1MQGn3jZXFXdDd8aW8hzFNbaBB_20cr9N/view?usp=sharing",
             badges: 0,
             points: 0,
             orgao: true

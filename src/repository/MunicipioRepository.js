@@ -6,13 +6,14 @@ class MunicipioRepository {
 
     async findAll() {
         return await this.repository.find({
+            where: { orgao: false},
             select: ["codIbge", "nome", "status", "badges", "points", "imagemAvatar"]
         });
     }
 
     async findParticipantes() {
         return await this.repository.find({
-            where: { status: "Participante" },
+            where: { status: "Participante", orgao: false },
             select: ["codIbge", "nome", "status", "badges", "points", "imagemAvatar", "orgao"]
         });
     }
@@ -26,7 +27,7 @@ class MunicipioRepository {
     async findOne(codIbge) {
         return await this.repository.findOne({
             where: { codIbge },
-            select: ["codIbge", "nome", "status", "badges", "points", "imagemAvatar"]
+            select: ["codIbge", "nome", "status", "badges", "points", "imagemAvatar", "orgao"]
         });
     }
 

@@ -51,6 +51,7 @@ class MunicipioService {
             points: municipioData.points || 0,
             orgao: municipioData.orgao || false
         };
+        console.log({municipio});
         return await this.municipioRepository.save(municipio);
     }
 

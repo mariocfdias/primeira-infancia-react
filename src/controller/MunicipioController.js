@@ -15,11 +15,11 @@ class MunicipioController {
      * @swagger
      * /municipios:
      *   get:
-     *     summary: Retorna todos os municípios
+     *     summary: Retorna todos os municípios (excluindo órgãos)
      *     tags: [Municipios]
      *     responses:
      *       200:
-     *         description: Lista de municípios
+     *         description: Lista de municípios (excluindo órgãos)
      *         content:
      *           application/json:
      *             schema:

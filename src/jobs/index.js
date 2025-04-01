@@ -28,10 +28,10 @@ async function setupJobs(connection, config) {
     //     fetchMunicipios(connection, FETCH_MUNICIPIOS_URL);
     // });
 
-    // // // Run autofetch job every 5 minutes
-    // cron.schedule('*/5 * * * *', () => {
-    //     autofetch(AUTOFETCH_URL);
-    // });
+    // // Run autofetch job every 5 minutes
+    cron.schedule('*/5 * * * *', () => {
+        autofetch(AUTOFETCH_URL);
+    });
     
     // // // Run updateJsonMunicipio job every 5 minutes
     // // cron.schedule('*/5 * * * *', () => {
