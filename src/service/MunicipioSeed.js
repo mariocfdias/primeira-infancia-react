@@ -52,11 +52,12 @@ async function seedMunicipios(connection) {
         const results = [];
         
         for (const municipioData of municipiosData) {
-            const existingMunicipio = await municipioService.findParticipantes(municipioData.cod_ibge);
+            const existingMunicipio = await municipioService.findById(municipioData.cod_ibge);
 
             console.log({existingMunicipio});
             
-            if (!existingMunicipio) {
+            if (existingMunicipio == null) {
+                console.log(`Adding municipio: ${municipioData.nome}`);
                 // Se o município não existir, adiciona-o
                 const savedMunicipio = await municipioService.saveMunicipio(municipioData);
                 results.push(savedMunicipio);

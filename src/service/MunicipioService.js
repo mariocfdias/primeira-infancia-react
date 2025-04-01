@@ -13,7 +13,7 @@ class MunicipioService {
     async findById(codIbge) {
         const municipio = await this.municipioRepository.findOne(codIbge);
         if (!municipio) {
-            throw new Error(`Municipio with codIbge ${codIbge} not found`);
+            return null;
         }
         return municipio;
     }

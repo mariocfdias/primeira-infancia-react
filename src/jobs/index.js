@@ -11,7 +11,7 @@ const fetchMissaoDesempenho = require('./fetchMissaoDesempenho');
  * @param {Object} connection - Database connection
  * @param {Object} config - Configuration object containing URLs for various jobs
  */
-function setupJobs(connection, config) {
+async function setupJobs(connection, config) {
     const {
         FETCH_MUNICIPIOS_URL,
         UPDATE_JSON_URL,
@@ -54,7 +54,7 @@ function setupJobs(connection, config) {
     // });
 
     // Run the jobs immediately on startup
-    runJobsImmediately(connection, config).catch(err => {
+    await runJobsImmediately(connection, config).catch(err => {
         console.error('Error running startup jobs:', err);
     });
 }

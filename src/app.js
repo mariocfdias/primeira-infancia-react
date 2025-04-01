@@ -30,7 +30,6 @@ async function startServer() {
 
         // Run seeds in sequence
         await seedMunicipios(connection);
-        await seedMunicipioDesempenho(connection);
         
         // Raw JSON endpoint (before Swagger setup to avoid middleware conflict)
         app.get('/raw-swagger.json', (req, res) => {
@@ -51,8 +50,9 @@ async function startServer() {
         app.use('/api', setupRoutes(connection));
         
         // Setup scheduled jobs
-        setupJobs(connection, jobConfig);
-        
+        await setupJobs(connection, jobConfig);
+        await seedMunicipioDesempenho(connection);
+
         app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
             console.log(`Swagger documentation available at http://localhost:${PORT}/api-docs`);
