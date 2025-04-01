@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import {
   Box,
   Typography,
@@ -39,40 +39,26 @@ export default function HomePage() {
   
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const isTablet = useMediaQuery(theme.breakpoints.down("md"))
+  
+  // Create a ref to store all API data states to prevent unnecessary reloads
+  const dataRef = useRef({
+    municipios: [],
+    missoes: [],
+    missionPanorama: [],
+    mapPanorama: null,
+    eventos: [],
+    missionPanoramaCache: {},
+    municipioCache: {},
+  });
+  
+  // Single instance of useApiRequest for general data fetching
   const { makeRequest, loading, error, data } = useApiRequest()
-  const { 
-    makeRequest: makeRequestPanorama, 
-    loading: loadingPanorama, 
-    error: panoramaError, 
-    data: panoramaData 
-  } = useApiRequest()
-  const { 
-    makeRequest: makeRequestEventos, 
-    loading: loadingEventos, 
-    error: eventosError
-  } = useApiRequest()
-  const { 
-    makeRequest: makeRequestMunicipio, 
-    loading: loadingMunicipio, 
-    data: municipioData
-  } = useApiRequest()
-  const { 
-    makeRequest: makeRequestMissionPanorama, 
-    loading: loadingMissionPanorama, 
-    data: missionPanoramaData 
-  } = useApiRequest()
-  const {
-    makeRequest: makeRequestMapPanorama,
-    loading: loadingMapPanorama,
-    error: mapPanoramaError,
-    data: mapPanoramaData
-  } = useApiRequest()
+  
+  // State variables with stable references
   const [municipios, setMunicipios] = useState([])
   const [selectedMunicipio, setSelectedMunicipio] = useState(null)
   const [selectedMissao, setSelectedMissao] = useState(null)
   const [missionPanoramaById, setMissionPanoramaById] = useState(null)
-  const [missionPanoramaCache, setMissionPanoramaCache] = useState({})
-  const [municipioCache, setMunicipioCache] = useState({})
   const [eventos, setEventos] = useState([])
   const [missoes, setMissoes] = useState([])
   const [missionPanorama, setMissionPanorama] = useState([])
@@ -80,13 +66,41 @@ export default function HomePage() {
   const [currentPage, setCurrentPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const [eventFilter, setEventFilter] = useState("mission_completed")
-  const eventosLimit = 10
-  // State to track if we should show MunicipioPage instead of HomePage
   const [showMunicipioPage, setShowMunicipioPage] = useState(false)
-
-  // State to hold non-participant municipality data for display
   const [nonParticipantMunicipio, setNonParticipantMunicipio] = useState(null);
-
+  
+  // Loading states
+  const [loadingStates, setLoadingStates] = useState({
+    municipios: false,
+    missoes: false,
+    missionPanorama: false,
+    mapPanorama: false,
+    eventos: false,
+    municipio: false,
+    missionPanoramaById: false
+  });
+  
+  // Error states
+  const [errorStates, setErrorStates] = useState({
+    municipios: null,
+    missoes: null,
+    missionPanorama: null,
+    mapPanorama: null,
+    eventos: null,
+    municipio: null,
+    missionPanoramaById: null
+  });
+  
+  // Helper function to update loading state
+  const setLoading = (key, isLoading) => {
+    setLoadingStates(prev => ({...prev, [key]: isLoading}));
+  };
+  
+  // Helper function to update error state
+  const setError = (key, error) => {
+    setErrorStates(prev => ({...prev, [key]: error}));
+  };
+  
   // Check URL parameter on component mount
   useEffect(() => {
     if (codIbgeParam) {
@@ -98,12 +112,12 @@ export default function HomePage() {
         setSelectedMunicipio(municipio);
         
         // Check if we need to fetch more data for this municipality
-        if (!municipioCache[codIbgeParam]) {
-          makeRequestMunicipio(() => services.municipiosService.getMunicipioByIbge(codIbgeParam));
+        if (!dataRef.current.municipioCache[codIbgeParam]) {
+          fetchMunicipioByIbge(codIbgeParam);
         }
       }
     }
-  }, [codIbgeParam, municipios, municipioCache, makeRequestMunicipio]);
+  }, [codIbgeParam, municipios]);
 
   // Add useEffect to track changes to missionPanoramaById
   useEffect(() => {
@@ -112,94 +126,156 @@ export default function HomePage() {
 
   // Fetch municipios on component mount
   useEffect(() => {
-    const fetchMunicipios = async () => {
-      try {
-        const response = await makeRequest(services.municipiosService.getAllMunicipios)
-        if (response && response.status === 'success' && Array.isArray(response.data)) {
-          setMunicipios(response.data)
-        }
-      } catch (error) {
-        console.error("Error fetching municipios:", error)
-      }
-    }
-
-    fetchMunicipios()
-  }, [])
+    fetchMunicipios();
+  }, []);
 
   // Fetch missoes data on component mount
   useEffect(() => {
-    const fetchMissoes = async () => {
-      try {
-        const response = await makeRequest(services.missoesService.getAllMissoes)
-        if (response && response.status === 'success' && Array.isArray(response.data)) {
-          setMissoes(response.data)
-        }
-      } catch (error) {
-        console.error("Error fetching missoes:", error)
-      }
-    }
-
-    fetchMissoes()
-  }, [])
+    fetchMissoes();
+  }, []);
 
   // Fetch mission panorama data
   useEffect(() => {
-    const fetchMissionPanorama = async () => {
-      try {
-        const response = await makeRequestPanorama(services.dashboardService.getMissionPanorama)
-        if (response && response.status === 'success' && Array.isArray(response.data)) {
-          setMissionPanorama(response.data)
-        }
-      } catch (error) {
-        console.error("Error fetching mission panorama:", error)
-      }
-    }
-
-    fetchMissionPanorama()
-  }, [])
-
-  // Fetch eventos based on filters and pagination
-  useEffect(() => {
-    const fetchEventos = async () => {
-      try {
-        const params = {
-          page: currentPage,
-          limit: eventosLimit,
-          event: eventFilter,
-          sortDirection: "DESC"
-        }
-        
-        const response = await makeRequestEventos(() => services.eventosService.getEventos(params))
-        if (response && response.status === 'success' && Array.isArray(response.data)) {
-          setEventos(response.data)
-          if (response.pagination) {
-            setTotalPages(response.pagination.pages)
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching eventos:", error)
-      }
-    }
-
-    fetchEventos()
-  }, [currentPage, eventFilter])
+    fetchMissionPanorama();
+  }, []);
 
   // Fetch map panorama data
   useEffect(() => {
-    const fetchMapPanorama = async () => {
-      try {
-        const response = await makeRequestMapPanorama(services.dashboardService.getMapPanorama)
-        if (response && response.status === 'success' && response.data) {
-          console.log('Map panorama data:', response.data);
-          setMapPanorama(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching map panorama:", error)
-      }
-    }
+    fetchMapPanorama();
+  }, []);
 
-    fetchMapPanorama()
-  }, [])
+  // Fetch eventos based on filters and pagination
+  useEffect(() => {
+    fetchEventos();
+  }, [currentPage, eventFilter]);
+
+  // Fetch municipios function
+  const fetchMunicipios = async () => {
+    try {
+      setLoading('municipios', true);
+      const response = await makeRequest(services.municipiosService.getAllMunicipios);
+      setLoading('municipios', false);
+      
+      if (response && response.status === 'success' && Array.isArray(response.data)) {
+        setMunicipios(response.data);
+        dataRef.current.municipios = response.data;
+      }
+    } catch (error) {
+      console.error("Error fetching municipios:", error);
+      setError('municipios', error);
+      setLoading('municipios', false);
+    }
+  };
+
+  // Fetch missoes function
+  const fetchMissoes = async () => {
+    try {
+      setLoading('missoes', true);
+      const response = await makeRequest(services.missoesService.getAllMissoes);
+      setLoading('missoes', false);
+      
+      if (response && response.status === 'success' && Array.isArray(response.data)) {
+        setMissoes(response.data);
+        dataRef.current.missoes = response.data;
+      }
+    } catch (error) {
+      console.error("Error fetching missoes:", error);
+      setError('missoes', error);
+      setLoading('missoes', false);
+    }
+  };
+
+  // Fetch mission panorama function
+  const fetchMissionPanorama = async () => {
+    try {
+      setLoading('missionPanorama', true);
+      const response = await makeRequest(services.dashboardService.getMissionPanorama);
+      setLoading('missionPanorama', false);
+      
+      if (response && response.status === 'success' && Array.isArray(response.data)) {
+        setMissionPanorama(response.data);
+        dataRef.current.missionPanorama = response.data;
+      }
+    } catch (error) {
+      console.error("Error fetching mission panorama:", error);
+      setError('missionPanorama', error);
+      setLoading('missionPanorama', false);
+    }
+  };
+
+  // Fetch map panorama function
+  const fetchMapPanorama = async () => {
+    try {
+      setLoading('mapPanorama', true);
+      const response = await makeRequest(services.dashboardService.getMapPanorama);
+      setLoading('mapPanorama', false);
+      
+      if (response && response.status === 'success' && response.data) {
+        console.log('Map panorama data:', response.data);
+        setMapPanorama(response.data);
+        dataRef.current.mapPanorama = response.data;
+      }
+    } catch (error) {
+      console.error("Error fetching map panorama:", error);
+      setError('mapPanorama', error);
+      setLoading('mapPanorama', false);
+    }
+  };
+
+  // Fetch eventos function
+  const fetchEventos = async () => {
+    try {
+      setLoading('eventos', true);
+      const params = {
+        page: currentPage,
+        limit: 100,
+        event: eventFilter,
+        sortDirection: "DESC"
+      };
+      
+      const response = await makeRequest(() => services.eventosService.getEventos(params));
+      setLoading('eventos', false);
+      
+      if (response && response.status === 'success' && Array.isArray(response.data)) {
+        setEventos(response.data);
+        dataRef.current.eventos = response.data;
+        
+        if (response.pagination) {
+          setTotalPages(response.pagination.pages);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching eventos:", error);
+      setError('eventos', error);
+      setLoading('eventos', false);
+    }
+  };
+
+  // Fetch municipio by IBGE code
+  const fetchMunicipioByIbge = async (codIbge) => {
+    if (dataRef.current.municipioCache[codIbge]) {
+      return dataRef.current.municipioCache[codIbge];
+    }
+    
+    try {
+      setLoading('municipio', true);
+      const response = await makeRequest(() => services.municipiosService.getMunicipioByIbge(codIbge));
+      setLoading('municipio', false);
+      
+      if (response && response.status === 'success') {
+        // Save to cache
+        const updatedCache = {...dataRef.current.municipioCache, [codIbge]: response};
+        dataRef.current.municipioCache = updatedCache;
+        return response;
+      }
+    } catch (error) {
+      console.error("Error fetching municipio by IBGE:", error);
+      setError('municipio', error);
+      setLoading('municipio', false);
+    }
+    
+    return null;
+  };
 
   // Handle view mission on map
   const handleViewMissionOnMap = async (missionId) => {
@@ -213,41 +289,45 @@ export default function HomePage() {
       setSelectedMissao(missionId);
       
       // Check if we already have data for this mission in the cache
-      if (missionPanoramaCache[missionId]) {
+      if (dataRef.current.missionPanoramaCache[missionId]) {
         console.log('Using cached mission panorama data for ID:', missionId);
-        setMissionPanoramaById(missionPanoramaCache[missionId]);
-      } else {
-        const response = await makeRequestMissionPanorama(() => 
-          services.dashboardService.getMissionPanoramaById(missionId)
-        );
+        setMissionPanoramaById(dataRef.current.missionPanoramaCache[missionId]);
+        return;
+      }
+      
+      setLoading('missionPanoramaById', true);
+      const response = await makeRequest(() => 
+        services.dashboardService.getMissionPanoramaById(missionId)
+      );
+      setLoading('missionPanoramaById', false);
+      
+      console.log('Mission panorama API response:', response);
+      
+      if (response && response.status === 'success') {
+        console.log('Setting mission panorama data:', response.data);
         
-        console.log('Mission panorama API response:', response);
+        // Check if response has the expected structure or format it correctly
+        let formattedData = response.data;
         
-        if (response && response.status === 'success') {
-          console.log('Setting mission panorama data:', response.data);
+        // If data is missing the expected arrays, create a structure that matches what the map component expects
+        if (!formattedData.completedMunicipios || !formattedData.startedMunicipios || !formattedData.pendingMunicipios) {
+          console.log('Restructuring mission panorama data to expected format');
           
-          // Check if response has the expected structure or format it correctly
-          let formattedData = response.data;
+          // Create a properly structured object based on what we received
+          formattedData = {
+            missao: { id: missionId },
+            completedMunicipios: formattedData.completedMunicipios || formattedData.completed || [],
+            startedMunicipios: formattedData.startedMunicipios || formattedData.started || [],
+            pendingMunicipios: formattedData.pendingMunicipios || formattedData.pending || []
+          };
           
-          // If data is missing the expected arrays, create a structure that matches what the map component expects
-          if (!formattedData.completedMunicipios || !formattedData.startedMunicipios || !formattedData.pendingMunicipios) {
-            console.log('Restructuring mission panorama data to expected format');
-            
-            // Create a properly structured object based on what we received
-            formattedData = {
-              missao: { id: missionId },
-              completedMunicipios: formattedData.completedMunicipios || formattedData.completed || [],
-              startedMunicipios: formattedData.startedMunicipios || formattedData.started || [],
-              pendingMunicipios: formattedData.pendingMunicipios || formattedData.pending || []
-            };
-            
-            console.log('Reformatted data:', formattedData);
-          }
-          
-          // Store in cache and set current data
-          setMissionPanoramaCache(prev => ({...prev, [missionId]: formattedData}));
-          setMissionPanoramaById(formattedData);
+          console.log('Reformatted data:', formattedData);
         }
+        
+        // Store in cache and set current data
+        const updatedCache = {...dataRef.current.missionPanoramaCache, [missionId]: formattedData};
+        dataRef.current.missionPanoramaCache = updatedCache;
+        setMissionPanoramaById(formattedData);
       }
       
       // If there's a selected municipality, we need to refetch its data to update mission-specific information
@@ -255,11 +335,13 @@ export default function HomePage() {
         if (selectedMunicipio.codIbge) {
           const codIbge = selectedMunicipio.codIbge;
           // Refetch municipality data to get updated mission status
-          makeRequestMunicipio(() => services.municipiosService.getMunicipioByIbge(codIbge));
+          fetchMunicipioByIbge(codIbge);
         }
       }
     } catch (error) {
       console.error("Error fetching mission panorama by ID:", error);
+      setError('missionPanoramaById', error);
+      setLoading('missionPanoramaById', false);
     }
   };
 
@@ -281,26 +363,15 @@ export default function HomePage() {
     const municipio = municipios.find(m => m.codIbge === codIbge);
     if (municipio) {
       setSelectedMunicipio(municipio);
-      
-      // Check if we already have this municipality in cache
-      if (municipioCache[codIbge]) {
-        console.log('Using cached municipality data for:', codIbge);
-        // Just reuse the existing municipality data through the normal API flow
-        // First, store the cached data back into the municipioCache to ensure it's available
-        setMunicipioCache(prev => ({...prev, [codIbge]: municipioCache[codIbge]}));
-        // Then, force a refetch to update the municipioData state through the API mechanism
-        makeRequestMunicipio(() => services.municipiosService.getMunicipioByIbge(codIbge));
-      } else {
-        // Fetch the selected municipality data if not in cache
-        makeRequestMunicipio(() => services.municipiosService.getMunicipioByIbge(codIbge));
-      }
+      fetchMunicipioByIbge(codIbge);
     }
-  }
+  };
 
   // Handle municipality selection from map
   const handleMapMunicipioSelect = (codIbge) => {
     // If the same municipality is already selected, don't make another API call
-    if (selectedMunicipio?.codIbge === codIbge && (municipioData || nonParticipantMunicipio)) {
+    if (selectedMunicipio?.codIbge === codIbge && 
+        (dataRef.current.municipioCache[codIbge] || nonParticipantMunicipio)) {
       return;
     }
     
@@ -313,25 +384,7 @@ export default function HomePage() {
     if (municipio) {
       // Set the selected municipio using the full object
       setSelectedMunicipio(municipio);
-      
-      // Check if we already have this municipality in cache
-      if (municipioCache[codIbge]) {
-        console.log('Using cached municipality data for:', codIbge);
-        // Just reuse the existing municipality data through the normal API flow
-        // First, store the cached data back into the municipioCache to ensure it's available
-        setMunicipioCache(prev => ({...prev, [codIbge]: municipioCache[codIbge]}));
-        // Then, force a refetch to update the municipioData state through the API mechanism
-        makeRequestMunicipio(() => services.municipiosService.getMunicipioByIbge(codIbge));
-      } else {
-        // Fetch the selected municipality data if not in cache
-        makeRequestMunicipio(() => services.municipiosService.getMunicipioByIbge(codIbge))
-          .then(response => {
-            if (response && response.status === 'success') {
-              // Store in cache for future use
-              setMunicipioCache(prev => ({...prev, [codIbge]: response}));
-            }
-          });
-      }
+      fetchMunicipioByIbge(codIbge);
     } else {
       // Create a basic object for municipalities not in our list
       const basicMunicipio = {
@@ -342,32 +395,28 @@ export default function HomePage() {
       setSelectedMunicipio(basicMunicipio);
       
       // Try to fetch data anyway, might be a municipality that doesn't participate yet
-      makeRequestMunicipio(() => services.municipiosService.getMunicipioByIbge(codIbge))
+      fetchMunicipioByIbge(codIbge)
         .then(response => {
-          if (response && response.status === 'success') {
-            // Store in cache for future use
-            setMunicipioCache(prev => ({...prev, [codIbge]: response}));
+          if (!response) {
+            // The API request failed, which might mean this municipality doesn't exist
+            // or doesn't participate in the pacto
+            console.log("Municipality data not found, creating placeholder");
+            
+            // Create a non-participant municipality data object
+            const placeholder = {
+              codIbge: codIbge,
+              nome: basicMunicipio.nome,
+              status: "Não participante",
+              points: 0,
+              badges: 0,
+              missoes: []
+            };
+            
+            setNonParticipantMunicipio(placeholder);
           }
-        })
-        .catch(error => {
-          // The API request failed, which might mean this municipality doesn't exist
-          // or doesn't participate in the pacto
-          console.log("Municipality data not found, creating placeholder");
-          
-          // Create a non-participant municipality data object
-          const placeholder = {
-            codIbge: codIbge,
-            nome: basicMunicipio.nome,
-            status: "Não participante",
-            points: 0,
-            badges: 0,
-            missoes: []
-          };
-          
-          setNonParticipantMunicipio(placeholder);
         });
     }
-  }
+  };
 
   // Handle "Ver perfil" button click
   const handleViewProfile = () => {
@@ -432,7 +481,7 @@ export default function HomePage() {
 
   // Add useMemo to memoize the mission cards grid to avoid re-renders
   const missionCardsGrid = useMemo(() => {
-    if (loading || loadingPanorama) {
+    if (loadingStates.missoes || loadingStates.missionPanorama) {
       return (
         <Box sx={{ display: "flex", justifyContent: "center", width: "100%", p: 3 }}>
           <CircularProgress />
@@ -440,11 +489,11 @@ export default function HomePage() {
       );
     }
     
-    if (error || panoramaError) {
+    if (errorStates.missoes || errorStates.missionPanorama) {
       return (
         <Grid item xs={12}>
           <Alert severity="error">
-            Erro ao carregar as missões: {(error || panoramaError)?.message}
+            Erro ao carregar as missões: {(errorStates.missoes || errorStates.missionPanorama)?.message}
           </Alert>
         </Grid>
       );
@@ -462,7 +511,8 @@ export default function HomePage() {
         />
       </Grid>
     ));
-  }, [missoes, selectedMissao, loading, loadingPanorama, error, panoramaError, missionPanorama, getMissionProgress]);
+  }, [missoes, selectedMissao, loadingStates.missoes, loadingStates.missionPanorama, 
+      errorStates.missoes, errorStates.missionPanorama, getMissionProgress]);
 
   // Memoize the MunicipioPreview component
   const memoizedMunicipioPreview = useMemo(() => {    
@@ -521,7 +571,7 @@ export default function HomePage() {
                   fontSize: { xs: "40px", sm: "48px", lg: "96px" },
                 }}
               >
-                {loadingMapPanorama ? <CircularProgress size={24} /> : (mapPanorama?.totalParticipatingPrefeituras || municipios.length || 0)}
+                {loadingStates.mapPanorama ? <CircularProgress size={24} /> : (mapPanorama?.totalParticipatingPrefeituras || municipios.length || 0)}
               </Typography>
               <Box>
                 <Typography
@@ -571,7 +621,7 @@ export default function HomePage() {
                   fontSize: { xs: "40px", sm: "48px", lg: "96px" },
                 }}
               >
-                {loadingMapPanorama ? <CircularProgress size={24} /> : `${(mapPanorama?.percentageFinishedMissions || 0).toFixed(1)}%`}
+                {loadingStates.mapPanorama ? <CircularProgress size={24} /> : `${(mapPanorama?.percentageFinishedMissions || 0).toFixed(1)}%`}
               </Typography>
               <Box>
               <Typography
@@ -797,9 +847,9 @@ export default function HomePage() {
           {/* Interactive Map */}
          
     
-          {error && (
+          {errorStates.municipios && (
             <Alert severity="error" sx={{ mb: 2 }}>
-              Ocorreu um erro ao carregar os dados dos municípios: {error.message}
+              Ocorreu um erro ao carregar os dados dos municípios: {errorStates.municipios.message}
             </Alert>
           )}
     
@@ -1077,13 +1127,13 @@ export default function HomePage() {
     
           {/* Pagination */}
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 4}}>
-            {loadingEventos ? (
+            {loadingStates.eventos ? (
               <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
                 <CircularProgress />
               </Box>
-            ) : eventosError ? (
+            ) : errorStates.eventos ? (
               <Alert severity="error" sx={{ mb: 2 }}>
-                Ocorreu um erro ao carregar os eventos: {eventosError?.message}
+                Ocorreu um erro ao carregar os eventos: {errorStates.eventos.message}
               </Alert>
             ) : eventos.length === 0 ? (
               <Paper elevation={1} sx={{ p: 3, textAlign: "center" }}>

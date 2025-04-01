@@ -49,6 +49,19 @@ const LegendDescription = ({ backgroundColor, color, description, number, title 
 
 // Map Legend component for non-mobile
 const MapLegendInternal = ({ selectedMissao, levelDistribution }) => {
+  // Get counts from levelDistribution if available
+  const getLevelCount = (level) => {
+    if (!levelDistribution) return 0;
+    const levelData = levelDistribution.find(l => l.level === level);
+    return levelData ? levelData.count : 0;
+  };
+
+  const npCount = getLevelCount("NP");
+  const level0Count = getLevelCount(0);
+  const level1Count = getLevelCount(1);
+  const level2Count = getLevelCount(2);
+  const level3Count = getLevelCount(3);
+
   return (
     <Paper
       elevation={1}
@@ -100,32 +113,32 @@ const MapLegendInternal = ({ selectedMissao, levelDistribution }) => {
             backgroundColor="#707070"
             title="Não iniciado"
             description="Município sem pontos"
-            number="89"
+            number={level0Count}
           />
           <LegendDescription 
             backgroundColor="#50B755"
             title="Nível 1"
             description="Entre 1 e 100 pontos"
-            number="135"
+            number={level1Count}
           />
           <LegendDescription 
             backgroundColor="#066829"
             title="Nível 2"
             description="Entre 101 e 199 pontos"
-            number="30"
+            number={level2Count}
           />
           <LegendDescription 
             backgroundColor="#12447f"
             title="Concluído"
             description="200 pontos ou mais"
-            number="2"
+            number={level3Count}
           />
           <LegendDescription 
             backgroundColor="white"
             color="#525252"
             title="Não aderiu"
             description="Município não participante"
-            number="10"
+            number={npCount}
           />
         </Box>
       )}

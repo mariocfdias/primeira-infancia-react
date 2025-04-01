@@ -51,6 +51,8 @@ const LegendItem = ({ backgroundColor, count, title, description }) => {
 
 export default function MapLegend({ selectedMissao, levelDistribution }) {
   // Get counts from levelDistribution if available
+  console.log({teste: levelDistribution})
+
   const getLevelCount = (level) => {
     if (!levelDistribution) return 0;
     const levelData = levelDistribution.find(l => l.level === level);
