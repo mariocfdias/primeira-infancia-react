@@ -10,6 +10,23 @@ class DashboardService {
         this.missoesRepository = new MissoesRepository(connection);
         this.municipioRepository = new MunicipioRepository(connection);
         this.municipioDesempenhoRepository = new MunicipioDesempenhoRepository(connection);
+        
+        // Cache para o panorama do mapa
+        this.mapPanoramaCache = {
+            data: null,
+            timestamp: null,
+            ttl: 15 * 60 * 1000 // 15 minutos em milissegundos
+        };
+    }
+
+    // Método para verificar se o cache é válido
+    isMapPanoramaCacheValid() {
+        if (!this.mapPanoramaCache.data || !this.mapPanoramaCache.timestamp) {
+            return false;
+        }
+        
+        const now = Date.now();
+        return (now - this.mapPanoramaCache.timestamp) < this.mapPanoramaCache.ttl;
     }
 
     async getMissionPanoramaGeneral() {
@@ -132,55 +149,75 @@ class DashboardService {
             .build();
     }
 
+    // Método getMapPanorama modificado para usar cache
     async getMapPanorama() {
-        // Get all municipios
-        const municipios = await this.municipioRepository.findAll();
+        // Verificar se há dados em cache válidos
+        if (this.isMapPanoramaCacheValid()) {
+            return this.mapPanoramaCache.data;
+        }
         
-        // Get all missoes to count total
-        const missoes = await this.missoesRepository.findAll();
+        // Obter todos os municípios e missões em uma única consulta
+        const [municipios, missoes] = await Promise.all([
+            this.municipioRepository.findAll(),
+            this.missoesRepository.findAll()
+        ]);
+        
         const totalMissoes = missoes.length;
+        const totalMunicipios = municipios.length;
         
-        // Create map panorama for each municipio
+        // Obter todos os desempenhos de uma vez, em vez de consultar para cada município
+        const allDesempenhos = await this.municipioDesempenhoRepository.findAllWithRelations();
+        
+        // Agrupar desempenhos por codIbge para acesso rápido
+        const desempenhosByIbge = {};
+        allDesempenhos.forEach(desempenho => {
+            if (!desempenhosByIbge[desempenho.codIbge]) {
+                desempenhosByIbge[desempenho.codIbge] = [];
+            }
+            desempenhosByIbge[desempenho.codIbge].push(desempenho);
+        });
+        
+        // Inicializar arrays e contadores
         const mapPanorama = [];
-        
-        // Initialize level distribution for desempenho panorama
-        const pointsPerLevel = 100;
         const municipioPoints = [];
+        const pointsPerLevel = 100;
         
-        // Count participating prefeituras
+        // Contar prefeituras participantes
         const totalParticipatingPrefeituras = municipios.filter(m => m.status === 'Participante').length;
         
-        // Count for percentage of finished missions
+        // Contadores para porcentagem de missões concluídas
         let totalValidMissions = 0;
         let totalMissionEntries = 0;
         
+        // Processar cada município
         for (const municipio of municipios) {
-            // Get all desempenhos for this municipio
-            const desempenhos = await this.municipioDesempenhoRepository.findByIbgeCode(municipio.codIbge);
+            const desempenhos = desempenhosByIbge[municipio.codIbge] || [];
             
-            // Count by status
+            // Contar por status
             const countValid = desempenhos.filter(d => d.validation_status === 'VALID').length;
             const countPending = desempenhos.filter(d => d.validation_status === 'PENDING').length;
             const countStarted = desempenhos.filter(d => d.validation_status === 'STARTED').length;
             
-            // Add to totals for percentage calculation
+            // Adicionar aos totais para cálculo de porcentagem
             totalValidMissions += countValid;
             totalMissionEntries += desempenhos.length;
             
-            // Calculate total points from valid missions
+            // Calcular pontos totais das missões válidas
             let totalPoints = 0;
             const validDesempenhos = desempenhos.filter(d => d.validation_status === 'VALID');
             
             for (const desempenho of validDesempenhos) {
-                if (desempenho.missao && desempenho.missao.qnt_pontos) {
-                    totalPoints += desempenho.missao.qnt_pontos;
+                // Buscar a missão correspondente no array de missões
+                const missao = missoes.find(m => m.id === desempenho.missaoId);
+                if (missao && missao.qnt_pontos) {
+                    totalPoints += missao.qnt_pontos;
                 }
             }
             
-            // Store the points for later desempenho calculation
+            // Armazenar os pontos para cálculo posterior de desempenho
             municipioPoints.push(totalPoints);
             
-            // Create panorama DTO with municipio object and points
+            // Criar DTO do panorama
             const municipioDTO = MunicipioDTO.fromEntity(municipio);
             
             const panoramaDTO = MapPanoramaDTO.builder()
@@ -195,12 +232,12 @@ class DashboardService {
             mapPanorama.push(panoramaDTO);
         }
         
-        // Calculate percentage of finished missions
+        // Calcular porcentagem de missões concluídas
         const percentageFinishedMissions = totalMissionEntries > 0 
             ? (totalValidMissions / totalMissionEntries) * 100 
             : 0;
         
-        // Inicializa a distribuição de níveis com grupos especiais
+        // Inicializar a distribuição de níveis
         const levelDistribution = [
             {
                 level: 'NP',  // Não Participante
@@ -218,7 +255,7 @@ class DashboardService {
             }
         ];
 
-        // Adiciona níveis regulares (1, 2, 3, etc)
+        // Adicionar níveis regulares
         const maxPoints = Math.max(...municipioPoints, 1);
         const numLevels = Math.ceil(maxPoints / pointsPerLevel);
         
@@ -232,12 +269,12 @@ class DashboardService {
             });
         }
 
-        // Distribui os municípios nos níveis
+        // Distribuir os municípios nos níveis
         for (let i = 0; i < municipios.length; i++) {
             const municipio = municipios[i];
             const points = municipioPoints[i];
 
-            // Verifica se é não participante
+            // Verificar se é não participante
             if (municipio.status !== 'Participante') {
                 levelDistribution[0].count++;
                 levelDistribution[0].municipios.push(municipio.codIbge);
@@ -251,28 +288,32 @@ class DashboardService {
                 continue;
             }
 
-            // Encontra o nível apropriado para os pontos
+            // Encontrar o nível apropriado para os pontos
             const levelIndex = Math.floor((points - 1) / pointsPerLevel) + 2;
             
-            // Garante que não exceda o array
+            // Garantir que não exceda o array
             if (levelIndex < levelDistribution.length) {
                 levelDistribution[levelIndex].count++;
                 levelDistribution[levelIndex].municipios.push(municipio.codIbge);
             }
         }
 
-        // Cria o panorama de desempenho
+        // Criar o panorama de desempenho
         const desempenhoPanorama = DesempenhoPanoramaDTO.builder()
             .withLevelDistribution(levelDistribution)
-            .withTotalMunicipios(municipios.length)
+            .withTotalMunicipios(totalMunicipios)
             .build();
         
-        return {
+        // Armazenar resultado no cache antes de retornar
+        this.mapPanoramaCache.data = {
             mapPanorama,
             desempenho: desempenhoPanorama,
             totalParticipatingPrefeituras,
             percentageFinishedMissions
         };
+        this.mapPanoramaCache.timestamp = Date.now();
+        
+        return this.mapPanoramaCache.data;
     }
 
     async getMapPanoramaByIbgeCode(codIbge) {
@@ -334,6 +375,12 @@ class DashboardService {
             level: level,
             totalPoints: totalPoints
         };
+    }
+
+    // Método para invalidar o cache quando necessário
+    invalidateMapPanoramaCache() {
+        this.mapPanoramaCache.data = null;
+        this.mapPanoramaCache.timestamp = null;
     }
 }
 

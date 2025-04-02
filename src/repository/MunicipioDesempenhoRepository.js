@@ -72,6 +72,12 @@ class MunicipioDesempenhoRepository {
                     
         return result;
     }
+
+    async findAllWithRelations() {
+        return await this.repository.createQueryBuilder("desempenho")
+            .leftJoinAndSelect("desempenho.missao", "missao")
+            .getMany();
+    }
 }
 
 module.exports = MunicipioDesempenhoRepository; 
