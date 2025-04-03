@@ -592,7 +592,7 @@ export default function HomePage() {
   }, [selectedMunicipio, selectedMissao]);
 
   return (
-    <Container maxWidth={false} sx={{ py: { xs: 2, sm: 3, md: 4 }, width: '100%' }}>
+    <Container maxWidth={false} sx={{ py: { xs: 2, sm: 3, md: 4 }, width: '100%', border: '1px solid black' }}>
       {showMunicipioPage || codIbgeParam ? (
         <MunicipioPage 
           ibge={selectedMunicipio?.codIbge || codIbgeParam}
