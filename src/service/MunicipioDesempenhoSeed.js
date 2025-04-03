@@ -75,11 +75,22 @@ async function seedMunicipioDesempenho(connection) {
             return;
         }
 
-        // Select 10 random municipalities to have all missions completed
-        const numFullyCompleted = Math.min(2, municipios.length);
-        const shuffledMunicipios = [...municipios].sort(() => Math.random() - 0.5);
-        const fullyCompletedMunicipios = shuffledMunicipios.slice(0, numFullyCompleted);
-        const remainingMunicipios = shuffledMunicipios.slice(numFullyCompleted);
+        // Filter out orgaos from the selection pool for fully completed municipalities
+        const regularMunicipios = municipios.filter(m => !m.orgao);
+        console.log(`Found ${regularMunicipios.length} regular municipalities (excluding orgaos) for selection`);
+
+        // Select 6 random municipalities to have all missions completed
+        const numFullyCompleted = Math.min(6, regularMunicipios.length);
+        const shuffledRegularMunicipios = [...regularMunicipios].sort(() => Math.random() - 0.5);
+        const fullyCompletedMunicipios = shuffledRegularMunicipios.slice(0, numFullyCompleted);
+        
+        // Get remaining municipalities (both regular and orgaos that weren't selected)
+        const remainingMunicipios = municipios.filter(m => 
+            !fullyCompletedMunicipios.some(fcm => fcm.codIbge === m.codIbge)
+        );
+
+        console.log(`Selected ${fullyCompletedMunicipios.length} regular municipalities for full completion`);
+        console.log('Fully completed municipalities:', fullyCompletedMunicipios.map(m => m.codIbge).join(', '));
 
         // Verify and reset each municipality
         for (const municipio of municipios) {
@@ -211,18 +222,32 @@ async function seedMunicipioDesempenho(connection) {
                 const desempenhos = await municipioDesempenhoService.findByIbgeCode(municipio.codIbge);
                 const completedDesempenhos = desempenhos.filter(d => d.validation_status === 'VALID');
                 
-                // Calculate total points and badges from completed missions
+                // Check if this is one of the fully completed municipalities
+                const isFullyCompleted = fullyCompletedMunicipios.some(fcm => fcm.codIbge === municipio.codIbge);
+                
                 let totalPoints = 0;
                 const completedMissionIds = new Set();
-                
-                // For each completed mission, add its points
-                for (const completedDesempenho of completedDesempenhos) {
-                    try {
-                        const mission = await missoesService.findById(completedDesempenho.missaoId);
-                        totalPoints += mission.qnt_pontos || 0;
-                        completedMissionIds.add(completedDesempenho.missaoId);
-                    } catch (missionError) {
-                        console.error(`Error fetching mission ${completedDesempenho.missaoId}:`, missionError.message);
+
+                // For fully completed municipalities, set fixed points
+                if (isFullyCompleted) {
+                    totalPoints = 200;
+                    // Add all mission IDs to completed set for badge count
+                    for (const missao of missoes) {
+                        completedMissionIds.add(missao.id);
+                    }
+                } else {
+                    // For each completed mission, add its points
+                    for (const desempenho of completedDesempenhos) {
+                        try {
+                            const mission = await missoesService.findById(desempenho.missaoId);
+                            if (mission) {
+                                totalPoints += mission.qnt_pontos || 0;
+                                completedMissionIds.add(desempenho.missaoId);
+                                console.log(`Added ${mission.qnt_pontos || 0} points from mission ${desempenho.missaoId} for municipality ${municipio.codIbge}`);
+                            }
+                        } catch (missionError) {
+                            console.error(`Error fetching mission ${desempenho.missaoId}:`, missionError.message);
+                        }
                     }
                 }
                 
@@ -237,7 +262,7 @@ async function seedMunicipioDesempenho(connection) {
                 };
                 
                 await municipioService.saveMunicipio(updatedMunicipio);
-                console.log(`Updated municipality ${municipio.codIbge} with recalculated points (${totalPoints}) and badges (${badgeCount})`);
+                console.log(`Updated municipality ${municipio.codIbge} - Status: ${isFullyCompleted ? 'Fully Completed' : 'Regular'} - Points: ${totalPoints} - Badges: ${badgeCount}`);
             } catch (error) {
                 console.error(`Error updating municipality ${municipio.codIbge} points and badges:`, error.message);
             }
