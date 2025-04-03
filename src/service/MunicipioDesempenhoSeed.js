@@ -3,6 +3,50 @@ const MissoesService = require('../service/MissoesService');
 const MunicipioService = require('../service/MunicipioService');
 const { MunicipioDesempenhoDTO } = require('../dto/MunicipioDesempenhoDTO');
 
+// Mock data for special municipalities
+const municipiosData = [
+    {
+        codIbge: "mpce",
+        nome: "Ministério Público do Estado do Ceará",
+        status: "Participante",
+        dataAlteracao: new Date(0).toISOString(),
+        imagemAvatar: "https://drive.google.com/file/d/13L40cl7VagIjuQtvStsH39omSGaLovvS/view?usp=sharing",
+        badges: 0,
+        points: 0,
+        orgao: true
+    },
+    {
+        codIbge: "govce",
+        nome: "Governo do Estado do Ceará",
+        status: "Participante",
+        dataAlteracao: new Date(0).toISOString(),
+        imagemAvatar: "https://drive.google.com/file/d/1SPWjwDyovW7DskedzhH_iqSfZQrV1HzC/view?usp=sharing",
+        badges: 0,
+        points: 0,
+        orgao: true
+    },
+    {
+        codIbge: "tcece",
+        nome: "TCE Ceará",
+        status: "Participante",
+        dataAlteracao: new Date(0).toISOString(),
+        imagemAvatar: "https://drive.google.com/file/d/1TN-m1leyK6sblCbGYG1G2kPoHq9awG4O/view?usp=sharing",
+        badges: 0,
+        points: 0,
+        orgao: true
+    },
+    {
+        codIbge: "podleg",
+        nome: "Poder Legislativo do Estado do Ceará",
+        status: "Participante",
+        dataAlteracao: new Date(0).toISOString(),
+        imagemAvatar: "https://drive.google.com/file/d/1MQGn3jZXFXdDd8aW8hzFNbaBB_20cr9N/view?usp=sharing",
+        badges: 0,
+        points: 0,
+        orgao: true
+    },
+];
+
 async function seedMunicipioDesempenho(connection) {
     console.log('Starting seed: municipio_desempenho');
     const municipioDesempenhoService = new MunicipioDesempenhoService(connection);
@@ -11,11 +55,14 @@ async function seedMunicipioDesempenho(connection) {
     
     try {
         // Get all municipalities from the database
-        const municipios = await municipioService.findAll();
-        console.log(`Found ${municipios.length} municipalities to seed`);
+        const dbMunicipios = await municipioService.findAll();
+        
+        // Combine database municipalities with mock data
+        const municipios = [...dbMunicipios, ...municipiosData];
+        console.log(`Found ${municipios.length} municipalities to seed (${dbMunicipios.length} from DB + ${municipiosData.length} mocks)`);
         
         if (municipios.length === 0) {
-            console.log('No municipalities found in database. Skipping seed.');
+            console.log('No municipalities found. Skipping seed.');
             return;
         }
 
@@ -193,6 +240,26 @@ async function seedMunicipioDesempenho(connection) {
                 console.log(`Updated municipality ${municipio.codIbge} with recalculated points (${totalPoints}) and badges (${badgeCount})`);
             } catch (error) {
                 console.error(`Error updating municipality ${municipio.codIbge} points and badges:`, error.message);
+            }
+        }
+
+        // Update status to "Participante" for municipalities with completed missions
+        console.log('Updating status for municipalities with completed missions...');
+        for (const municipio of municipios) {
+            try {
+                const desempenhos = await municipioDesempenhoService.findByIbgeCode(municipio.codIbge);
+                const hasCompletedMissions = desempenhos.some(d => d.validation_status === 'VALID');
+                
+                if (hasCompletedMissions) {
+                    const updatedMunicipio = {
+                        ...municipio,
+                        status: "Participante"
+                    };
+                    await municipioService.saveMunicipio(updatedMunicipio);
+                    console.log(`Updated municipality ${municipio.codIbge} status to Participante`);
+                }
+            } catch (error) {
+                console.error(`Error updating status for municipality ${municipio.codIbge}:`, error.message);
             }
         }
     } catch (error) {
