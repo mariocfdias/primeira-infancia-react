@@ -36,57 +36,78 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
           opacity: 1,
         },
         position: "relative",
-        pt: 2,
+        pt: 2 ,
         overflow: "visible",
         zIndex: isSelected ? 2 : 1,
-        marginBottom: 1.5,
+        marginBottom: 1.5 ,
       }}
     >
       <Chip
         label={category}
         sx={{
           position: "absolute",
-          top: -12,
-          left: 16,
+          top: { xs: -10, sm: -12, md: -14, lg: -16 },
+          left: { xs: 12, sm: 16, md: 20, lg: 24 },
           color: "white",
           fontWeight: "500",
-          letterSpacing: 2,
-          fontSize: { xs: "10px", sm: "12px", lg: "14px" },
+          letterSpacing: { xs: 1, sm: 1.5, md: 2 },
+          fontSize: { xs: "12px", sm: "14px", md: "16px", lg: "18px" },
           background: getCategoryColor(category),
+          maxWidth: "90%",
           "& .MuiChip-label": {
-            px: 1,
+            px: { xs: 1, sm: 1.25, md: 1.5, lg: 2 },
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis"
           }
         }}
       />
-      <Box sx={{ p: { xs: 1.5, sm: 2 }, paddingBottom: { xs: 0, sm: 0 }, display: "flex", flexDirection: "column", flex: 1 }}>
+      <Box sx={{ 
+        p: { xs: 1.5, sm: 2, md: 2, lg: 2 }, 
+        display: "flex", 
+        flexDirection: "column",
+        height: "100%"
+      }}>
         <Typography
           variant="body2"
           sx={{
-            mb: 0.5,
-            minHeight: { xs: 60, sm: 80 },
-            flex: 1,
+            mb: { xs: 0.5, sm: 1, md: 1.5, lg: 3 },
+            minHeight: { xs: 60, sm: 80, md: 100, lg: 120 },
+            flex: "0 0 auto",
             color: "white",
-            fontSize: { xs: "12px", sm: "14px", lg: "20px" },
-            lineHeight: 1.5,
+            fontSize: { xs: "18px", sm: "18px", md: "19px", lg: "20px" },
+            lineHeight: { xs: 1.5, sm: 1.6, md: 1.7, lg: 1.8 },
           }}
         >
           {title}
         </Typography>
-        <Box sx={{ mb: 0, mx: -2, mt: 'auto' }}>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2, px: 2 }}>
-            <Box sx={{ position: 'relative', width: '100%', mr: 1 }}>
+        <Box sx={{ 
+          display: "flex", 
+          flexDirection: "column",
+          mt: "auto",
+          mx: { xs: -1.5, sm: -2, md: -2, lg: -2 },
+          mb: { xs: -1.5, sm: -2, md: -2, lg: -2 }
+        }}>
+          <Box sx={{ 
+            display: "flex", 
+            alignItems: "center", 
+            justifyContent: "space-between", 
+            mb: 2,
+            px: { xs: 1.5, sm: 2, md: 2, lg: 2 }
+          }}>
+            <Box sx={{ position: 'relative', width: '100%', mr: { xs: 1, sm: 1.5, md: 2, lg: 2.5 } }}>
               <LinearProgress
                 variant="determinate"
                 value={progressValue}
                 sx={{
-                  height: { xs: 12, sm: 16, lg: 22 },
-                  borderRadius: 4,
+                  height: { xs: 16, sm: 18, md: 20, lg: 22 },
+                  borderRadius: { xs: 3, sm: 3.5, md: 4, lg: 4 },
                   border: "1px solid #ffffff",
                   bgcolor: "#eeeeee",
                   width: "100%",
                   ".MuiLinearProgress-bar": {
                     bgcolor: "#50b755",
-                    borderRadius: 4,
+                    borderRadius: { xs: 3, sm: 3.5, md: 4, lg: 4 },
                   },
                 }}
               />
@@ -97,7 +118,7 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
                   top: '50%',
                   transform: 'translate(50%, -50%)',
                   color: '#E79D0D',
-                  fontSize: { xs: 16, sm: 24, lg: 48 },
+                  fontSize: { xs: "32px", sm: "36px", md: "42px", lg: "48px" },
                   filter: 'drop-shadow(0px 0px 2px rgba(0,0,0,0.3))'
                 }}
               />
@@ -107,9 +128,9 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
               fontFamily={"Atkinson Hyperlegible"}
               sx={{
                 color: "#ffffff",
-                minWidth: 40,
+                minWidth: { xs: 40, sm: 50, md: 60, lg: 70 },
                 textAlign: "right",
-                fontSize: { xs: "10px", sm: "12px", lg: "18px" },
+                fontSize: { xs: "16px", sm: "17px", md: "18px", lg: "20px" },
               }}
             >
               {progress}
@@ -119,7 +140,7 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
             endIcon={
               <ArrowUpward
                 sx={{                  
-                fontSize: isMobile ? "19px" : "24px",
+                  fontSize: { xs: "20px", sm: "22px", md: "23px", lg: "24px" },
                 }}
               />
             }
@@ -127,19 +148,19 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
               color: "#12447f",
               backgroundColor: "white",
               width: "100%",
-              py: 1,
-              px: 2,
+              py: { xs: 1, sm: 1.25, md: 1.5, lg: 2 },
+              px: { xs: 2, sm: 2.5, md: 3, lg: 1 },
               textAlign: "center",
               justifyContent: "center",
               textTransform: "none",
-              fontSize: { xs: "14px", sm: "16px", md: "20px" },
+              fontSize: { xs: "16px", sm: "17px", md: "18px", lg: "20px" },
               fontWeight: "500",
               borderRadius: 0,
-              borderBottomLeftRadius: 1,
-              borderBottomRightRadius: 1,
+              borderBottomLeftRadius: { xs: 0.75, sm: 1, md: 1.25, lg: 1.5 },
+              borderBottomRightRadius: { xs: 0.75, sm: 1, md: 1.25, lg: 1.5 },
               "&:hover": {
                 backgroundColor: "#f5f5f5",
-              },
+              }
             }}
             onClick={() => onViewMap(missionId)}
           >

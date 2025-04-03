@@ -1,27 +1,35 @@
 import React from 'react';
 import { Box, Typography, Paper } from '@mui/material';
-
+import StarIcon from '@mui/icons-material/Star';
 const LegendItem = ({ backgroundColor, count, title, description }) => {
   return (
-    <Box sx={{ display: "flex", alignItems: "flex-start", mb: 1.5 }}>
+    <Box sx={{ display: "flex", alignItems: "flex-start", mb: 1.5, width: "100%" }}>
       <Box
         sx={{
           width: 30,
           height: 30,
           bgcolor: backgroundColor,
-          color: backgroundColor === "white" ? "#525252" : "white",
-          border: backgroundColor === "white" ? "1px solid #d3d3d3" : "none",
+          color: backgroundColor === "#ffffff" || backgroundColor === "white" ? "#525252" : "white",
+          border: backgroundColor === "#ffffff" || backgroundColor === "white" ? "1px solid #000000" : "none",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           mr: 1.5,
           boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
-          fontSize: "0.8rem"
+          fontSize: "0.8rem",
+          flex: "0 0 auto",
+          borderRadius: 1
         }}
       >
-        {count}
+        {count || 0}
+        {title == "Concluída" ? <StarIcon /> : ""}
       </Box>
-      <Box>
+      <Box sx={{ 
+        display: "flex", 
+        flexDirection: "column",
+        flex: 1,
+        minHeight: 40
+      }}>
         <Typography 
           variant="subtitle2" 
           sx={{ 
@@ -33,17 +41,20 @@ const LegendItem = ({ backgroundColor, count, title, description }) => {
         >
           {title}
         </Typography>
-        <Typography 
-          variant="caption" 
-          component="p" 
-          sx={{ 
-            fontSize: "0.8rem",
-            lineHeight: 1.2,
-            color: "#525252"
-          }}
-        >
-          {description}
-        </Typography>
+        {description && (
+          <Typography 
+            variant="caption" 
+            component="p" 
+            sx={{ 
+              fontSize: "0.8rem",
+              lineHeight: 1.2,
+              color: "#525252",
+              backgroundColor: "#ffffff",
+            }}
+          >
+            {description}
+          </Typography>
+        )}
       </Box>
     </Box>
   );
@@ -94,19 +105,21 @@ export default function MapLegend({ selectedMissao, levelDistribution }) {
             backgroundColor="#12447f"
             count="" 
             title="Concluída"
-            description="Todas etapas foram finalizadas"
           />
           <LegendItem
             backgroundColor="#72C576"
             count=""
             title="Em Andamento"
-            description="Missão está em progresso"
           />
           <LegendItem
             backgroundColor="#9F9F9F"
             count=""
             title="Pendente"
-            description="Missão ainda não iniciada"
+          />
+          <LegendItem
+            backgroundColor="#ffffff"
+            count=""
+            title="Não aderiram ao Pacto"
           />
         </Box>
       ) : (
@@ -137,7 +150,7 @@ export default function MapLegend({ selectedMissao, levelDistribution }) {
             description="201 pontos ou mais"
           />
           <LegendItem
-            backgroundColor="white"
+            backgroundColor="#ffffff"
             count={npCount}
             title="Não aderiu"
             description="Município não participante"

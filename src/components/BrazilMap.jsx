@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react"
 import { Box, useTheme, useMediaQuery, Typography, Paper } from "@mui/material"
-import { MapContainer, TileLayer, GeoJSON } from "react-leaflet"
+import StarIcon from '@mui/icons-material/Star';
+import { MapContainer, TileLayer, GeoJSON, Marker } from "react-leaflet"
 import L from "leaflet"
 import "leaflet/dist/leaflet.css"
 
@@ -16,31 +17,57 @@ L.Icon.Default.mergeOptions({
 // Legend Description component
 const LegendDescription = ({ backgroundColor, color, description, number, title }) => {
   return (
-    <Box sx={{ display: "flex", alignItems: "flex-start" }}>
+    <Box sx={{ display: "flex", alignItems: "flex-start", width: "100%" }}>
       <Box
         sx={{
-          width: 30,
+          minWidth: 30,
           height: 30,
           bgcolor: backgroundColor,
           color: color || "white",
           display: "flex",
+          flexDirection: "row",
           alignItems: "center",
-          borderRadius: 1,
           justifyContent: "center",
+          gap: 0.5,
+          borderRadius: 1,
           fontSize: "1rem",
           mr: 1,
-          border: backgroundColor === "white" ? "1px solid #d3d3d3" : "none",
+          border: backgroundColor === "white" || backgroundColor === "#ffffff" ? "1px solid #000000" : "none",
+          px: 1,
+          whiteSpace: "nowrap",
+          flex: "0 0 auto",
         }}
       >
-        {number}
+          {number}
+          {title == "Concluída" ? <StarIcon  style={{ color: "#FCBA38" }}/> : ""}
       </Box>
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
+      <Box sx={{ 
+        display: "flex", 
+        flexDirection: "column",
+        flex: 1,
+        minHeight: 40
+      }}>
         {title && (
-          <Typography variant="body2" sx={{ fontSize: "1rem", fontWeight: "medium", lineHeight: 1.2 }}>
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              fontSize: "1rem", 
+              fontWeight: "medium", 
+              lineHeight: 1.2,
+              mb: 0.5
+            }}
+          >
             {title}
           </Typography>
         )}
-        <Typography variant="body2" sx={{ fontSize: "0.85rem", lineHeight: 1.2 }}>
+        <Typography 
+          variant="body2" 
+          sx={{ 
+            fontSize: "0.85rem", 
+            lineHeight: 1.2,
+            color: "#525252"
+          }}
+        >
           {description}
         </Typography>
       </Box>
@@ -49,7 +76,7 @@ const LegendDescription = ({ backgroundColor, color, description, number, title 
 };
 
 // Map Legend component for non-mobile
-const MapLegendInternal = ({ selectedMissao, levelDistribution }) => {
+const MapLegendInternal = ({ selectedMissao, levelDistribution, missionPanoramaData }) => {
   // Get counts from levelDistribution if available
   const getLevelCount = (level) => {
     if (!levelDistribution) return 0;
@@ -57,11 +84,49 @@ const MapLegendInternal = ({ selectedMissao, levelDistribution }) => {
     return levelData ? levelData.count : 0;
   };
 
+  // Get counts for mission status
+  const getMissionCounts = () => {
+    if (!missionPanoramaData) return { completed: 0, inProgress: 0, pending: 0, notParticipating: 0 };
+    
+    console.log('Mission Panorama Data:', missionPanoramaData);
+    
+    // Check data structure
+    const completedMunicipios = Array.isArray(missionPanoramaData.completedMunicipios) ? 
+      missionPanoramaData.completedMunicipios : 
+      missionPanoramaData.completed || [];
+      
+    const startedMunicipios = Array.isArray(missionPanoramaData.startedMunicipios) ?
+      missionPanoramaData.startedMunicipios :
+      missionPanoramaData.started || [];
+      
+    const pendingMunicipios = Array.isArray(missionPanoramaData.pendingMunicipios) ?
+      missionPanoramaData.pendingMunicipios :
+      missionPanoramaData.pending || [];
+    
+    console.log('Completed municipalities:', completedMunicipios);
+    console.log('Started municipalities:', startedMunicipios);
+    console.log('Pending municipalities:', pendingMunicipios);
+    
+    const completed = completedMunicipios.length;
+    const inProgress = startedMunicipios.length;
+    const pending = pendingMunicipios.length;
+    
+    // Get not participating count directly from levelDistribution
+    const notParticipating = levelDistribution?.find(l => l.level === "NP")?.count || 0;
+
+    const counts = { completed, inProgress, pending, notParticipating };
+    console.log('Final counts:', counts);
+    
+    return counts;
+  };
+
   const npCount = getLevelCount("NP");
   const level0Count = getLevelCount(0);
   const level1Count = getLevelCount(1);
   const level2Count = getLevelCount(2);
   const level3Count = getLevelCount(3);
+
+  const missionCounts = getMissionCounts();
 
   return (
     <Paper
@@ -87,25 +152,31 @@ const MapLegendInternal = ({ selectedMissao, levelDistribution }) => {
           fontSize: "1rem",
         }}
       >
-        {selectedMissao ? "Legenda de Missão" : "Legenda"}
+        {selectedMissao ? "Legenda do Compromisso" : "Legenda"}
       </Typography>
       
       {selectedMissao ? (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
           <LegendDescription 
             backgroundColor="#12447F"
-            title="Concluída"
-            description="Todas etapas foram finalizadas"
+            title="Concluído"
+            number={missionCounts.completed}
           />
           <LegendDescription 
             backgroundColor="#72C576"
-            title="Em Andamento"
-            description="Missão está em progresso"
+            title="Em Ação"
+            number={missionCounts.inProgress}
           />
           <LegendDescription 
             backgroundColor="#9F9F9F"
-            title="Pendente"
-            description="Missão ainda não iniciada"
+            title="Não Iniciado"
+            number={missionCounts.pending}
+          />
+          <LegendDescription 
+            backgroundColor="#ffffff"
+            color="#525252"
+            title="Não aderiram o Pacto"
+            number={missionCounts.notParticipating}
           />
         </Box>
       ) : (
@@ -137,8 +208,7 @@ const MapLegendInternal = ({ selectedMissao, levelDistribution }) => {
           <LegendDescription 
             backgroundColor="white"
             color="#525252"
-            title="Não aderiu"
-            description="Município não participante"
+            title="Não aderiram o Pacto"
             number={npCount}
           />
         </Box>
@@ -150,30 +220,75 @@ const MapLegendInternal = ({ selectedMissao, levelDistribution }) => {
 const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunicipioCode, onMunicipioSelect, levelDistribution }) => {
   const mapRef = useRef(null)
   const geoJsonRef = useRef(null)
+  const [completedMarkers, setCompletedMarkers] = useState([])
 
-  // Log when LeafletMap receives new mission panorama data
-  useEffect(() => {
-    console.log('LeafletMap received updated missionPanoramaData:', missionPanoramaData);
-    
-    // Debug function to check missionPanoramaData structure
-    if (missionPanoramaData) {
-      console.log('Mission panorama data structure check:');
-      console.log('Has completedMunicipios?', !!missionPanoramaData.completedMunicipios);
-      console.log('Has startedMunicipios?', !!missionPanoramaData.startedMunicipios);
-      console.log('Has pendingMunicipios?', !!missionPanoramaData.pendingMunicipios);
-      
-      // Log the structure of the first item in each array if they exist
-      if (missionPanoramaData.completedMunicipios?.length > 0) {
-        console.log('Sample completedMunicipios item:', missionPanoramaData.completedMunicipios[0]);
-      }
-      if (missionPanoramaData.startedMunicipios?.length > 0) {
-        console.log('Sample startedMunicipios item:', missionPanoramaData.startedMunicipios[0]);
-      }
-      if (missionPanoramaData.pendingMunicipios?.length > 0) {
-        console.log('Sample pendingMunicipios item:', missionPanoramaData.pendingMunicipios[0]);
-      }
+  // Create a simpler icon for testing
+  const starIcon = L.divIcon({
+    className: 'custom-star-icon',
+    html: '<div style="width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px;">🌟</div>',
+    iconSize: [18, 18],
+    iconAnchor: [9, 9],
+  });
+
+  // Function to get municipality center coordinates from GeoJSON feature
+  const getMunicipalityCenter = (feature) => {
+    if (!feature || !feature.geometry) {
+      console.log('Invalid feature:', feature);
+      return null;
     }
-  }, [missionPanoramaData]);
+    try {
+      const bounds = L.geoJSON(feature).getBounds();
+      const center = bounds.getCenter();
+      console.log('Municipality center calculated:', center);
+      return center;
+    } catch (error) {
+      console.error('Error calculating municipality center:', error);
+      return null;
+    }
+  };
+
+  // Update markers when mission panorama data changes
+  useEffect(() => {
+    console.log('Mission panorama data changed:', missionPanoramaData);
+    console.log('GeoJSON data available:', !!geoJsonData);
+
+    if (!geoJsonData) return;
+
+    // Clear existing markers
+    setCompletedMarkers([]);
+
+    if (missionPanoramaData?.completedMunicipios) {
+      console.log('Number of completed municipalities:', missionPanoramaData.completedMunicipios.length);
+      const newMarkers = [];
+      
+      missionPanoramaData.completedMunicipios.forEach(({ codIbge }) => {
+        console.log('Processing completed municipality:', codIbge);
+        const feature = geoJsonData.features.find(f => f.properties.id === codIbge);
+        
+        if (feature) {
+          console.log('Found matching feature for municipality:', codIbge);
+          const center = getMunicipalityCenter(feature);
+          if (center) {
+            console.log('Adding marker for municipality:', codIbge, 'at position:', center);
+            newMarkers.push({
+              position: [center.lat, center.lng],
+              id: codIbge
+            });
+          }
+        } else {
+          console.log('No matching feature found for municipality:', codIbge);
+        }
+      });
+
+      console.log('Setting new markers:', newMarkers);
+      setCompletedMarkers(newMarkers);
+    }
+  }, [missionPanoramaData, geoJsonData]);
+
+  // Log when markers are updated
+  useEffect(() => {
+    console.log('Completed markers updated:', completedMarkers);
+  }, [completedMarkers]);
 
   // Check if a municipality is in a specific level group
   const isMunicipioInLevel = (codIbge, levelData) => {
@@ -223,32 +338,55 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
     
     // Default style
     let fillColor = "#cccccc";
-    let weight = 1;
-    let fillOpacity = 0.7;
+    let color = "#333333";
+    let weight = 0.5;
+    let fillOpacity = 1;
     
     // Check if this is the selected municipality
     const isSelected = selectedMunicipioCode === codIbge;
-    console.log({missionPanoramaData, levelDistribution})
 
     // If showing mission panorama, color municipalities based on mission status
     if (missionPanoramaData) {
-      // Default color for municipalities not in the panorama
-      fillColor = "#cccccc";
+      console.log('Styling municipality:', codIbge);
       
-      // Check if the municipality is in completed municipalities
-      if (missionPanoramaData.completedMunicipios?.some(m => m.codIbge === codIbge)) {
+      // Check data structure
+      const completedMunicipios = Array.isArray(missionPanoramaData.completedMunicipios) ? 
+        missionPanoramaData.completedMunicipios : 
+        missionPanoramaData.completed || [];
+        
+      const startedMunicipios = Array.isArray(missionPanoramaData.startedMunicipios) ?
+        missionPanoramaData.startedMunicipios :
+        missionPanoramaData.started || [];
+        
+      const pendingMunicipios = Array.isArray(missionPanoramaData.pendingMunicipios) ?
+        missionPanoramaData.pendingMunicipios :
+        missionPanoramaData.pending || [];
+      console.log({completedMunicipios, startedMunicipios, pendingMunicipios})
+      // First check if municipality is completed
+      if (completedMunicipios.some(m => m.codIbge === codIbge || m === codIbge)) {
+        console.log('Municipality is completed:', codIbge);
         fillColor = "#12447F"; // Blue for completed missions
+        color = "#ffffff";
+        
       } 
-      // Check if the municipality is in started municipalities
-      else if (missionPanoramaData.startedMunicipios?.some(m => m.codIbge === codIbge)) {
+      // Then check if it's in progress
+      else if (startedMunicipios.some(m => m.codIbge === codIbge || m === codIbge)) {
+        console.log('Municipality is in progress:', codIbge);
         fillColor = "#72C576"; // Light green for started missions
       } 
-      // Check if the municipality is in pending municipalities
-      else if (missionPanoramaData.pendingMunicipios?.some(m => m.codIbge === codIbge)) {
-        fillColor = "#9F9F9F"; // Gray for pending missions
+      // Then check if it's pending
+      else if (pendingMunicipios.some(m => m.codIbge === codIbge || m === codIbge)) {
+        console.log('Municipality is pending:', codIbge);
+        const level = levelDistribution ? getMunicipioLevel(codIbge) : null;
+        fillColor = level && level !== "NP" ? "#9F9F9F" : "#FFFFFF"; // Gray for pending missions
+      }
+      // If not in any of the above, it's not participating
+      else {
+        console.log('Municipality is not participating:', codIbge);
+        fillColor = "#FFFFFF"; // White for non-participating
       }
     }
-    // Check if we have levelDistribution data to use
+    // Only check levelDistribution if we're not showing mission data
     else if (levelDistribution) {
       // Get the level for this municipality
       const level = getMunicipioLevel(codIbge);
@@ -276,7 +414,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
       fillColor,
       weight,
       opacity: 1,
-      color: isSelected ? "#FF8000" : "#333333", // Orange border for selected
+      color: isSelected ? "#FF8000" : color, // Orange border for selected
       fillOpacity,
       dashArray: isSelected ? "3" : null // Dashed line for selected
     };
@@ -295,9 +433,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
       layer.bindTooltip(`
         <div>
           <strong>${municipioName}</strong>
-          <br />
-          Status da missão: ${missionStatus}
-        </div>
+</div>
       `);
     } else if (levelDistribution) {
       // If showing level distribution, include level information
@@ -325,10 +461,6 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
       layer.bindTooltip(`
         <div>
           <strong>${municipioName}</strong>
-          <br />
-          Status: ${status}
-          <br />
-          Pontos: ${points}
         </div>
       `);
     } else {
@@ -384,6 +516,29 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
     // Remove fit bounds functionality 
   }, [geoJsonData, isMobile]);
 
+  // Component to handle markers
+  const MarkersList = () => {
+    console.log('Rendering MarkersList with markers:', completedMarkers);
+    return (
+      <>
+        {completedMarkers.map((marker) => (
+          <Marker
+            key={marker.id}
+            position={marker.position}
+            icon={starIcon}
+            eventHandlers={{
+              click: () => {
+                if (onMunicipioSelect) {
+                  onMunicipioSelect(marker.id);
+                }
+              }
+            }}
+          />
+        ))}
+      </>
+    );
+  };
+
   return (
     <Box
       sx={{
@@ -395,12 +550,18 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
           width: "100%",
           height: "100%",
           backgroundColor: "#ffffff",
+        },
+        "& .custom-star-icon": {
+          background: 'transparent !important',
+          border: 'none !important',
+          boxShadow: 'none !important',
+          zIndex: 1000
         }
       }}
     >
       <MapContainer 
-        center={[-5.5, -39.3]} // Default center (will be overridden by bounds)
-        zoom={7.3} // Default zoom (will be overridden by bounds)
+        center={[-5.5, -39.3]}
+        zoom={7.3}
         style={{ width: "100%", height: "100%" }}
         zoomDelta={0.25}
         zoomSnap={0.25}
@@ -409,7 +570,6 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
         zoomScaleMax={1.25}
         zoomScaleMin={0.25}
         zoomScaleStep={0.25}
-
         attributionControl={false}
         ref={mapRef}
         zoomControl={true}
@@ -423,7 +583,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           subdomains={['a', 'b', 'c', 'd']}
-          opacity={0.5}
+          opacity={1}
           crossOrigin={true}
         />
         {geoJsonData && (
@@ -434,10 +594,15 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
             ref={geoJsonRef}
           />
         )}
+        <MarkersList />
       </MapContainer>
       
       {/* Show legend inside the map for non-mobile */}
-      {!isMobile && <MapLegendInternal selectedMissao={missionPanoramaData ? true : null} levelDistribution={levelDistribution} />}
+      {!isMobile && <MapLegendInternal 
+        selectedMissao={missionPanoramaData ? true : null} 
+        levelDistribution={levelDistribution}
+        missionPanoramaData={missionPanoramaData}
+      />}
     </Box>
   );
 };

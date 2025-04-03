@@ -56,19 +56,22 @@ export default function EmblemCard({ title, categoryId, stars, color }) {
         {stars >= 0 && (
           <Box
             sx={{
-              position: "relative",
-              bottom: 40,
-              left: 40,
+              position: "absolute",
+              bottom: "10%",
+              right: "10%",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               bgcolor: "#213B7B",
               color: "#FFFFFF",
-              borderRadius: 300,
-              width: { xs: 20, sm: 34, lg: 40 },
-              height: { xs: 20, sm: 34, lg: 40 },
-              fontSize: { xs: "0.75rem", sm: "1rem", lg: "1.5rem" },
+              borderRadius: "50%",
+              width: { xs: 24, sm: 34, lg: 40 },
+              height: { xs: 24, sm: 34, lg: 40 },
+              fontSize: { xs: "12px", sm: "16px", lg: "24px" },
               fontWeight: "bold",
+              minWidth: { xs: 24, sm: 34, lg: 40 },
+              minHeight: { xs: 24, sm: 34, lg: 40 },
+              zIndex: 1,
             }}
           >
             {stars}
@@ -80,10 +83,14 @@ export default function EmblemCard({ title, categoryId, stars, color }) {
         sx={{
           color: "#525252",
           position: "relative",
-          top: -30,
-          fontSize: { xs: "0.65rem", sm: "0.7rem", lg: "20px" },
+          top: { xs: -20, sm: -25, md: -30 },
+          mt: { xs: 2, sm: 3, md: 4 },
+          fontSize: { xs: "12px", sm: "14px", lg: "20px" },
           fontWeight: "400",
           lineHeight: 1.2,
+          display: "block",
+          maxWidth: "100%",
+          wordWrap: "break-word"
         }}
       >
         {title}

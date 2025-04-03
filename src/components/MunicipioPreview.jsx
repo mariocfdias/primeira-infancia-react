@@ -260,6 +260,7 @@ const MunicipioPreview = ({
                 src={imageUrl}
                 alt={`${nome} logo`}
                 height={"100%"}
+                variant="square"
                 sx={{ 
                   width: "100%",
                   height: "100%"
@@ -324,12 +325,15 @@ const MunicipioPreview = ({
 
             {/* Stats */}
             <Box display="flex" gap={1} flexWrap="wrap" alignItems="center">
+              <Box sx={{display: "flex", flexDirection: "row", alignItems: "center", gap: 0.5}}>
               <Box display="flex" alignItems="center" gap={0.5} bgcolor="#FDF9DE" borderRadius={2} p={0.5}>
                 <StarOutlined sx={{ color: "#FCBA38", fontSize: "24px" }} />
               </Box>
               <Typography variant="body2" fontWeight="400" fontSize={"16px"} fontFamily={"Atkinson Hyperlegible"} color="#ffffff">
                 {points} pontos
               </Typography>
+              </Box>
+              <Box sx={{display: "flex", flexDirection: "row", alignItems: "center", gap: 0.5}}>
 
               <Box display="flex" alignItems="center" gap={0.5} bgcolor="#E7EEF8" borderRadius={2} p={0.5}>
                 <EmojiEventsOutlined sx={{ color: "#0076B1", fontSize: "24px" }} />
@@ -337,14 +341,24 @@ const MunicipioPreview = ({
               <Typography variant="body2" fontWeight="400" fontSize={"16px"} fontFamily={"Atkinson Hyperlegible"} color="#ffffff">
                 {badges} emblemas
               </Typography>
+              </Box>
             </Box>
           </Box>
         </Box>
 
         <Typography variant="subtitle1" fontWeight="bold" mb={1} sx={{fontSize: { xs: "12px", sm: "14px", lg: "20px" }}}>
-          Missões
+          Compromissos
         </Typography>
-        <Box display="flex" gap={1} justifyContent="flex-start">
+        <Box 
+          display="flex" 
+          gap={1} 
+          flexWrap="wrap"
+          sx={{
+            '& .MuiChip-root': {
+              mb: 1 // Add margin bottom to each chip for better spacing when wrapped
+            }
+          }}
+        >
           <Chip
             avatar={<Avatar sx={{ bgcolor: "#1f5bb4", color: "#ffffff", fontSize: "0.75rem", width: 24, height: 24 }}>
               <Typography variant="body2" fontWeight="bold" color="#ffffff">{data?.mapPanorama?.countValid || 0}</Typography>

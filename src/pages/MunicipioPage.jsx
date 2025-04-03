@@ -243,33 +243,38 @@ export default function MunicipioPage({ onBack, ibge }) {
           )}
 
           {/* Municipality Card */}
-          <Box display={"flex"} flexDirection={"row"} sx={{ mb: 4 }}>
+          <Box display={"flex"} flexDirection={isMobile ? "column" : "row"} sx={{ mb: 4 }}>
           <Paper
                 elevation={2}
                 sx={{
-                  width: { xs: 80, sm: 120, lg: 260 },
-                  height: { xs: 80, sm: 120, lg: 260 },
-                  mr: 2,
+                  width: isMobile ? "100%" : { sm: 120, lg: 260 },
+                  height: isMobile ? 200 : { sm: 120, lg: 260 },
+                  mb: isMobile ? 2 : 0,
+                  mr: isMobile ? 0 : 2,
                   p: 0,
                   overflow: "hidden",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  position: "relative"
                 }}
               >
                 <img
-                  src={formatImageUrl(municipioData.imagemAvatar) || "/placeholder.svg"}
+                  src={formatImageUrl(municipioData.imagemAvatar) || "/tcece.png"}
                   alt={municipioData.nome}
                   style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
                     width: "100%",
                     height: "100%",
+                    objectFit: "cover",
                     padding: 0,
-                    margin: 0,
-                    objectFit: "contain",
+                    margin: 0
                   }}
                 />
               </Paper>
-            <Box sx={{ display: "flex",flexDirection: "column", alignItems: "flex-start", mb: 2,width: "100%" }}>
+            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start", mb: 2, width: "100%" }}>
 
               <Box sx={{width: "100%"}}>
                 <Typography
@@ -345,11 +350,19 @@ export default function MunicipioPage({ onBack, ibge }) {
                   fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "14px" },
                 }}
               >
-                Complete missões para subir de nível.
+                Cumpra os compromissos para subir de nível.
               </Typography>
                 </Box>
               </Box>
-              <Box sx={{ display: "flex", justifyContent: "space-around", mb: 4, pt: 1, gap: 4 }}>
+              <Box sx={{ 
+                display: "flex", 
+                flexDirection: "row", 
+                justifyContent: isMobile ? "center" : "space-around",
+                alignItems: "center",
+                mb: 4, 
+                pt: 1, 
+                gap: 4 
+              }}>
               <NumericIcon 
                 icon={<Star sx={{ color: "#f5d664", fontSize: { xs: "1.25rem", sm: "1.5rem", lg: "3rem" } }} />}
                 number={earnedPoints}
@@ -392,7 +405,7 @@ export default function MunicipioPage({ onBack, ibge }) {
               fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "18px" },
             }}
           >
-            Complete missões para ganhar novos emblemas.
+            Cumpra os compromissos para ganhar novos emblemas.
           </Typography>
 
           <Grid container spacing={1}>
@@ -435,7 +448,7 @@ export default function MunicipioPage({ onBack, ibge }) {
               mb: 1,
             }}
           >
-            Missões 2025
+            Compromissos 2025
           </Typography>
           <Typography
             variant="body1"
@@ -445,7 +458,7 @@ export default function MunicipioPage({ onBack, ibge }) {
               mb: 3,
             }}
           >
-            Conclua as missões para ganhar emblemas e pontos!
+            Cumpra os compromissos para ganhar emblemas e pontos!
           </Typography>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>

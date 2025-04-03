@@ -51,7 +51,7 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
           <Typography
             sx={{
               mb: 0.5,
-              fontSize: { xs: "0.75rem", sm: "0.875rem", md: "16px" },
+              fontSize: { xs: "12px", sm: "14px", lg: "16px" },
               lineHeight: 1.5,
             }}
           >
@@ -67,7 +67,7 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
                 fontWeight: "medium",
                 display: "inline-flex",
                 alignItems: "center",
-                fontSize: { xs: "0.75rem", sm: "0.875rem", md: "20px" },
+                fontSize: { xs: "12px", sm: "14px", md: "20px" },
               }}
             >
               <StarRounded
@@ -85,7 +85,7 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
               sx={{
                 background: getCategoryColor(badge.toUpperCase()),
                 color: "white",
-                fontSize: { xs: "0.65rem", sm: "0.75rem", md: "16px" },
+                fontSize: { xs: "12px", sm: "14px", md: "16px" },
                 height: "auto",
                 py: 0.25,
                 fontWeight: "medium",
@@ -99,7 +99,7 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
               color: "#8d8d8d",
               display: "block",
               textAlign: "right",
-              fontSize: { xs: "0.65rem", sm: "0.75rem", md: "16px" },
+              fontSize: { xs: "12px", sm: "14px", md: "16px" },
             }}
           >
             {date}
