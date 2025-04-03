@@ -3,10 +3,6 @@ const MissoesService = require('../service/MissoesService');
 const MunicipioService = require('../service/MunicipioService');
 const { MunicipioDesempenhoDTO } = require('../dto/MunicipioDesempenhoDTO');
 
-// List of organizations for which we'll create seed data
-// These will also be skipped in fetchMissaoDesempenho.js
-const ORG_IBGE_CODES = ['mpce', 'govce', 'tcece', 'podleg'];
-
 async function seedMunicipioDesempenho(connection) {
     console.log('Starting seed: municipio_desempenho');
     const municipioDesempenhoService = new MunicipioDesempenhoService(connection);
@@ -14,31 +10,15 @@ async function seedMunicipioDesempenho(connection) {
     const municipioService = new MunicipioService(connection);
     
     try {
-        // Verify organizations exist in the database
-        for (const codIbge of ORG_IBGE_CODES) {
-            try {
-                const municipio = await municipioService.findById(codIbge);
-                if (municipio) {
-                    // Delete all existing desempenhos for this organization
-                    await municipioDesempenhoService.deleteByIbgeCode(codIbge);
-                    console.log(`Deleted existing desempenhos for organization ${codIbge}`);
-                    
-                    // Reset badges and points
-                    const resetMunicipio = {
-                        ...municipio,
-                        badges: 0,
-                        points: 0
-                    };
-                    console.log({resetMunicipio});
-                    await municipioService.saveMunicipio(resetMunicipio);
-                    console.log(`Reset badges and points for organization ${codIbge}`);
-                }
-            } catch (error) {
-                console.error(`Organization ${codIbge} not found in database. Skipping.`);
-                return;
-            }
-        }
+        // Get all municipalities from the database
+        const municipios = await municipioService.findAll();
+        console.log(`Found ${municipios.length} municipalities to seed`);
         
+        if (municipios.length === 0) {
+            console.log('No municipalities found in database. Skipping seed.');
+            return;
+        }
+
         // Get all missions
         const missoes = await missoesService.findAll();
         console.log(`Found ${missoes.length} missions to use for seeding`);
@@ -48,32 +28,84 @@ async function seedMunicipioDesempenho(connection) {
             return;
         }
 
-        // Check if we already have desempenho records for these organizations
-        let existingRecordsCount = 0;
-        for (const codIbge of ORG_IBGE_CODES) {
+        // Select 10 random municipalities to have all missions completed
+        const numFullyCompleted = Math.min(2, municipios.length);
+        const shuffledMunicipios = [...municipios].sort(() => Math.random() - 0.5);
+        const fullyCompletedMunicipios = shuffledMunicipios.slice(0, numFullyCompleted);
+        const remainingMunicipios = shuffledMunicipios.slice(numFullyCompleted);
+
+        // Verify and reset each municipality
+        for (const municipio of municipios) {
             try {
-                const desempenhos = await municipioDesempenhoService.findByIbgeCode(codIbge);
-                existingRecordsCount += desempenhos.length;
+                // Delete all existing desempenhos for this municipality
+                await municipioDesempenhoService.deleteByIbgeCode(municipio.codIbge);
+                console.log(`Deleted existing desempenhos for municipality ${municipio.codIbge}`);
+                
+                // Reset badges and points
+                const resetMunicipio = {
+                    ...municipio,
+                    badges: 0,
+                    points: 0
+                };
+                await municipioService.saveMunicipio(resetMunicipio);
+                console.log(`Reset badges and points for municipality ${municipio.codIbge}`);
             } catch (error) {
-                console.error(`Error checking existing records for ${codIbge}:`, error.message);
+                console.error(`Error resetting municipality ${municipio.codIbge}:`, error.message);
+                continue;
             }
         }
 
-        if (existingRecordsCount > 0) {
-            console.log(`Seed skipped: Database already contains ${existingRecordsCount} desempenho records for the organizations`);
-            return;
-        }
-        
-        // Create desempenho records for each organization and mission
+        // Create desempenho records
         const createdRecords = [];
         
-        for (const codIbge of ORG_IBGE_CODES) {
+        // First, create VALID desempenhos for the fully completed municipalities
+        console.log(`Creating VALID desempenhos for ${numFullyCompleted} fully completed municipalities`);
+        for (const municipio of fullyCompletedMunicipios) {
+            for (const missao of missoes) {
+                try {
+                    // Create evidence array based on missao.evidencias
+                    let evidence = [];
+                    if (missao.evidencias && Array.isArray(missao.evidencias)) {
+                        evidence = missao.evidencias.map((_, index) => ({
+                            evidencia: `https://drive.google.com/open?id=${Math.random().toString(36).substring(2)}${Math.random().toString(36).substring(2)}`,
+                            title: `Evidência ${index + 1}`
+                        }));
+                    }
+                    
+                    // Calculate date in the past (0-30 days ago)
+                    const daysAgo = Math.floor(Math.random() * 30);
+                    const updatedAt = new Date();
+                    updatedAt.setDate(updatedAt.getDate() - daysAgo);
+                    
+                    // Create DTO with VALID status
+                    const desempenhoDTO = MunicipioDesempenhoDTO.builder()
+                        .withCodIbge(municipio.codIbge)
+                        .withMissaoId(missao.id)
+                        .withValidationStatus('VALID')
+                        .withUpdatedAt(updatedAt)
+                        .withEvidence(evidence)
+                        .build();
+                    
+                    // Save to database
+                    const savedDesempenho = await municipioDesempenhoService.createDesempenho(desempenhoDTO);
+                    createdRecords.push(savedDesempenho);
+                    
+                    console.log(`Created VALID desempenho for fully completed municipality ${municipio.codIbge}, mission ${missao.id}`);
+                } catch (error) {
+                    console.error(`Error creating desempenho for municipality ${municipio.codIbge}, mission ${missao.id}:`, error.message);
+                }
+            }
+        }
+        
+        // Then create random status desempenhos for the remaining municipalities
+        console.log(`Creating random status desempenhos for ${remainingMunicipios.length} remaining municipalities`);
+        for (const municipio of remainingMunicipios) {
             for (const missao of missoes) {
                 try {
                     // Create desempenho with random status (mostly VALID for demo purposes)
                     const random = Math.random();
                     let status;
-                    if (random < 0.7) {
+                    if (random < 0.08) {
                         status = 'VALID';
                     } else if (random < 0.9) {
                         status = 'PENDING';
@@ -95,7 +127,7 @@ async function seedMunicipioDesempenho(connection) {
                                     title: `Evidência ${index + 1}`
                                 };
                             })
-                            .filter(item => item !== null); // Remove null entries
+                            .filter(item => item !== null);
                     }
                     
                     // Calculate date in the past (0-30 days ago)
@@ -105,7 +137,7 @@ async function seedMunicipioDesempenho(connection) {
                     
                     // Create DTO
                     const desempenhoDTO = MunicipioDesempenhoDTO.builder()
-                        .withCodIbge(codIbge)
+                        .withCodIbge(municipio.codIbge)
                         .withMissaoId(missao.id)
                         .withValidationStatus(status)
                         .withUpdatedAt(updatedAt)
@@ -116,23 +148,20 @@ async function seedMunicipioDesempenho(connection) {
                     const savedDesempenho = await municipioDesempenhoService.createDesempenho(desempenhoDTO);
                     createdRecords.push(savedDesempenho);
                     
-                    console.log(`Created desempenho for organization ${codIbge}, mission ${missao.id} with status ${status}`);
+                    console.log(`Created desempenho for municipality ${municipio.codIbge}, mission ${missao.id} with status ${status}`);
                 } catch (error) {
-                    console.error(`Error creating desempenho for organization ${codIbge}, mission ${missao.id}:`, error.message);
+                    console.error(`Error creating desempenho for municipality ${municipio.codIbge}, mission ${missao.id}:`, error.message);
                 }
             }
         }
         
         console.log(`Successfully created ${createdRecords.length} desempenho records`);
         
-        // Update organization points and badges
-        for (const codIbge of ORG_IBGE_CODES) {
+        // Update municipality points and badges
+        for (const municipio of municipios) {
             try {
-                // Get the organization
-                const municipio = await municipioService.findById(codIbge);
-                
-                // Get all completed missions for this organization
-                const desempenhos = await municipioDesempenhoService.findByIbgeCode(codIbge);
+                // Get all completed missions for this municipality
+                const desempenhos = await municipioDesempenhoService.findByIbgeCode(municipio.codIbge);
                 const completedDesempenhos = desempenhos.filter(d => d.validation_status === 'VALID');
                 
                 // Calculate total points and badges from completed missions
@@ -153,7 +182,7 @@ async function seedMunicipioDesempenho(connection) {
                 // Count unique badges (one badge per completed mission)
                 const badgeCount = completedMissionIds.size;
                 
-                // Update organization with calculated points and badges
+                // Update municipality with calculated points and badges
                 const updatedMunicipio = {
                     ...municipio,
                     points: totalPoints,
@@ -161,9 +190,9 @@ async function seedMunicipioDesempenho(connection) {
                 };
                 
                 await municipioService.saveMunicipio(updatedMunicipio);
-                console.log(`Updated organization ${codIbge} with recalculated points (${totalPoints}) and badges (${badgeCount})`);
+                console.log(`Updated municipality ${municipio.codIbge} with recalculated points (${totalPoints}) and badges (${badgeCount})`);
             } catch (error) {
-                console.error(`Error updating organization ${codIbge} points and badges:`, error.message);
+                console.error(`Error updating municipality ${municipio.codIbge} points and badges:`, error.message);
             }
         }
     } catch (error) {
@@ -174,6 +203,5 @@ async function seedMunicipioDesempenho(connection) {
 }
 
 module.exports = {
-    seedMunicipioDesempenho,
-    ORG_IBGE_CODES // Export the list so it can be used in fetchMissaoDesempenho.js
+    seedMunicipioDesempenho
 }; 
