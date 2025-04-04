@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react"
 import { Box, useTheme, useMediaQuery, Typography, Paper } from "@mui/material"
 import StarIcon from '@mui/icons-material/Star';
-import { MapContainer, TileLayer, GeoJSON, Marker } from "react-leaflet"
+import { MapContainer, TileLayer, GeoJSON, Marker, Tooltip } from "react-leaflet"
 import L from "leaflet"
 import "leaflet/dist/leaflet.css"
 
@@ -39,7 +39,7 @@ const LegendDescription = ({ backgroundColor, color, description, number, title 
         }}
       >
           {number}
-          {title == "Concluída" ? <StarIcon  style={{ color: "#FCBA38" }}/> : ""}
+          {(title === "Concluída" || title === "Nível 3" || title === "Concluído") ? <StarIcon style={{ color: "#FCBA38" }}/> : ""}
       </Box>
       <Box sx={{ 
         display: "flex", 
@@ -225,7 +225,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
   // Create a simpler icon for testing
   const starIcon = L.divIcon({
     className: 'custom-star-icon',
-    html: '<div style="width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px;">🌟</div>',
+    html: '<div style="width: 18px; height: 18px; color: #FCBA38; display: flex; align-items: center; justify-content: center; border-radius: 50%;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" fill="#FCBA38"/></svg></div>',
     iconSize: [18, 18],
     iconAnchor: [9, 9],
   });
@@ -247,9 +247,9 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
     }
   };
 
-  // Update markers when mission panorama data changes
+  // Update markers when mission panorama data changes or level distribution changes
   useEffect(() => {
-    console.log('Mission panorama data changed:', missionPanoramaData);
+    console.log('Mission panorama data or level distribution changed:', missionPanoramaData, levelDistribution);
     console.log('GeoJSON data available:', !!geoJsonData);
 
     if (!geoJsonData) return;
@@ -257,6 +257,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
     // Clear existing markers
     setCompletedMarkers([]);
 
+    // Add markers for completed municipalities in mission panorama
     if (missionPanoramaData?.completedMunicipios) {
       console.log('Number of completed municipalities:', missionPanoramaData.completedMunicipios.length);
       const newMarkers = [];
@@ -280,10 +281,42 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
         }
       });
 
-      console.log('Setting new markers:', newMarkers);
+      console.log('Setting new markers for completed missions:', newMarkers);
       setCompletedMarkers(newMarkers);
     }
-  }, [missionPanoramaData, geoJsonData]);
+    // Add markers for level 3 municipalities when showing level distribution
+    else if (levelDistribution && !missionPanoramaData) {
+      console.log('Adding markers for level 3 municipalities');
+      const level3Data = levelDistribution.find(l => l.level === 3);
+      
+      if (level3Data && level3Data.municipios) {
+        console.log('Number of level 3 municipalities:', level3Data.municipios.length);
+        const newMarkers = [];
+        
+        level3Data.municipios.forEach(codIbge => {
+          console.log('Processing level 3 municipality:', codIbge);
+          const feature = geoJsonData.features.find(f => f.properties.id === codIbge);
+          
+          if (feature) {
+            console.log('Found matching feature for level 3 municipality:', codIbge);
+            const center = getMunicipalityCenter(feature);
+            if (center) {
+              console.log('Adding marker for level 3 municipality:', codIbge, 'at position:', center);
+              newMarkers.push({
+                position: [center.lat, center.lng],
+                id: codIbge
+              });
+            }
+          } else {
+            console.log('No matching feature found for level 3 municipality:', codIbge);
+          }
+        });
+        
+        console.log('Setting new markers for level 3 municipalities:', newMarkers);
+        setCompletedMarkers(newMarkers);
+      }
+    }
+  }, [missionPanoramaData, geoJsonData, levelDistribution]);
 
   // Log when markers are updated
   useEffect(() => {
@@ -395,6 +428,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
         fillColor = "#FFFFFF"; // White for non-participating
       } else if (level === 3) {
         fillColor = "#12447F"; // Blue for level 3 (highest)
+        color = "#ffffff"; // White border for level 3
       } else if (level === 2) {
         fillColor = "#066829"; // Dark green for level 2
       } else if (level === 1) {
@@ -518,23 +552,31 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
 
   // Component to handle markers
   const MarkersList = () => {
-    console.log('Rendering MarkersList with markers:', completedMarkers);
+    console.log('Renderizando MarkersList com marcadores:', completedMarkers);
     return (
       <>
-        {completedMarkers.map((marker) => (
-          <Marker
-            key={marker.id}
-            position={marker.position}
-            icon={starIcon}
-            eventHandlers={{
-              click: () => {
-                if (onMunicipioSelect) {
-                  onMunicipioSelect(marker.id);
+        {completedMarkers.map((marker) => {
+          // Encontrar o nome do município para o tooltip
+          const feature = geoJsonData.features.find(f => f.properties.id === marker.id);
+          const municipioName = feature ? feature.properties.name : `Município ${marker.id}`;
+          
+          return (
+            <Marker
+              key={marker.id}
+              position={marker.position}
+              icon={starIcon}
+              eventHandlers={{
+                click: () => {
+                  if (onMunicipioSelect) {
+                    onMunicipioSelect(marker.id);
+                  }
                 }
-              }
-            }}
-          />
-        ))}
+              }}
+            >
+              <Tooltip>{municipioName}</Tooltip>
+            </Marker>
+          );
+        })}
       </>
     );
   };

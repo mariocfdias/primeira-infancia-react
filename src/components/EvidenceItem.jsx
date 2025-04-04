@@ -75,13 +75,13 @@ export default function EvidenceItem({
       <Typography
         variant="body2"
         sx={{
-          fontSize: { xs: "0.7rem", sm: "0.8rem", lg: "20px" },
+          fontSize: { xs: "1rem", sm: "1.2rem", lg: "20px" },
           mr: 1,
         }}
       >
         {title}
       </Typography>
-      <Tooltip color={(evidence) ? "#ffffff" : "#333333"} title={<Typography sx={{fontSize: { xs: "0.7rem", sm: "0.8rem", lg: "20px", width: {xs: "200px", lg: "360px"} }}}>{getTooltipTitle()}</Typography>} arrow placement="top">
+      <Tooltip color={(evidence) ? "#ffffff" : "#333333"} title={<Typography sx={{fontSize: { xs: "1rem", sm: "1.2rem", lg: "20px", width: {xs: "200px", lg: "360px"} }}}>{getTooltipTitle()}</Typography>} arrow placement="top">
         {getIcon(evidence)}
       </Tooltip>
     </Box>

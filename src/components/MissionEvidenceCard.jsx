@@ -16,6 +16,9 @@ export default function MissionEvidenceCard({
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
 
+  // Atualiza o status para 'in-progress' se houver evidências e o status não for 'completed'
+  const effectiveStatus = status !== 'completed' && evidenceItems.length > 0 ? 'in-progress' : status;
+
   console.log({evidenceItems})
 
   const getCategoryIcon = (categoryId) => {
@@ -50,8 +53,9 @@ export default function MissionEvidenceCard({
       'in-progress': {
         label: 'Em ação',
         style: {
-          bgcolor: '#e7eef8',
-          color: '#12447f',
+          bgcolor: '#D4FFDE',
+          color: '#066829',
+          fontWeight: "500",
         },
         icon: null
       },
@@ -65,7 +69,8 @@ export default function MissionEvidenceCard({
       }
     };
 
-    const config = statusConfig[status];
+    // Usar o effectiveStatus em vez do status original
+    const config = statusConfig[effectiveStatus];
     
     return (
       <Chip
@@ -73,7 +78,7 @@ export default function MissionEvidenceCard({
         label={config.label}
         sx={{
           ...config.style,
-          fontSize: { xs: "0.65rem", sm: "0.75rem", lg: "18px" },
+          fontSize: { xs: "1rem", sm: "1.2rem", lg: "18px" },
           height: 24,
           "& .MuiChip-icon": {
             color: "white",
@@ -84,9 +89,10 @@ export default function MissionEvidenceCard({
   }
 
   const getEvidenceInstructions = () => {
-    if (status === "completed" && viewOnly) {
+    // Usar o effectiveStatus em vez do status original
+    if (effectiveStatus === "completed" && viewOnly) {
       return "Visualize as evidências enviadas."
-    } else if (status === "in-progress") {
+    } else if (effectiveStatus === "in-progress") {
       return "Envie as evidências abaixo para concluir a missão ou visualize as que já foram enviadas."
     } else {
       return "Envie as evidências abaixo para concluir a missão."
@@ -152,7 +158,7 @@ export default function MissionEvidenceCard({
               sx={{
                 fontWeight: "400",
                 color: "white",
-                fontSize: { xs: "12px", sm: "14px", lg: "20px" },
+                fontSize: { xs: "14px", sm: "16px", lg: "20px" },
                 mb: 1,
               }}
             >
@@ -166,7 +172,7 @@ export default function MissionEvidenceCard({
                 sx={{
                   color: "#e79d0d",
                   fontWeight: "bold",
-                  fontSize: { xs: "0.875rem", sm: "1rem", lg: "24px" },
+                  fontSize: { xs: "1rem", sm: "1.2rem", lg: "24px" },
                   display: "flex",
                   alignItems: "center",
                   ml: 2,
@@ -177,7 +183,7 @@ export default function MissionEvidenceCard({
               <StarRounded sx={{ 
                  color: "#e79d0d",
                  fontWeight: "bold",
-                 fontSize: { xs: "0.875rem", sm: "1rem", lg: "36px" },
+                 fontSize: { xs: "1rem", sm: "1.2rem", lg: "36px" },
                  display: "flex",
                  alignItems: "center",
               }} />
@@ -192,8 +198,8 @@ export default function MissionEvidenceCard({
         <Typography
           variant="body2"
           sx={{
-            fontWeight: "medium",
-            fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "24px" },
+            fontWeight: "bold",
+            fontSize: { xs: "1rem", sm: "1.2rem", lg: "24px" },
             color: "#000000",
           }}
         >
@@ -202,14 +208,14 @@ export default function MissionEvidenceCard({
         <Typography
           sx={{
             color: "#000000",
-            fontSize: { xs: "0.7rem", sm: "0.8rem", lg: "16px" },
+            fontSize: { xs: "0.8rem", sm: "1rem", lg: "16px" },
             mb: 2,
           }}
         >
           {getEvidenceInstructions()}
         </Typography>
 
-        <Grid container spacing={1}  sx={{ mb: status !== "completed" ? 2 : 0 }}>
+        <Grid container spacing={1}  sx={{ mb: effectiveStatus !== "completed" ? 2 : 0 }}>
           {evidenceItems.map((item) => (
             <Grid item xs={12} sm={6} key={item.id}>
               {console.log({item})}
@@ -224,7 +230,7 @@ export default function MissionEvidenceCard({
           ))}
         </Grid>
 
-        {status !== "completed" && (
+        {effectiveStatus !== "completed" && (
           <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Button
               variant="contained"

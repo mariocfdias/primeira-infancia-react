@@ -510,7 +510,7 @@ export default function HomePage() {
   // Get mission details by ID
   const getMissionDetails = (missionId) => {
     return missoes.find(mission => mission.id === missionId) || { 
-      descricao_da_missao: "Missão não encontrada",
+      descricao_da_missao: "Compromisso não encontrado",
       descricao_da_categoria: "Categoria não encontrada",
       qnt_pontos: 0
     }
@@ -559,14 +559,14 @@ export default function HomePage() {
       return (
         <Grid item xs={12}>
           <Alert severity="error">
-            Erro ao carregar as missões: {(errorStates.missoes || errorStates.missionPanorama)?.message}
+            Erro ao carregar os compromissos: {(errorStates.missoes || errorStates.missionPanorama)?.message}
           </Alert>
         </Grid>
       );
     }
     
     return missoes.map((missao) => (
-      <Grid item xs={12} sm={6} md={4} key={missao.id}>
+      <Grid item sm={12} md={6} lg={4} key={missao.id}>
         <MissionCard
           category={missao.descricao_da_categoria.toUpperCase()}
           title={missao.descricao_da_missao}
@@ -607,7 +607,7 @@ export default function HomePage() {
             elevation={1}
             sx={{
               display: "flex",
-              flexDirection: { xs: "column", sm: "row" },
+              flexDirection: { sm: "column", md: "row" },
               mb: { xs: 4, sm: 5, md: 6 },
               border: "1px solid #D3D3D3",
               borderRadius: 1,
@@ -619,7 +619,7 @@ export default function HomePage() {
               sx={{
                 flex: 1,
                 p: { xs: 2, sm: 3, md: 4 },
-                borderBottom: { xs: "1px solid #d3d3d3", sm: "none" },
+                borderBottom: { xs: "0.0625rem solid #d3d3d3", sm: "none" },
                 display: "flex",
                 alignItems: "center",
                 justifyContent: { xs: "center" },
@@ -634,7 +634,7 @@ export default function HomePage() {
                   fontWeight: "800",
                   mr: 2,
                   color: "#12447f",
-                  fontSize: { xs: "40px", sm: "56px", md: "76px", lg: "96px" },
+                  fontSize: { xs: "2.5rem", sm: "3.5rem", md: "4.75rem", lg: "6rem" },
                 }}
               >
                 {loadingStates.mapPanorama ? <CircularProgress size={24} /> : (mapPanorama?.totalParticipatingPrefeituras || municipios.length || 0)}
@@ -645,7 +645,7 @@ export default function HomePage() {
                   sx={{
                     fontWeight: "bold",
                     color: "#12447f",
-                    fontSize: { xs: "26px", sm: "38px", md: "43px", lg: "48px" },
+                    fontSize: { xs: "1.625rem", sm: "2.375rem", md: "2.6875rem", lg: "3rem" },
                     letterSpacing: "0.02em",
                     mt: { xs: -1, sm: -1, md: -1 }
                   }}
@@ -656,7 +656,7 @@ export default function HomePage() {
                   variant="body2"
                   sx={{
                     color: "#333333",
-                    fontSize: { xs: "18px", sm: "20px", md: "28px", lg: "36px" },
+                    fontSize: { xs: "1.125rem", sm: "1.25rem", md: "1.75rem", lg: "2.25rem" },
                     mt: { xs: -1.2, sm: -2, md: -2.5, lg: -3.4 },
                     letterSpacing: "0.01em"
                   }}
@@ -684,7 +684,11 @@ export default function HomePage() {
                   fontWeight: "600",
                   mr: 2,
                   color: "#12447f",
-                  fontSize: { xs: "40px", sm: "56px", md: "76px", lg: "96px" },
+                  fontSize: { xs: "2.5rem", sm: "3.5rem", md: "4.75rem", lg: "6rem" },
+                  whiteSpace: "nowrap",
+                  [theme.breakpoints.down('sm')]: {
+                    fontSize: '2rem',
+                  }
                 }}
               >
                 {loadingStates.mapPanorama ? <CircularProgress size={24} /> : `${(mapPanorama?.percentageFinishedMissions || 0).toFixed(1)}%`}
@@ -694,25 +698,36 @@ export default function HomePage() {
                   variant="subtitle1"
                   sx={{
                     fontWeight: "bold",
+                    textAlign: "left",
                     color: "#12447f",
-                    fontSize: { xs: "26px", sm: "38px", md: "43px", lg: "48px" },
+                    fontSize: { xs: "1.625rem", sm: "2.375rem", md: "2.6875rem", lg: "3rem" },
                     mb: 0,
                     mt: -3,
-                    letterSpacing: "0.02em"
+                    [theme.breakpoints.down('sm')]: {
+                      fontSize: '1.4rem',
+                    },
+                    [theme.breakpoints.up('md')]: {
+                      lineHeight: "1.5",
+                    },
+                    letterSpacing: "0.02em",
                   }}
                 >
-                  das missões
+                  dos compromissos
                 </Typography>
                 <Typography
                   variant="body2"
                   sx={{
                     color: "#333333",
-                    fontSize: { xs: "18px", sm: "20px", md: "28px", lg: "36px" },
+                    fontSize: { xs: "1.125rem", sm: "1.25rem", md: "1.75rem", lg: "2.25rem" },
                     mt: { xs: -1.2, sm: -2, md: -2.5, lg: -3.4 },
+                    whiteSpace: "nowrap",
+                    [theme.breakpoints.down('sm')]: {
+                      fontSize: '1rem',
+                    },
                     letterSpacing: "0.01em"
                   }}
                 >
-                  foram concluídas
+                  foram concluídos
                 </Typography>
               </Box>
             </Box>
@@ -726,7 +741,7 @@ export default function HomePage() {
               fontWeight: "600",
               color: "#333333",
               mb: 1,
-              fontSize: { xs: "20px", sm: "26px", md: "28px", lg: "32px" },
+              fontSize: { xs: "1.25rem", sm: "1.625rem", md: "1.75rem", lg: "2rem" },
             }}
           >
             Mapa interativo
@@ -736,7 +751,7 @@ export default function HomePage() {
             sx={{
               color: "#525252",
               mb: 2,
-              fontSize: { xs: "14px", sm: "16px", md: "18px", lg: "20px" },
+              fontSize: { xs: "0.875rem", sm: "1rem", md: "1.125rem", lg: "1.25rem" },
             }}
           >
             Acesse um município no mapa abaixo ou selecione-o na caixa ao lado para ver mais detalhes sobre a participação e
@@ -754,8 +769,8 @@ export default function HomePage() {
               <Paper
                 elevation={1}
                 sx={{
-                  height: { xs: 280, sm: 480, md: 600 },
-                  border: "1px solid #d3d3d3",
+                  height: { xs: "17.5rem", sm: "30rem", md: "37.5rem" },
+                  border: "0.0625rem solid #d3d3d3",
                   borderRadius: 1,
                   overflow: "hidden",
                   alignItems: "center",
@@ -785,12 +800,12 @@ export default function HomePage() {
             {/* Municipality Details */}
             <Grid item xs={12} md={4}>
               {selectedMissao && (
-                <Box sx={{ p: { xs: 2, sm: 2.5, md: 3 }, border: "1px solid #d3d3d3", borderRadius: 1, mb: { xs: 2, sm: 2.5, md: 3 }, backgroundColor: "#F2F2F2" }}>
+                <Box sx={{ p: { xs: 2, sm: 2.5, md: 3 }, border: "0.0625rem solid #d3d3d3", borderRadius: 1, mb: { xs: 2, sm: 2.5, md: 3 }, backgroundColor: "#F2F2F2" }}>
                   <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
-                    Visualizando missão no mapa
+                    Visualizando compromisso no mapa
                   </Typography>
-                  <Typography variant="body2" fontWeight={"400"} fontSize={"20px"} sx={{ mb: 2 }}>
-                    {missoes.find(m => m.id === selectedMissao)?.descricao_da_missao || "Missão selecionada"}
+                  <Typography variant="body2" fontWeight={"400"} fontSize={"1.25rem"} sx={{ mb: 2 }}>
+                    {missoes.find(m => m.id === selectedMissao)?.descricao_da_missao || "Compromisso selecionado"}
                   </Typography>
                   <Button
                     variant="outlined"
@@ -811,7 +826,7 @@ export default function HomePage() {
               )}
     
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: { xs: 1, sm: 1.5, md: 2 }, mb: { xs: 2, sm: 2.5, md: 3 } }}>
-              <InputLabel htmlFor="my-input" sx={{ fontWeight: "500", color: "#333333", fontSize: { xs: "14px", sm: "16px", md: "20px", lg: "24px" } }}>Prefeituras</InputLabel>
+              <InputLabel htmlFor="my-input" sx={{ fontWeight: "500", color: "#333333", fontSize: { xs: "0.875rem", sm: "1rem", md: "1.25rem", lg: "1.5rem" } }}>Prefeituras</InputLabel>
                 <FormControl 
                   fullWidth 
                   variant="outlined" 
@@ -819,11 +834,11 @@ export default function HomePage() {
                   <InputLabel id="municipio-select-label"
                   sx={{
                     '&.MuiInputLabel-root': {
-                      color: '#000000', // <------------------ label-color by default
+                      color: '#000000',
                       fontWeight: 500
                     },
                     '&.MuiInputLabel-root.Mui-focused': {
-                      color: '#000000', // <------------------ label-color on focus
+                      color: '#000000',
                     }
                   }}
                   >Selecione</InputLabel>
@@ -839,7 +854,7 @@ export default function HomePage() {
                         borderColor: 'pink',
                         color: '#000000',
                         borderWidth: "thin",
-                        fontSize: { xs: "14px", sm: "16px", md: "20px", lg: "24px" },
+                        fontSize: { xs: "0.875rem", sm: "1rem", md: "1.25rem", lg: "1.5rem" },
                       },
                       '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                         borderColor: '#000000',
@@ -859,16 +874,16 @@ export default function HomePage() {
                         color: '#000000',
                       },
                       '&.MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#000000', // <------------------ outline-color by default
-            },
-            '&:hover fieldset': {
-              borderColor: '#000000', // <------------------ outline-color on hover
-            },
-            '&.Mui-focused fieldset': {
-              borderColor: '#000000', // <------------------ outline-color on focus
-            },
-          },
+                        '& fieldset': {
+                          borderColor: '#000000',
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#000000',
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#000000',
+                        },
+                      },
                     }}
                   >
                     <MenuItem value="">
@@ -927,25 +942,25 @@ export default function HomePage() {
               fontWeight: "600",
               color: "#333333",
               mb: 1,
-              fontSize: { xs: "14px", sm: "22px", md: "27px", lg: "32px" },
+              fontSize: { xs: "1.3rem", sm: "1.375rem", md: "1.6875rem", lg: "2rem" },
             }}
           >
-            Panorama de missões
+            Panorama de compromissos
           </Typography>
           <Typography
             sx={{
               color: "#525252",
               mb: 3,
-              fontSize: { xs: "14px", sm: "16px", md: "18px", lg: "20px" },
+              fontSize: { xs: "1rem", sm: "1rem", md: "1.125rem", lg: "1.25rem" },
             }}
           >
-            Cada card abaixo representa uma missão específica e mostra a quantidade de municípios que já a concluíram.
+            Cada card abaixo representa um compromisso específico e mostra a quantidade de municípios que já a concluíram.
             Acesse{" "}
             <Box component="span" sx={{ fontWeight: "medium" }}>
               "Ver no mapa"
             </Box>{" "}
-            para visualizar no mapa interativo os municípios que já completaram, estão em curso ou ainda não iniciaram essa
-            missão.
+            para visualizar no mapa interativo os municípios que já completaram, estão em curso ou ainda não iniciaram esse
+            compromisso.
           </Typography>
     
           <Grid container spacing={8} sx={{ mb: { xs: 4, sm: 5, md: 6 }, mt: { xs: 1, sm: 2, md: 3 } }}>
@@ -960,7 +975,7 @@ export default function HomePage() {
               fontWeight: "600",
               color: "#333333",
               mb: 1,
-              fontSize: { xs: "14px", sm: "22px", md: "27px", lg: "32px" },
+              fontSize: { xs: "1.3rem", sm: "1.375rem", md: "1.6875rem", lg: "2rem" },
             }}
           >
             Quem está avançando?
@@ -969,12 +984,12 @@ export default function HomePage() {
             sx={{
               color: "#525252",
               mb: 3,
-              fontSize: { xs: "14px", sm: "16px", md: "18px", lg: "20px" },
+              fontSize: { xs: "1rem", sm: "1rem", md: "1.125rem", lg: "1.25rem" },
             }}
           >
             Veja as atualizações mais recentes sobre{" "}
             <Box component="span" sx={{ fontWeight: "medium" }}>
-              missões concluídas
+              compromissos concluídos
             </Box>{" "}
             e{" "}
             <Box component="span" sx={{ fontWeight: "medium" }}>
@@ -987,14 +1002,14 @@ export default function HomePage() {
             .
           </Typography>
     
-          <Box display="flex" flexDirection="row" alignItems="center" sx={{ mb: 3, display: "flex", flexDirection: "row", border: "1px solid #d3d3d3", borderRadius: 1, p: 2 }}>
+          <Box display="flex" flexDirection="row" alignItems="center" sx={{ mb: 3, display: "flex", flexDirection: "row", border: "0.0625rem solid #d3d3d3", borderRadius: 1, p: 2 }}>
             <Box>
             <Typography
               variant="body2"
               component="span"
               sx={{
                 mr: { xs: 2, sm: 2.5, md: 3 },
-                fontSize: { xs: "14px", sm: "16px", md: "18px", lg: "20px" },
+                fontSize: { xs: "0.875rem", sm: "1rem", md: "1.125rem", lg: "1.25rem" },
                 display: { xs: "block", sm: "inline" },
                 mb: { xs: 1, sm: 0 },
               }}
@@ -1012,7 +1027,7 @@ export default function HomePage() {
                   color: eventFilter === "mission_completed" ? "white" : "#333333",
                   textTransform: "none",
                   fontWeight: "semibold",
-                  fontSize: { xs: "12px", sm: "14px", md: "17px", lg: "20px" },
+                  fontSize: { xs: "0.75rem", sm: "0.875rem", md: "1.0625rem", lg: "1.25rem" },
                   "&:hover": {
                     bgcolor: eventFilter === "mission_completed" ? "#0d3666" : "rgba(0, 0, 0, 0.04)",
                     borderColor: eventFilter === "mission_completed" ? "transparent" : "#b3b3b3",
@@ -1020,11 +1035,11 @@ export default function HomePage() {
                   boxShadow: eventFilter === "mission_completed" ? 2 : 0,
                 }}
                 startIcon={
-                  <StarRounded sx={{ color: "#FCBA38", fontSize: { xs: "16px", sm: "20px", md: "34px", lg: "48px" } }} />
+                  <StarRounded sx={{ color: "#FCBA38", fontSize: { xs: "1rem", sm: "1.25rem", md: "2.125rem", lg: "3rem" } }} />
                 }
                 onClick={() => handleEventFilterChange("mission_completed")}
               >
-                Missões concluídas
+                Compromissos concluídos
               </Button>
               <Button
                 variant={eventFilter === "mission_started" ? "contained" : "outlined"}
@@ -1035,8 +1050,8 @@ export default function HomePage() {
                   color: eventFilter === "mission_started" ? "white" : "#333333",
                   textTransform: "none",
                   fontWeight: "semibold",
-                  fontSize: { xs: "12px", sm: "14px", md: "17px", lg: "20px" },
-                                    "&:hover": {
+                  fontSize: { xs: "0.75rem", sm: "0.875rem", md: "1.0625rem", lg: "1.25rem" },
+                  "&:hover": {
                     bgcolor: eventFilter === "mission_started" ? "#0d3666" : "rgba(0, 0, 0, 0.04)",
                     borderColor: eventFilter === "mission_started" ? "transparent" : "#b3b3b3",
                   },
@@ -1050,13 +1065,13 @@ export default function HomePage() {
           </Box>
     
           <Box container spacing={2} display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3,backgroundColor: "#FFFFFF" }}>
-            <Box width={"30%"} sx={{minWidth: "150px"}}>
+            <Box width={"30%"} sx={{minWidth: "9.375rem"}}>
               <InputLabel 
                 htmlFor="municipio-search" 
                 sx={{ 
                   fontWeight: "400", 
                   color: "#333333", 
-                  fontSize: { xs: "14px", sm: "16px", md: "20px", lg: "24px" },
+                  fontSize: { xs: "0.875rem", sm: "1rem", md: "1.25rem", lg: "1.5rem" },
                   mb: 1
                 }}
               >
@@ -1076,7 +1091,7 @@ export default function HomePage() {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Search sx={{ color: "#9f9f9f", fontSize: isMobile ? "1rem" : isTablet ? "20px" : "24px" }} />
+                      <Search sx={{ color: "#9f9f9f", fontSize: isMobile ? "1rem" : isTablet ? "1.25rem" : "1.5rem" }} />
                     </InputAdornment>
                   ),
                 }}
@@ -1084,13 +1099,13 @@ export default function HomePage() {
                   '& input::placeholder': {
                     color: 'black',
                     opacity: 0.8,
-                    fontSize: { xs: "14px", sm: "16px", md: "18px", lg: "20px" },
+                    fontSize: { xs: "0.875rem", sm: "1rem", md: "1.125rem", lg: "1.25rem" },
                   },
                   '.MuiTextField-notchedOutline': {
                     borderColor: 'pink',
                     color: '#000000',
                     borderWidth: "thin",
-                    fontSize: { xs: "14px", sm: "16px", md: "20px", lg: "24px" },
+                    fontSize: { xs: "0.875rem", sm: "1rem", md: "1.25rem", lg: "1.5rem" },
                   },
                   '&.Mui-focused .MuiTextField-notchedOutline': {
                     borderColor: '#000000',
@@ -1105,16 +1120,16 @@ export default function HomePage() {
                     color: '#000000',
                   },
                   '&.MuiTextField-root': {
-        '& fieldset': {
-          borderColor: '#000000', // <------------------ outline-color by default
-        },
-        '&:hover fieldset': {
-          borderColor: '#000000', // <------------------ outline-color on hover
-        },
-        '&.Mui-focused fieldset': {
-          borderColor: '#000000', // <------------------ outline-color on focus
-        },
-      }
+                    '& fieldset': {
+                      borderColor: '#000000',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: '#000000',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#000000',
+                    },
+                  }
                 }}
               />
             </Box>
@@ -1131,7 +1146,7 @@ export default function HomePage() {
                   variant="body2"
                   sx={{
                     mr: { xs: 2, sm: 2.5, md: 3 },
-                    fontSize: { xs: "14px", sm: "16px", md: "18px", lg: "20px" },
+                    fontSize: { xs: "0.875rem", sm: "1rem", md: "1.125rem", lg: "1.25rem" },
                   }}
                 >
                   Ordenar por
@@ -1157,7 +1172,7 @@ export default function HomePage() {
                         borderColor: 'pink',
                         color: '#000000',
                         borderWidth: "thin",
-                        fontSize: { xs: "14px", sm: "16px", md: "18px", lg: "20px" },
+                        fontSize: { xs: "0.875rem", sm: "1rem", md: "1.125rem", lg: "1.25rem" },
                       },
                       '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                         borderColor: '#000000',
@@ -1171,26 +1186,24 @@ export default function HomePage() {
                         backgroundColor: '#12447F',
                         borderRadius: '50%',
                         color: '#ffffff',
-                        margin: "4px",
-
+                        margin: "0.25rem",
                       },
                       '.MuiSelect-outlined': {
                         borderColor: '#000000',
                         color: '#000000',
-                        marginRight: "4px",
-
+                        marginRight: "0.25rem",
                       },
                       '&.MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#000000', // <------------------ outline-color by default
-            },
-            '&:hover fieldset': {
-              borderColor: '#000000', // <------------------ outline-color on hover
-            },
-            '&.Mui-focused fieldset': {
-              borderColor: '#000000', // <------------------ outline-color on focus
-            },
-          }
+                        '& fieldset': {
+                          borderColor: '#000000',
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#000000',
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#000000',
+                        },
+                      }
                     }}
                   >
                     <MenuItem value="recent">Mais recente</MenuItem>
@@ -1254,9 +1267,9 @@ export default function HomePage() {
                         bgcolor: "#0d3666",
                       },
                     },
-                    border: "1px solid #d3d3d3",
+                    border: "0.0625rem solid #d3d3d3",
                     borderRadius: 0,
-                    fontSize: { xs: "12px", sm: "14px", md: "17px", lg: "20px" },
+                    fontSize: { xs: "0.75rem", sm: "0.875rem", md: "1.0625rem", lg: "1.25rem" },
                   }}
                 />
               )}

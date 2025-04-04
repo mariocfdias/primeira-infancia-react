@@ -51,12 +51,12 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
           <Typography
             sx={{
               mb: 0.5,
-              fontSize: { xs: "12px", sm: "14px", lg: "16px" },
+              fontSize: { xs: "12px", sm: "16px", lg: "18px" },
               lineHeight: 1.5,
             }}
           >
             Prefeitura de {" "}
-            <Typography component="span" sx={{ fontWeight: "bold", fontSize: { xs: "0.75rem", sm: "0.875rem", md: "20px" } }}>
+            <Typography component="span" sx={{ fontWeight: "bold", fontSize: { xs: "1rem", sm: "1.2rem", md: "1.4rem" } }}>
               {city}
             </Typography>{" "}
             concluiu a missão "{mission}" e ganhou{" "}
@@ -67,7 +67,7 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
                 fontWeight: "medium",
                 display: "inline-flex",
                 alignItems: "center",
-                fontSize: { xs: "12px", sm: "14px", md: "20px" },
+                fontSize: { xs: "16px", sm: "16px", md: "20px" },
               }}
             >
               <StarRounded
@@ -85,7 +85,7 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
               sx={{
                 background: getCategoryColor(badge.toUpperCase()),
                 color: "white",
-                fontSize: { xs: "12px", sm: "14px", md: "16px" },
+                fontSize: { xs: "16px", sm: "16px", md: "20px" },
                 height: "auto",
                 py: 0.25,
                 fontWeight: "medium",
@@ -99,7 +99,7 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
               color: "#8d8d8d",
               display: "block",
               textAlign: "right",
-              fontSize: { xs: "12px", sm: "14px", md: "16px" },
+              fontSize: { xs: "16px", sm: "16px", md: "20px" },
             }}
           >
             {date}

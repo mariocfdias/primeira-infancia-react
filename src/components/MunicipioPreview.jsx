@@ -345,51 +345,56 @@ const MunicipioPreview = ({
             </Box>
           </Box>
         </Box>
+        {!missaoId && (
+          
 
+        <Box>
         <Typography variant="subtitle1" fontWeight="bold" mb={1} sx={{fontSize: { xs: "12px", sm: "14px", lg: "20px" }}}>
           Compromissos
         </Typography>
-        <Box 
-          display="flex" 
-          gap={1} 
-          flexWrap="wrap"
-          sx={{
-            '& .MuiChip-root': {
-              mb: 1 // Add margin bottom to each chip for better spacing when wrapped
-            }
-          }}
-        >
-          <Chip
-            avatar={<Avatar sx={{ bgcolor: "#1f5bb4", color: "#ffffff", fontSize: "0.75rem", width: 24, height: 24 }}>
-              <Typography variant="body2" fontWeight="bold" color="#ffffff">{data?.mapPanorama?.countValid || 0}</Typography>
-            </Avatar>}
-            label={`Concluídas`}
+          <Box 
+            display="flex" 
+            gap={1} 
+            flexWrap="wrap"
             sx={{
-              bgcolor: "#ffffff",
-              color: "#333333"
+              '& .MuiChip-root': {
+                mb: 1 // Add margin bottom to each chip for better spacing when wrapped
+              }
             }}
-          />
-          <Chip
-            avatar={<Avatar sx={{ bgcolor: "#27884A", color: "#ffffff", fontSize: "0.75rem", width: 24, height: 24 }}>
-              <Typography variant="body2" fontWeight="bold" color="#ffffff">{data?.mapPanorama?.countStarted || 0}</Typography>
-            </Avatar>}
-            label={`Em ação`}
-            sx={{
-              bgcolor: "#ffffff",
-              color: "#333333"
-            }}
-          />
-          <Chip
-            avatar={<Avatar sx={{ bgcolor: "#000000", color: "#ffffff", fontSize: "0.75rem", width: 24, height: 24 }}>
-              <Typography variant="body2" fontWeight="bold" color="#ffffff">{data?.mapPanorama?.countPending || 0}</Typography>
-            </Avatar>}
-            label={`Pendentes`}
-            sx={{
-              bgcolor: "#ffffff",
-              color: "#333333"
-            }}
-          />
+          >
+            <Chip
+              avatar={<Avatar sx={{ bgcolor: "#1f5bb4", color: "#ffffff", fontSize: "0.75rem", width: 24, height: 24 }}>
+                <Typography variant="body2" fontWeight="bold" color="#ffffff">{data?.mapPanorama?.countValid || 0}</Typography>
+              </Avatar>}
+              label={`Concluídas`}
+              sx={{
+                bgcolor: "#ffffff",
+                color: "#333333"
+              }}
+            />
+            <Chip
+              avatar={<Avatar sx={{ bgcolor: "#27884A", color: "#ffffff", fontSize: "0.75rem", width: 24, height: 24 }}>
+                <Typography variant="body2" fontWeight="bold" color="#ffffff">{data?.mapPanorama?.countStarted || 0}</Typography>
+              </Avatar>}
+              label={`Em ação`}
+              sx={{
+                bgcolor: "#ffffff",
+                color: "#333333"
+              }}
+            />
+            <Chip
+              avatar={<Avatar sx={{ bgcolor: "#000000", color: "#ffffff", fontSize: "0.75rem", width: 24, height: 24 }}>
+                <Typography variant="body2" fontWeight="bold" color="#ffffff">{data?.mapPanorama?.countPending || 0}</Typography>
+              </Avatar>}
+              label={`Pendentes`}
+              sx={{
+                bgcolor: "#ffffff",
+                color: "#333333"
+              }}
+            />
+          </Box>
         </Box>
+        )}
 
         {/* Evidence section - only show if we have mission data */}
         {missaoId && missao && evidence && (
