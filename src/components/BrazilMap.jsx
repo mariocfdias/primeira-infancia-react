@@ -202,7 +202,7 @@ const MapLegendInternal = ({ selectedMissao, levelDistribution, missionPanoramaD
           <LegendDescription 
             backgroundColor="#12447f"
             title="Concluído"
-            description="200 pontos ou mais"
+            description="200 pontos"
             number={level3Count}
           />
           <LegendDescription 

@@ -300,7 +300,7 @@ const MunicipioPreview = ({
                 fontFamily={"Atkinson Hyperlegible"}
                 sx={{
                   fontSize: { xs: "0.875rem", sm: "1rem", lg: "20px" }}}> 
-                  {points}/100
+                  {points % 100}/100
                 </Typography>
                 <Star sx={{ color: levelColor }} />
               </Box>
@@ -310,7 +310,7 @@ const MunicipioPreview = ({
             <Box mt={1} mb={2}>
               <LinearProgress
                 variant="determinate"
-                value={progressPercentage}
+                value={progressPercentage % 100}
                 sx={{
                   height: 16,
                   borderRadius: 10,

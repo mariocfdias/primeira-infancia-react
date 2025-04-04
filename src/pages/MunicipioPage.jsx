@@ -311,7 +311,7 @@ export default function MunicipioPage({ onBack, ibge }) {
                     alignItems: "center",
                   }}
                 >
-                  Nível {Math.floor(earnedPoints / 50) + 1 || 1}
+                  Nível {Math.floor(earnedPoints / 100) + 1 || 1}
                 </Typography>
               <Typography
                   variant="body2"
@@ -329,7 +329,7 @@ export default function MunicipioPage({ onBack, ibge }) {
               </Box>
               <LinearProgress
                 variant="determinate"
-                value={totalPointsAvailable > 0 ? (earnedPoints / totalPointsAvailable) * 100 : 0}
+                value={earnedPoints % 100}
                 
                 sx={{
                   height: 10,
@@ -497,7 +497,8 @@ export default function MunicipioPage({ onBack, ibge }) {
               sx={{
                 color: "#333333",
                 textTransform: "none",
-                fontSize: { xs: "0.875rem", sm: "1rem" },
+                fontSize: { xs: "1rem", sm: "1rem", md: "1.25rem" },
+                fontWeight: "bold",
               }}
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             >

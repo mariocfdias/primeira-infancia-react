@@ -141,13 +141,13 @@ export default function MapLegend({ selectedMissao, levelDistribution }) {
             backgroundColor="#066829"
             count={level2Count}
             title="Nível 2"
-            description="Entre 101 e 200 pontos"
+            description="Entre 101 e 199 pontos"
           />
           <LegendItem
             backgroundColor="#12447f"
             count={level3Count}
-            title="Nível 3"
-            description="201 pontos ou mais"
+            title="Concluído"
+            description="200 pontos"
           />
           <LegendItem
             backgroundColor="#ffffff"
