@@ -19,7 +19,7 @@ import {
   Alert,
   Divider,
 } from "@mui/material"
-import { FilterAlt, Search, KeyboardArrowLeft, KeyboardArrowRight, StarRounded } from "@mui/icons-material"
+import { FilterAlt, Search, KeyboardArrowLeft, KeyboardArrowRight, StarRounded, Clear, Refresh } from "@mui/icons-material"
 import BrazilMap from "../components/BrazilMap"
 import MapLegend from "../components/MapLegend"
 import MissionCard from "../components/MissionCard"
@@ -814,13 +814,22 @@ export default function HomePage() {
                       setSelectedMissao(null);
                       setMissionPanoramaById(null);
                     }}
+                    startIcon={<Refresh />}
                     sx={{
-                      borderColor: "#d3d3d3",
-                      color: "#333333",
-                      textTransform: "none",
+                      mt: 3,
+                      bgcolor: "#1f5bb4",
+                      color: "white",
+                      py: 1.5,
+                      fontSize: "0.9rem",
+                      fontWeight: "bold",
+                      "&:hover": {
+                        bgcolor: "#12447f"
+                      }
                     }}
                   >
+                    <Typography fontWeight="bold" fontSize={"16px"} sx={{letterSpacing: "2px", textTransform: "none"}} color="#ffffff">
                     Voltar à visualização padrão
+              </Typography>
                   </Button>
                 </Box>
               )}
@@ -900,21 +909,27 @@ export default function HomePage() {
                 
                 {selectedMunicipio && (
                   <Button
-                    variant="outlined"
-                    size="small"
+                  variant="contained"
+                  
                     onClick={() => {
                       setSelectedMunicipio(null);
                       setMissionPanoramaById(null);
                     }}
+                    startIcon={<Refresh />}
                     sx={{
-                      minWidth: 'auto',
-                      borderColor: "#d3d3d3",
-                      color: "#333333",
-                      mt: 1,
-                      px: 1,
+                      bgcolor: "#1f5bb4",
+                      color: "white",
+                      py: 1,
+                      fontSize: "0.9rem",
+                      fontWeight: "bold",
+                      "&:hover": {
+                        bgcolor: "#12447f"
+                      }
                     }}
                   >
-                    Limpar
+                <Typography fontWeight="bold" fontSize={"16px"} sx={{letterSpacing: "2px", textTransform: "none"}} color="#ffffff">
+                    Limpar prefeitura
+              </Typography>
                   </Button>
                 )}
               </Box>

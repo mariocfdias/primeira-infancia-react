@@ -448,9 +448,8 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
       fillColor,
       weight,
       opacity: 1,
-      color: isSelected ? "#FF8000" : color, // Orange border for selected
+      color: isSelected ? "#E79D0D" : color, // Orange border for selected
       fillOpacity,
-      dashArray: isSelected ? "3" : null // Dashed line for selected
     };
   };
 

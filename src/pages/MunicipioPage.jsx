@@ -315,6 +315,8 @@ export default function MunicipioPage({ onBack, ibge }) {
                 </Typography>
               <Typography
                   variant="body2"
+                  fontFamily={"Atkinson Hyperlegible"}
+
                   sx={{
                     color: "#FCBA38",
                     fontSize: { xs: "0.75rem", sm: "0.875rem", lg: "24px" },
@@ -324,7 +326,7 @@ export default function MunicipioPage({ onBack, ibge }) {
                   }}
                 >
                   {earnedPoints % 100}/100
-                  <StarRounded sx={{ color: "#FCBA38", fontSize: { xs: "1rem", sm: "1.25rem" } }} />
+                  <StarRounded sx={{ color: "#FCBA38", fontSize: { xs: "1rem", sm: "1.8rem" } }} />
                 </Typography>
               </Box>
               <LinearProgress

@@ -81,7 +81,7 @@ export default function EvidenceItem({
       >
         {title}
       </Typography>
-      <Tooltip color={(evidence) ? "#ffffff" : "#333333"} title={<Typography sx={{fontSize: { xs: "1rem", sm: "1.2rem", lg: "20px", width: {xs: "200px", lg: "360px"} }}}>{getTooltipTitle()}</Typography>} arrow placement="top">
+      <Tooltip sx={{zIndex: 1000}} disablePortal color={(evidence) ? "#ffffff" : "#333333"} title={<Typography sx={{backgroundColor: "#333333", zIndex: 1000, fontSize: { xs: "1rem", sm: "1.2rem", lg: "20px", width: {xs: "200px", lg: "360px"} }}}>{getTooltipTitle()}</Typography>} arrow placement="top">
         {getIcon(evidence)}
       </Tooltip>
     </Box>

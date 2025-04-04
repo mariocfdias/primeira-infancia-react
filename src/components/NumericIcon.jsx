@@ -17,6 +17,7 @@ export default function NumericIcon({ icon, number, description, sx }) {
           fontFamily={"Atkinson Hyperlegible"}
           sx={{
             fontWeight: "bold",
+            fontFamily: "Atkinson Hyperlegible",
             fontSize: { xs: "1.25rem", sm: "1.5rem", lg: "24px" },
             lineHeight: 1
           }}

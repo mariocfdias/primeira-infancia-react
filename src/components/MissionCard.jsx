@@ -39,7 +39,7 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
         pt: 2 ,
         overflow: "visible",
         zIndex: isSelected ? 2 : 1,
-        marginBottom: 1.5 ,
+        marginBottom: 0 ,
       }}
     >
       <Chip
@@ -71,7 +71,7 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
         <Typography
           variant="body2"
           sx={{
-            mb: { xs: 0.5, sm: 1, md: 1.5, lg: 3 },
+            mb: { xs: 0.5, sm: 1, md: 1, lg: 0 },
             minHeight: { xs: 60, sm: 80, md: 100, lg: 120 },
             flex: "0 0 auto",
             color: "white",
@@ -118,7 +118,7 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
                   top: '50%',
                   transform: 'translate(50%, -50%)',
                   color: '#E79D0D',
-                  fontSize: { xs: "32px", sm: "36px", md: "42px", lg: "48px" },
+                  fontSize: { xs: "34px", sm: "38px", md: "44px", lg: "52px" },
                   filter: 'drop-shadow(0px 0px 2px rgba(0,0,0,0.3))'
                 }}
               />
@@ -162,7 +162,14 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
                 backgroundColor: "#f5f5f5",
               }
             }}
-            onClick={() => onViewMap(missionId)}
+            onClick={() => {
+              onViewMap(missionId);
+              // Encontra o elemento do mapa e rola até ele
+              const mapElement = document.getElementById('brazil-map');
+              if (mapElement) {
+                mapElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }
+            }}
           >
             {isSelected ? 'Mostrando no mapa' : 'Ver no mapa'}
           </Button>
