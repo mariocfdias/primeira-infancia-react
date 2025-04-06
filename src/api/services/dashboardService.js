@@ -6,10 +6,12 @@ import apiClient from './apiClient';
 const dashboardService = {
   /**
    * Get mission panorama overview
+   * @param {Object} params - Query parameters
+   * @param {string} [params.orgao] - Optional organization filter
    * @returns {Promise} Promise object representing the API call
    */
-  getMissionPanorama: async () => {
-    return await apiClient.get('/dashboard/mission-panorama');
+  getMissionPanorama: async (params = {}) => {
+    return await apiClient.get('/dashboard/mission-panorama', { params });
   },
 
   /**
@@ -23,10 +25,12 @@ const dashboardService = {
 
   /**
    * Get map panorama with municipality performance distribution
+   * @param {Object} params - Query parameters
+   * @param {string} [params.orgao] - Optional organization filter
    * @returns {Promise} Promise object representing the API call
    */
-  getMapPanorama: async () => {
-    return await apiClient.get('/dashboard/map-panorama');
+  getMapPanorama: async (params = {}) => {
+    return await apiClient.get('/dashboard/map-panorama', { params });
   },
 
   /**

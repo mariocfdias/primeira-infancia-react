@@ -13,6 +13,7 @@ export default function MunicipioPage({ onBack, ibge }) {
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
   const codIbge = urlParams.get('codIbge');
+  const orgaoParam = urlParams.get('orgao');
   
   const [loading, setLoading] = useState(true)
   const [municipioData, setMunicipioData] = useState(null)
@@ -49,11 +50,16 @@ export default function MunicipioPage({ onBack, ibge }) {
     const fetchMunicipioData = async () => {
       try {
         setLoading(true)
-        const response = await services.municipiosService.getMunicipioByIbge(ibge)
+        // Create params object with orgaoParam if available
+        const params = orgaoParam ? { orgao: orgaoParam } : {};
         
-        // Fetch desempenhos for this municipality
-        const desempenhosResponse = await services.desempenhosService.getDesempenhosByMunicipio(ibge)
+        // Pass params to API calls
+        const response = await services.municipiosService.getMunicipioByIbge(ibge, params)
         
+        // Fetch desempenhos for this municipality with orgao parameter
+
+        const desempenhosResponse = await services.desempenhosService.getDesempenhosByMunicipio(ibge, params)
+        console.log({desempenhosResponse})
         // Process the evidence items directly after fetching
         const processedDesempenhos = desempenhosResponse.data.map(desempenho => {
           let evidenceItems = []
@@ -113,7 +119,7 @@ export default function MunicipioPage({ onBack, ibge }) {
     if (ibge) {
       fetchMunicipioData()
     }
-  }, [ibge])
+  }, [ibge, orgaoParam])
 
   useEffect(() => {
     console.log({desempenhoData})

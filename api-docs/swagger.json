@@ -370,6 +370,20 @@
                 "tags": [
                     "Dashboard"
                 ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "orgao",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "PREFEITURA",
+                                "CAMARA"
+                            ]
+                        },
+                        "description": "Filtra resultados por tipo de órgão"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Panorama geral de missões"
@@ -405,13 +419,27 @@
         },
         "/dashboard/map-panorama": {
             "get": {
-                "summary": "Retorna um panorama de municípios com contagem de status de missões e pontos",
+                "summary": "Retorna o panorama do mapa com distribuição de níveis",
                 "tags": [
                     "Dashboard"
                 ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "orgao",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "PREFEITURA",
+                                "CAMARA"
+                            ]
+                        },
+                        "description": "Filtra resultados por tipo de órgão"
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Panorama de municípios e distribuição de desempenho",
+                        "description": "Panorama do mapa",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -424,56 +452,6 @@
                                         "data": {
                                             "type": "object",
                                             "properties": {
-                                                "mapPanorama": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "municipio": {
-                                                                "type": "object",
-                                                                "properties": {
-                                                                    "codIbge": {
-                                                                        "type": "string"
-                                                                    },
-                                                                    "nome": {
-                                                                        "type": "string"
-                                                                    },
-                                                                    "status": {
-                                                                        "type": "string"
-                                                                    },
-                                                                    "dataAlteracao": {
-                                                                        "type": "string",
-                                                                        "format": "date-time"
-                                                                    },
-                                                                    "imagemAvatar": {
-                                                                        "type": "string"
-                                                                    },
-                                                                    "badges": {
-                                                                        "type": "integer"
-                                                                    },
-                                                                    "points": {
-                                                                        "type": "integer"
-                                                                    }
-                                                                }
-                                                            },
-                                                            "countValid": {
-                                                                "type": "integer"
-                                                            },
-                                                            "countPending": {
-                                                                "type": "integer"
-                                                            },
-                                                            "countStarted": {
-                                                                "type": "integer"
-                                                            },
-                                                            "totalMissoes": {
-                                                                "type": "integer"
-                                                            },
-                                                            "points": {
-                                                                "type": "integer"
-                                                            }
-                                                        }
-                                                    }
-                                                },
                                                 "desempenho": {
                                                     "type": "object",
                                                     "properties": {
@@ -493,6 +471,12 @@
                                                                     },
                                                                     "count": {
                                                                         "type": "integer"
+                                                                    },
+                                                                    "municipios": {
+                                                                        "type": "array",
+                                                                        "items": {
+                                                                            "type": "string"
+                                                                        }
                                                                     }
                                                                 }
                                                             }
@@ -501,6 +485,12 @@
                                                             "type": "integer"
                                                         }
                                                     }
+                                                },
+                                                "totalParticipatingPrefeituras": {
+                                                    "type": "integer"
+                                                },
+                                                "percentageFinishedMissions": {
+                                                    "type": "number"
                                                 }
                                             }
                                         }
@@ -510,23 +500,7 @@
                         }
                     },
                     "500": {
-                        "description": "Erro no servidor",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "error"
-                                        },
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        "description": "Erro no servidor"
                     }
                 }
             }
@@ -1196,6 +1170,21 @@
                 "tags": [
                     "Missoes"
                 ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "orgao",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "PREFEITURA",
+                                "CAMARA"
+                            ]
+                        },
+                        "required": false,
+                        "description": "Filtrar missões pelo tipo de órgão (PREFEITURA ou CAMARA)"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Lista de missões",
@@ -1555,13 +1544,28 @@
         },
         "/municipios": {
             "get": {
-                "summary": "Retorna todos os municípios",
+                "summary": "Retorna todos os municípios (excluindo órgãos)",
                 "tags": [
                     "Municipios"
                 ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "orgao",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "PREFEITURA",
+                                "CAMARA"
+                            ]
+                        },
+                        "required": false,
+                        "description": "Filtrar por tipo de órgão (PREFEITURA ou CAMARA)"
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Lista de municípios",
+                        "description": "Lista de municípios (excluindo órgãos)",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1744,11 +1748,159 @@
                 }
             }
         },
+        "/municipios/search": {
+            "get": {
+                "summary": "Busca municípios por nome",
+                "tags": [
+                    "Municipios"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "Texto para busca por nome"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        },
+                        "required": false,
+                        "description": "Número máximo de resultados a retornar"
+                    },
+                    {
+                        "in": "query",
+                        "name": "orgao",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "PREFEITURA",
+                                "CAMARA"
+                            ]
+                        },
+                        "required": false,
+                        "description": "Filtrar por tipo de órgão (PREFEITURA ou CAMARA)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de municípios que correspondem à busca",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Municipio"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/municipios/participantes": {
+            "get": {
+                "summary": "Retorna todos os municípios participantes",
+                "tags": [
+                    "Municipios"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "orgao",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "PREFEITURA",
+                                "CAMARA"
+                            ]
+                        },
+                        "required": false,
+                        "description": "Filtrar por tipo de órgão (PREFEITURA ou CAMARA)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de municípios participantes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Municipio"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/desempenhos": {
             "get": {
                 "summary": "Retorna todos os registros de desempenho",
                 "tags": [
                     "Desempenhos"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "orgao",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "PREFEITURA",
+                                "CAMARA"
+                            ]
+                        },
+                        "required": false,
+                        "description": "Filtrar por tipo de órgão (PREFEITURA ou CAMARA)"
+                    }
                 ],
                 "responses": {
                     "200": {
@@ -2111,6 +2263,19 @@
                         },
                         "required": true,
                         "description": "Código IBGE do município"
+                    },
+                    {
+                        "in": "query",
+                        "name": "orgao",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "PREFEITURA",
+                                "CAMARA"
+                            ]
+                        },
+                        "required": false,
+                        "description": "Filtrar por tipo de órgão (PREFEITURA ou CAMARA)"
                     }
                 ],
                 "responses": {
@@ -2164,6 +2329,19 @@
                         },
                         "required": true,
                         "description": "ID da missão"
+                    },
+                    {
+                        "in": "query",
+                        "name": "orgao",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "PREFEITURA",
+                                "CAMARA"
+                            ]
+                        },
+                        "required": false,
+                        "description": "Filtrar por tipo de órgão (PREFEITURA ou CAMARA)"
                     }
                 ],
                 "responses": {
@@ -2409,6 +2587,19 @@
                         },
                         "required": true,
                         "description": "ID da missão"
+                    },
+                    {
+                        "in": "query",
+                        "name": "orgao",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "PREFEITURA",
+                                "CAMARA"
+                            ]
+                        },
+                        "required": false,
+                        "description": "Filtrar por tipo de órgão (PREFEITURA ou CAMARA)"
                     }
                 ],
                 "responses": {

@@ -36,6 +36,12 @@ export default function HomePage() {
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
   const codIbgeParam = urlParams.get('codIbge');
+  const orgaoParam = urlParams.get('orgao');
+  
+  // Helper function to determine the correct text based on orgao type
+  const getOrgaoText = (prefeituraText, camaraText) => {
+    return orgaoParam === 'CAMARA' ? camaraText : prefeituraText;
+  };
   
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const isTablet = useMediaQuery(theme.breakpoints.down("md"))
@@ -135,10 +141,14 @@ export default function HomePage() {
     const fetchInitialData = async () => {
       try {
         // Iniciar todas as requisições em paralelo
-        const municipiosPromise = makeRequest(services.municipiosService.getAllMunicipios);
-        const missoesPromise = makeRequest(services.missoesService.getAllMissoes);
-        const missionPanoramaPromise = makeRequest(services.dashboardService.getMissionPanorama);
-        const mapPanoramaPromise = makeRequest(services.dashboardService.getMapPanorama);
+        const municipiosPromise = makeRequest(() => 
+          services.municipiosService.getAllMunicipios({ orgao: orgaoParam }));
+        const missoesPromise = makeRequest(() => 
+          services.missoesService.getAllMissoes({ orgao: orgaoParam }));
+        const missionPanoramaPromise = makeRequest(() => 
+          services.dashboardService.getMissionPanorama({ orgao: orgaoParam }));
+        const mapPanoramaPromise = makeRequest(() => 
+          services.dashboardService.getMapPanorama({ orgao: orgaoParam }));
         
         // Definir estados de carregamento
         setLoading('municipios', true);
@@ -214,7 +224,8 @@ export default function HomePage() {
   const fetchMunicipios = async () => {
     try {
       setLoading('municipios', true);
-      const response = await makeRequest(services.municipiosService.getAllMunicipios);
+      const response = await makeRequest(() => 
+        services.municipiosService.getAllMunicipios({ orgao: orgaoParam }));
       setLoading('municipios', false);
       
       if (response && response.status === 'success' && Array.isArray(response.data)) {
@@ -232,7 +243,8 @@ export default function HomePage() {
   const fetchMissoes = async () => {
     try {
       setLoading('missoes', true);
-      const response = await makeRequest(services.missoesService.getAllMissoes);
+      const response = await makeRequest(() => 
+        services.missoesService.getAllMissoes({ orgao: orgaoParam }));
       setLoading('missoes', false);
       
       if (response && response.status === 'success' && Array.isArray(response.data)) {
@@ -250,7 +262,8 @@ export default function HomePage() {
   const fetchMissionPanorama = async () => {
     try {
       setLoading('missionPanorama', true);
-      const response = await makeRequest(services.dashboardService.getMissionPanorama);
+      const response = await makeRequest(() => 
+        services.dashboardService.getMissionPanorama({ orgao: orgaoParam }));
       setLoading('missionPanorama', false);
       
       if (response && response.status === 'success' && Array.isArray(response.data)) {
@@ -268,7 +281,8 @@ export default function HomePage() {
   const fetchMapPanorama = async () => {
     try {
       setLoading('mapPanorama', true);
-      const response = await makeRequest(services.dashboardService.getMapPanorama);
+      const response = await makeRequest(() => 
+        services.dashboardService.getMapPanorama({ orgao: orgaoParam }));
       setLoading('mapPanorama', false);
       
       if (response && response.status === 'success' && response.data) {
@@ -291,7 +305,8 @@ export default function HomePage() {
         page: currentPage,
         limit: 100,
         event: eventFilter,
-        sortDirection: sortDirection
+        sortDirection: sortDirection,
+        orgao: orgaoParam
       };
       
       // Add municipio search if provided
@@ -325,7 +340,8 @@ export default function HomePage() {
     
     try {
       setLoading('municipio', true);
-      const response = await makeRequest(() => services.municipiosService.getMunicipioByIbge(codIbge));
+      const response = await makeRequest(() => 
+        services.municipiosService.getMunicipioByIbge(codIbge, { orgao: orgaoParam }));
       setLoading('municipio', false);
       
       if (response && response.status === 'success') {
@@ -421,7 +437,7 @@ export default function HomePage() {
     }
     
     if (codIbge === "all") {
-      setSelectedMunicipio({ codIbge: "all", nome: "Todas as prefeituras" });
+      setSelectedMunicipio({ codIbge: "all", nome: `Todas as ${getOrgaoText('prefeituras', 'câmaras')}` });
       return;
     }
     
@@ -435,6 +451,8 @@ export default function HomePage() {
 
   // Handle municipality selection from map
   const handleMapMunicipioSelect = (codIbge) => {
+    // IDs already come with prefixes like "CAMARA-" or "PREFEITURA-"
+    
     // If the same municipality is already selected, don't make another API call
     if (selectedMunicipio?.codIbge === codIbge && 
         (dataRef.current.municipioCache[codIbge] || nonParticipantMunicipio)) {
@@ -444,7 +462,7 @@ export default function HomePage() {
     // Clear any previous non-participant data
     setNonParticipantMunicipio(null);
     
-    // Find the municipio in our list
+    // Find the municipio in our list using the ID with prefix
     const municipio = municipios.find(m => m.codIbge === codIbge);
     
     if (municipio) {
@@ -592,7 +610,7 @@ export default function HomePage() {
   }, [selectedMunicipio, selectedMissao]);
 
   return (
-    <Container maxWidth={false} sx={{ py: { xs: 2, sm: 3, md: 4 }, width: '100%', border: '1px solid black' }}>
+    <Container maxWidth={false} sx={{ py: { xs: 2, sm: 3, md: 4 }, width: '100%', border: '1px solid black', backgroundColor: '#ffffff' }}>
       {showMunicipioPage || codIbgeParam ? (
         <MunicipioPage 
           ibge={selectedMunicipio?.codIbge || codIbgeParam}
@@ -650,7 +668,7 @@ export default function HomePage() {
                     mt: { xs: -1, sm: -1, md: -1 }
                   }}
                 >
-                  prefeituras
+                  {getOrgaoText('prefeituras', 'câmaras')}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -661,7 +679,7 @@ export default function HomePage() {
                     letterSpacing: "0.01em"
                   }}
                 >
-                  aderiram ao Pacto
+                  Aderiram ao Pacto
                 </Typography>
               </Box>
             </Box>
@@ -757,7 +775,7 @@ export default function HomePage() {
             Acesse um município no mapa abaixo ou selecione-o na caixa ao lado para ver mais detalhes sobre a participação e
             avanço de sua{" "}
             <Box component="span" sx={{ fontWeight: "bold" }}>
-              prefeitura
+              {getOrgaoText('prefeitura', 'câmara')}
             </Box>
             .
           </Typography>
@@ -835,7 +853,7 @@ export default function HomePage() {
               )}
     
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: { xs: 1, sm: 1.5, md: 2 }, mb: { xs: 2, sm: 2.5, md: 3 } }}>
-              <InputLabel htmlFor="my-input" sx={{ fontWeight: "500", color: "#333333", fontSize: { xs: "0.875rem", sm: "1rem", md: "1.25rem", lg: "1.5rem" } }}>Prefeituras</InputLabel>
+              <InputLabel htmlFor="my-input" sx={{ fontWeight: "500", color: "#333333", fontSize: { xs: "0.875rem", sm: "1rem", md: "1.25rem", lg: "1.5rem" } }}>{getOrgaoText('Prefeituras', 'Câmaras')}</InputLabel>
                 <FormControl 
                   fullWidth 
                   variant="outlined" 
@@ -903,7 +921,7 @@ export default function HomePage() {
                         {municipio.nome}
                       </MenuItem>
                     ))}
-                    <MenuItem value="all">Todas as prefeituras</MenuItem>
+                    <MenuItem value="all">Todas as {getOrgaoText('prefeituras', 'câmaras')}</MenuItem>
                   </Select>
                 </FormControl>
                 
@@ -928,7 +946,7 @@ export default function HomePage() {
                     }}
                   >
                 <Typography fontWeight="bold" fontSize={"16px"} sx={{letterSpacing: "2px", textTransform: "none"}} color="#ffffff">
-                    Limpar prefeitura
+                    Limpar {getOrgaoText('prefeitura', 'câmara')}
               </Typography>
                   </Button>
                 )}
@@ -1010,7 +1028,7 @@ export default function HomePage() {
             <Box component="span" sx={{ fontWeight: "medium" }}>
               envio de evidências
             </Box>{" "}
-            pelas prefeituras{" "}
+            pelas {getOrgaoText('prefeituras', 'câmaras')}{" "}
             <Box component="span" sx={{ fontWeight: "medium" }}>
               nos últimos 30 dias
             </Box>

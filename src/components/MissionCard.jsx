@@ -1,11 +1,12 @@
 import { Box, Typography, Paper, Button, LinearProgress, useTheme, useMediaQuery, Chip } from "@mui/material"
 import { ArrowUpward, KeyboardArrowDown, Star, StarRounded } from "@mui/icons-material"
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useState } from 'react'
 
 function MissionCard({ category, title, progress, missionId, onViewMap, isSelected }) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
+  const [isHovered, setIsHovered] = useState(false)
 
   const getCategoryColor = (category) => {
     if (category.includes("AMPLIAÇÃO")) return "linear-gradient(to right, #1C434F, #0A5166)"
@@ -162,16 +163,24 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
                 backgroundColor: "#f5f5f5",
               }
             }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
             onClick={() => {
-              onViewMap(missionId);
-              // Encontra o elemento do mapa e rola até ele
-              const mapElement = document.getElementById('brazil-map');
-              if (mapElement) {
-                mapElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              if (isSelected) {
+                // Remove selection by passing null or empty string as missionId
+                onViewMap(null);
+              } else {
+                // Select this mission
+                onViewMap(missionId);
+                // Encontra o elemento do mapa e rola até ele
+                const mapElement = document.getElementById('brazil-map');
+                if (mapElement) {
+                  mapElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
               }
             }}
           >
-            {isSelected ? 'Mostrando no mapa' : 'Ver no mapa'}
+            {isSelected ? (isHovered ? 'Voltar a visualização padrão' : 'Mostrando no mapa') : 'Ver no mapa'}
           </Button>
         </Box>
       </Box>

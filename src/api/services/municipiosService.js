@@ -6,19 +6,23 @@ import apiClient from './apiClient';
 const municipiosService = {
   /**
    * Get all municipios
+   * @param {Object} params - Query parameters
+   * @param {string} [params.orgao] - Optional organization filter
    * @returns {Promise} Promise object representing the API call
    */
-  getAllMunicipios: async () => {
-    return await apiClient.get('/municipios');
+  getAllMunicipios: async (params = {}) => {
+    return await apiClient.get('/municipios', { params });
   },
 
   /**
    * Get a specific municipio by IBGE code with its desempenhos and missões
    * @param {string} ibgeCode - The IBGE code of the municipio
+   * @param {Object} params - Query parameters
+   * @param {string} [params.orgao] - Optional organization filter
    * @returns {Promise} Promise object representing the API call
    */
-  getMunicipioByIbge: async (ibgeCode) => {
-    return await apiClient.get(`/municipios/${ibgeCode}`);
+  getMunicipioByIbge: async (ibgeCode, params = {}) => {
+    return await apiClient.get(`/municipios/${ibgeCode}`, { params });
   },
 };
 
