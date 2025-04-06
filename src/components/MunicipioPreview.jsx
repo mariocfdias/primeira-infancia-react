@@ -205,8 +205,8 @@ const MunicipioPreview = ({
 
   // Get color based on level
   const getLevelColor = (points) => {
-    if (points >= 1) return "#FFCA61"; 
-    return "#707070";
+      return "#FFCA61"; 
+
   };
 
   // Calculate progress for progress bar (max 100%)
@@ -292,7 +292,7 @@ const MunicipioPreview = ({
             </Typography>
             
             <Box display="flex" justifyContent="space-between" alignItems="center">
-              <Typography color={levelColor} fontFamily={"Atkinson Hyperlegible"} sx={{fontSize: { xs: "0.875rem", sm: "1rem", lg: "20px" }}}>
+              <Typography color={points > 0 ? levelColor : "#FFFFFF"} fontFamily={"Atkinson Hyperlegible"} sx={{fontSize: { xs: "0.875rem", sm: "1rem", lg: "20px" }}}>
                 {level}
               </Typography>
               <Box display="flex" alignItems="center" gap={0.5}>

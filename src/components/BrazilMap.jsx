@@ -26,6 +26,7 @@ const LegendDescription = ({ backgroundColor, color, description, number, title 
           bgcolor: backgroundColor,
           color: color || "white",
           display: "flex",
+          minWidth: 40,
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "center",
@@ -436,7 +437,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
     
     let color = "#9F9F9F"; // Default gray color
     let fillColor = "#9F9F9F";
-    let fillOpacity = 0.7;
+    let fillOpacity = 1;
     
     // If we have mission panorama data, color based on mission status
     if (missionPanoramaData) {
@@ -445,27 +446,27 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
       
       switch(status) {
         case "completed":
-          color = "#12447F"; // Blue for completed
+          color = "#FFFFFF"; // Blue for completed
           fillColor = "#12447F";
-          fillOpacity = 0.7;
+          fillOpacity = 1;
           break;
         case "in_progress":
-          color = "#72C576"; // Green for in progress
+          color = "#FFFFFF"; // Green for in progress
           fillColor = "#72C576";
-          fillOpacity = 0.7;
+          fillOpacity = 1;
           break;
         case "pending":
-          color = "#9F9F9F"; // Gray for pending
+          color = "#FFFFFF"; // Gray for pending
           fillColor = "#9F9F9F";
-          fillOpacity = 0.7;
+          fillOpacity = 1;
           break;
         case "not_available":
           color = "#FFA500"; // Orange for no data
           fillColor = "#FFA500";
-          fillOpacity = 0.7;
+          fillOpacity = 1;
           break;
         default:
-          color = "#D8D8D8"; // Light gray for non-participant/other
+          color = "#707070"; // Light gray for non-participant/other
           fillColor = "#FFFFFF";
           fillOpacity = 0.0;
       }
@@ -478,37 +479,37 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
 
       if (level === "NP") {
         // Non-participant municipalities
-        color = "#D8D8D8";
+        color = "#707070";
         fillColor = "#FFFFFF";
         fillOpacity = 0.0;
       } else if (level === 0) {
         // Level 0 - Not started
         color = "#707070";
         fillColor = "#707070";
-        fillOpacity = 0.7;
+        fillOpacity = 1;
       } else if (level === 1) {
         // Level 1 - Between 1-100 points
-        color = "#50B755";
+        color = "#FFFFFF";
         fillColor = "#50B755";
-        fillOpacity = 0.7;
+        fillOpacity = 1;
       } else if (level === 2) {
         // Level 2 - Between 101-199 points
-        color = "#066829";
+        color = "#FFFFFF";
         fillColor = "#066829";
-        fillOpacity = 0.7;
+        fillOpacity = 1;
       } else if (level === 3) {
         // Level 3 - 200+ points
-        color = "#12447F";
+        color = "#FFFFFF";
         fillColor = "#12447F";
-        fillOpacity = 0.7;
+        fillOpacity = 1;
       } else if (level === null) {
         // No data available for this municipality
         color = "#FFA500";
         fillColor = "#FFA500";
-        fillOpacity = 0.7;
+        fillOpacity = 1;
       } else {
         // Default for unknown level
-        color = "#D8D8D8";
+        color = "#707070";
         fillColor = "#FFFFFF";
         fillOpacity = 0.0;
       }
@@ -735,7 +736,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           subdomains={['a', 'b', 'c', 'd']}
-          opacity={1}
+          opacity={0.5}
           crossOrigin={true}
         />
         {geoJsonData && (

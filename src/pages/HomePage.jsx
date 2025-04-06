@@ -675,11 +675,11 @@ export default function HomePage() {
                   sx={{
                     color: "#333333",
                     fontSize: { xs: "1.125rem", sm: "1.25rem", md: "1.75rem", lg: "2.25rem" },
-                    mt: { xs: -1.2, sm: -2, md: -2.5, lg: -3.4 },
+                    mt: { xs: -1.2, sm: -2, md: -2.5, lg: -2.8 },
                     letterSpacing: "0.01em"
                   }}
                 >
-                  Aderiram ao Pacto
+                  aderiram o Pacto
                 </Typography>
               </Box>
             </Box>
@@ -737,7 +737,7 @@ export default function HomePage() {
                   sx={{
                     color: "#333333",
                     fontSize: { xs: "1.125rem", sm: "1.25rem", md: "1.75rem", lg: "2.25rem" },
-                    mt: { xs: -1.2, sm: -2, md: -2.5, lg: -3.4 },
+                    mt: { xs: -1.2, sm: -2, md: -2.5, lg: -2.0 },
                     whiteSpace: "nowrap",
                     [theme.breakpoints.down('sm')]: {
                       fontSize: '1rem',

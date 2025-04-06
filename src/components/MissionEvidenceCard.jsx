@@ -170,7 +170,9 @@ export default function MissionEvidenceCard({
                 variant="body2"
                 fontFamily="Atkinson Hyperlegible"
                 sx={{
-                  color: "#e79d0d",
+                  color: "#F6CD54",
+                  textShadow: "1px 1px 1px #EE9C06",
+                  letterSpacing: "2px",
                   fontWeight: "bold",
                   fontSize: { xs: "1rem", sm: "1.2rem", lg: "24px" },
                   display: "flex",
@@ -181,8 +183,10 @@ export default function MissionEvidenceCard({
                 +{points} 
               </Typography>
               <StarRounded sx={{ 
-                 color: "#e79d0d",
-                 fontWeight: "bold",
+                  color: "#F6CD54",
+                  textShadow: "1px 1px 1px #EE9C06",
+                  fontWeight: "bold",
+                  pr: 2,
                  fontSize: { xs: "1rem", sm: "1.2rem", lg: "36px" },
                  display: "flex",
                  alignItems: "center",
