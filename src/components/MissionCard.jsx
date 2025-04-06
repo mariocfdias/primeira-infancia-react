@@ -26,7 +26,7 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
         display: "flex",
         flexDirection: "column",
         border: isSelected ? "16px solid #FFDE9D" : "3px solid #12447f",
-        opacity: isSelected ? 1 : 0.8,
+        opacity: 1,
         borderRadius: 2,
         transition: "all 0.2s ease-in-out",
         transform: isSelected ? "scale(1.18)" : "scale(1)",
@@ -63,9 +63,9 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
           }
         }}
       />
-      <Box sx={{ 
-        p: { xs: 1.5, sm: 2, md: 2, lg: 2 }, 
-        display: "flex", 
+      <Box sx={{
+        p: { xs: 1.5, sm: 2, md: 2, lg: 2 },
+        display: "flex",
         flexDirection: "column",
         height: "100%"
       }}>
@@ -82,17 +82,17 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
         >
           {title}
         </Typography>
-        <Box sx={{ 
-          display: "flex", 
+        <Box sx={{
+          display: "flex",
           flexDirection: "column",
           mt: "auto",
           mx: { xs: -1.5, sm: -2, md: -2, lg: -2 },
           mb: { xs: -1.5, sm: -2, md: -2, lg: -2 }
         }}>
-          <Box sx={{ 
-            display: "flex", 
-            alignItems: "center", 
-            justifyContent: "space-between", 
+          <Box sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
             mb: 2,
             px: { xs: 1.5, sm: 2, md: 2, lg: 2 }
           }}>
@@ -112,7 +112,7 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
                   },
                 }}
               />
-              <StarRounded 
+              <StarRounded
                 sx={{
                   position: 'absolute',
                   right: `${100 - progressValue}%`,
@@ -140,7 +140,7 @@ function MissionCard({ category, title, progress, missionId, onViewMap, isSelect
           <Button
             endIcon={
               <ArrowUpward
-                sx={{                  
+                sx={{
                   fontSize: { xs: "20px", sm: "22px", md: "23px", lg: "24px" },
                 }}
               />
