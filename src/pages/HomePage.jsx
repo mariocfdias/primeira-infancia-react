@@ -37,15 +37,15 @@ export default function HomePage() {
   const urlParams = new URLSearchParams(location.search);
   const codIbgeParam = urlParams.get('codIbge');
   const orgaoParam = urlParams.get('orgao');
-  
+
   // Helper function to determine the correct text based on orgao type
   const getOrgaoText = (prefeituraText, camaraText) => {
     return orgaoParam === 'CAMARA' ? camaraText : prefeituraText;
   };
-  
+
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const isTablet = useMediaQuery(theme.breakpoints.down("md"))
-  
+
   // Create a ref to store all API data states to prevent unnecessary reloads
   const dataRef = useRef({
     municipios: [],
@@ -56,10 +56,10 @@ export default function HomePage() {
     missionPanoramaCache: {},
     municipioCache: {},
   });
-  
+
   // Single instance of useApiRequest for general data fetching
   const { makeRequest, loading, error, data } = useApiRequest()
-  
+
   // State variables with stable references
   const [municipios, setMunicipios] = useState([])
   const [selectedMunicipio, setSelectedMunicipio] = useState(null)
@@ -77,7 +77,7 @@ export default function HomePage() {
   const [sortDirection, setSortDirection] = useState("DESC")
   const [showMunicipioPage, setShowMunicipioPage] = useState(false)
   const [nonParticipantMunicipio, setNonParticipantMunicipio] = useState(null);
-  
+
   // Loading states
   const [loadingStates, setLoadingStates] = useState({
     municipios: false,
@@ -88,7 +88,7 @@ export default function HomePage() {
     municipio: false,
     missionPanoramaById: false
   });
-  
+
   // Error states
   const [errorStates, setErrorStates] = useState({
     municipios: null,
@@ -99,30 +99,30 @@ export default function HomePage() {
     municipio: null,
     missionPanoramaById: null
   });
-  
+
   // Ref for debounce timer
   const searchTimerRef = useRef(null);
-  
+
   // Helper function to update loading state
   const setLoading = (key, isLoading) => {
     setLoadingStates(prev => ({...prev, [key]: isLoading}));
   };
-  
+
   // Helper function to update error state
   const setError = (key, error) => {
     setErrorStates(prev => ({...prev, [key]: error}));
   };
-  
+
   // Check URL parameter on component mount
   useEffect(() => {
     if (codIbgeParam) {
       setShowMunicipioPage(true);
-      
+
       // Find the municipio in our list if it exists
       const municipio = municipios.find(m => m.codIbge === codIbgeParam);
       if (municipio) {
         setSelectedMunicipio(municipio);
-        
+
         // Check if we need to fetch more data for this municipality
         if (!dataRef.current.municipioCache[codIbgeParam]) {
           fetchMunicipioByIbge(codIbgeParam);
@@ -141,41 +141,41 @@ export default function HomePage() {
     const fetchInitialData = async () => {
       try {
         // Iniciar todas as requisições em paralelo
-        const municipiosPromise = makeRequest(() => 
+        const municipiosPromise = makeRequest(() =>
           services.municipiosService.getAllMunicipios({ orgao: orgaoParam }));
-        const missoesPromise = makeRequest(() => 
+        const missoesPromise = makeRequest(() =>
           services.missoesService.getAllMissoes({ orgao: orgaoParam }));
-        const missionPanoramaPromise = makeRequest(() => 
+        const missionPanoramaPromise = makeRequest(() =>
           services.dashboardService.getMissionPanorama({ orgao: orgaoParam }));
-        const mapPanoramaPromise = makeRequest(() => 
+        const mapPanoramaPromise = makeRequest(() =>
           services.dashboardService.getMapPanorama({ orgao: orgaoParam }));
-        
+
         // Definir estados de carregamento
         setLoading('municipios', true);
         setLoading('missoes', true);
         setLoading('missionPanorama', true);
         setLoading('mapPanorama', true);
-        
+
         // Aguardar todas as requisições serem concluídas
-        const [municipiosResponse, missoesResponse, missionPanoramaResponse, mapPanoramaResponse] = 
+        const [municipiosResponse, missoesResponse, missionPanoramaResponse, mapPanoramaResponse] =
           await Promise.all([municipiosPromise, missoesPromise, missionPanoramaPromise, mapPanoramaPromise]);
-        
+
         // Processar respostas e atualizar estados
         if (municipiosResponse && municipiosResponse.status === 'success' && Array.isArray(municipiosResponse.data)) {
           setMunicipios(municipiosResponse.data);
           dataRef.current.municipios = municipiosResponse.data;
         }
-        
+
         if (missoesResponse && missoesResponse.status === 'success' && Array.isArray(missoesResponse.data)) {
           setMissoes(missoesResponse.data);
           dataRef.current.missoes = missoesResponse.data;
         }
-        
+
         if (missionPanoramaResponse && missionPanoramaResponse.status === 'success' && Array.isArray(missionPanoramaResponse.data)) {
           setMissionPanorama(missionPanoramaResponse.data);
           dataRef.current.missionPanorama = missionPanoramaResponse.data;
         }
-        
+
         if (mapPanoramaResponse && mapPanoramaResponse.status === 'success' && mapPanoramaResponse.data) {
           console.log('Map panorama data:', mapPanoramaResponse.data);
           setMapPanorama(mapPanoramaResponse.data);
@@ -191,7 +191,7 @@ export default function HomePage() {
         setLoading('mapPanorama', false);
       }
     };
-    
+
     fetchInitialData();
   }, []);
 
@@ -201,12 +201,12 @@ export default function HomePage() {
     if (searchTimerRef.current) {
       clearTimeout(searchTimerRef.current);
     }
-    
+
     // Set a new timer
     searchTimerRef.current = setTimeout(() => {
       setDebouncedSearch(municipioSearch);
     }, 800); // 500ms delay
-    
+
     // Cleanup function
     return () => {
       if (searchTimerRef.current) {
@@ -224,10 +224,10 @@ export default function HomePage() {
   const fetchMunicipios = async () => {
     try {
       setLoading('municipios', true);
-      const response = await makeRequest(() => 
+      const response = await makeRequest(() =>
         services.municipiosService.getAllMunicipios({ orgao: orgaoParam }));
       setLoading('municipios', false);
-      
+
       if (response && response.status === 'success' && Array.isArray(response.data)) {
         setMunicipios(response.data);
         dataRef.current.municipios = response.data;
@@ -243,10 +243,10 @@ export default function HomePage() {
   const fetchMissoes = async () => {
     try {
       setLoading('missoes', true);
-      const response = await makeRequest(() => 
+      const response = await makeRequest(() =>
         services.missoesService.getAllMissoes({ orgao: orgaoParam }));
       setLoading('missoes', false);
-      
+
       if (response && response.status === 'success' && Array.isArray(response.data)) {
         setMissoes(response.data);
         dataRef.current.missoes = response.data;
@@ -262,10 +262,10 @@ export default function HomePage() {
   const fetchMissionPanorama = async () => {
     try {
       setLoading('missionPanorama', true);
-      const response = await makeRequest(() => 
+      const response = await makeRequest(() =>
         services.dashboardService.getMissionPanorama({ orgao: orgaoParam }));
       setLoading('missionPanorama', false);
-      
+
       if (response && response.status === 'success' && Array.isArray(response.data)) {
         setMissionPanorama(response.data);
         dataRef.current.missionPanorama = response.data;
@@ -281,10 +281,10 @@ export default function HomePage() {
   const fetchMapPanorama = async () => {
     try {
       setLoading('mapPanorama', true);
-      const response = await makeRequest(() => 
+      const response = await makeRequest(() =>
         services.dashboardService.getMapPanorama({ orgao: orgaoParam }));
       setLoading('mapPanorama', false);
-      
+
       if (response && response.status === 'success' && response.data) {
         console.log('Map panorama data:', response.data);
         setMapPanorama(response.data);
@@ -308,19 +308,19 @@ export default function HomePage() {
         sortDirection: sortDirection,
         orgao: orgaoParam
       };
-      
+
       // Add municipio search if provided
       if (debouncedSearch.trim()) {
         params.municipioSearch = debouncedSearch.trim();
       }
-      
+
       const response = await makeRequest(() => services.eventosService.getEventos(params));
       setLoading('eventos', false);
-      
+
       if (response && response.status === 'success' && Array.isArray(response.data)) {
         setEventos(response.data);
         dataRef.current.eventos = response.data;
-        
+
         if (response.pagination) {
           setTotalPages(response.pagination.pages);
         }
@@ -337,13 +337,13 @@ export default function HomePage() {
     if (dataRef.current.municipioCache[codIbge]) {
       return dataRef.current.municipioCache[codIbge];
     }
-    
+
     try {
       setLoading('municipio', true);
-      const response = await makeRequest(() => 
+      const response = await makeRequest(() =>
         services.municipiosService.getMunicipioByIbge(codIbge, { orgao: orgaoParam }));
       setLoading('municipio', false);
-      
+
       if (response && response.status === 'success') {
         // Save to cache
         const updatedCache = {...dataRef.current.municipioCache, [codIbge]: response};
@@ -355,7 +355,7 @@ export default function HomePage() {
       setError('municipio', error);
       setLoading('municipio', false);
     }
-    
+
     return null;
   };
 
@@ -369,32 +369,32 @@ export default function HomePage() {
     try {
       console.log('Starting to fetch mission panorama for ID:', missionId);
       setSelectedMissao(missionId);
-      
+
       // Check if we already have data for this mission in the cache
       if (dataRef.current.missionPanoramaCache[missionId]) {
         console.log('Using cached mission panorama data for ID:', missionId);
         setMissionPanoramaById(dataRef.current.missionPanoramaCache[missionId]);
         return;
       }
-      
+
       setLoading('missionPanoramaById', true);
-      const response = await makeRequest(() => 
+      const response = await makeRequest(() =>
         services.dashboardService.getMissionPanoramaById(missionId)
       );
       setLoading('missionPanoramaById', false);
-      
+
       console.log('Mission panorama API response:', response);
-      
+
       if (response && response.status === 'success') {
         console.log('Setting mission panorama data:', response.data);
-        
+
         // Check if response has the expected structure or format it correctly
         let formattedData = response.data;
-        
+
         // If data is missing the expected arrays, create a structure that matches what the map component expects
         if (!formattedData.completedMunicipios || !formattedData.startedMunicipios || !formattedData.pendingMunicipios) {
           console.log('Restructuring mission panorama data to expected format');
-          
+
           // Create a properly structured object based on what we received
           formattedData = {
             missao: { id: missionId },
@@ -402,16 +402,16 @@ export default function HomePage() {
             startedMunicipios: formattedData.startedMunicipios || formattedData.started || [],
             pendingMunicipios: formattedData.pendingMunicipios || formattedData.pending || []
           };
-          
+
           console.log('Reformatted data:', formattedData);
         }
-        
+
         // Store in cache and set current data
         const updatedCache = {...dataRef.current.missionPanoramaCache, [missionId]: formattedData};
         dataRef.current.missionPanoramaCache = updatedCache;
         setMissionPanoramaById(formattedData);
       }
-      
+
       // If there's a selected municipality, we need to refetch its data to update mission-specific information
       if (selectedMunicipio && selectedMunicipio !== "all" && selectedMunicipio !== "") {
         if (selectedMunicipio.codIbge) {
@@ -430,17 +430,17 @@ export default function HomePage() {
   // Handle municipality selection change
   const handleMunicipioChange = (event) => {
     const codIbge = event.target.value;
-    
+
     if (!codIbge || codIbge === "") {
       setSelectedMunicipio(null);
       return;
     }
-    
+
     if (codIbge === "all") {
       setSelectedMunicipio({ codIbge: "all", nome: `Todas as ${getOrgaoText('prefeituras', 'câmaras')}` });
       return;
     }
-    
+
     // Find the municipio in our list
     const municipio = municipios.find(m => m.codIbge === codIbge);
     if (municipio) {
@@ -452,19 +452,19 @@ export default function HomePage() {
   // Handle municipality selection from map
   const handleMapMunicipioSelect = (codIbge) => {
     // IDs already come with prefixes like "CAMARA-" or "PREFEITURA-"
-    
+
     // If the same municipality is already selected, don't make another API call
-    if (selectedMunicipio?.codIbge === codIbge && 
+    if (selectedMunicipio?.codIbge === codIbge &&
         (dataRef.current.municipioCache[codIbge] || nonParticipantMunicipio)) {
       return;
     }
-    
+
     // Clear any previous non-participant data
     setNonParticipantMunicipio(null);
-    
+
     // Find the municipio in our list using the ID with prefix
     const municipio = municipios.find(m => m.codIbge === codIbge);
-    
+
     if (municipio) {
       // Set the selected municipio using the full object
       setSelectedMunicipio(municipio);
@@ -475,9 +475,9 @@ export default function HomePage() {
         codIbge: codIbge,
         nome: `Município ${codIbge}`
       };
-      
+
       setSelectedMunicipio(basicMunicipio);
-      
+
       // Try to fetch data anyway, might be a municipality that doesn't participate yet
       fetchMunicipioByIbge(codIbge)
         .then(response => {
@@ -485,7 +485,7 @@ export default function HomePage() {
             // The API request failed, which might mean this municipality doesn't exist
             // or doesn't participate in the pacto
             console.log("Municipality data not found, creating placeholder");
-            
+
             // Create a non-participant municipality data object
             const placeholder = {
               codIbge: codIbge,
@@ -495,7 +495,7 @@ export default function HomePage() {
               badges: 0,
               missoes: []
             };
-            
+
             setNonParticipantMunicipio(placeholder);
           }
         });
@@ -527,7 +527,7 @@ export default function HomePage() {
 
   // Get mission details by ID
   const getMissionDetails = (missionId) => {
-    return missoes.find(mission => mission.id === missionId) || { 
+    return missoes.find(mission => mission.id === missionId) || {
       descricao_da_missao: "Compromisso não encontrado",
       descricao_da_categoria: "Categoria não encontrada",
       qnt_pontos: 0
@@ -540,7 +540,7 @@ export default function HomePage() {
     const now = new Date()
     const diffTime = Math.abs(now - date)
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-    
+
     if (diffDays === 0) {
       return "Hoje"
     } else if (diffDays <= 7) {
@@ -554,11 +554,11 @@ export default function HomePage() {
   const getMissionProgress = useMemo(() => {
     return (missionId) => {
       const panoramaItem = missionPanorama.find(item => item.missao.id === missionId)
-      
+
       if (panoramaItem) {
         return `${panoramaItem.countValid}/${panoramaItem.totalMunicipios}`
       }
-      
+
       return "0/184" // Default fallback
     }
   }, [missionPanorama]);
@@ -572,7 +572,7 @@ export default function HomePage() {
         </Box>
       );
     }
-    
+
     if (errorStates.missoes || errorStates.missionPanorama) {
       return (
         <Grid item xs={12}>
@@ -582,7 +582,7 @@ export default function HomePage() {
         </Grid>
       );
     }
-    
+
     return missoes.map((missao) => (
       <Grid item sm={12} md={6} lg={4} key={missao.id}>
         <MissionCard
@@ -595,11 +595,11 @@ export default function HomePage() {
         />
       </Grid>
     ));
-  }, [missoes, selectedMissao, loadingStates.missoes, loadingStates.missionPanorama, 
+  }, [missoes, selectedMissao, loadingStates.missoes, loadingStates.missionPanorama,
       errorStates.missoes, errorStates.missionPanorama, getMissionProgress]);
 
   // Memoize the MunicipioPreview component
-  const memoizedMunicipioPreview = useMemo(() => {    
+  const memoizedMunicipioPreview = useMemo(() => {
     return (
       <MunicipioPreview
         codIbge={selectedMunicipio?.codIbge}
@@ -612,7 +612,7 @@ export default function HomePage() {
   return (
     <Container maxWidth={false} sx={{ py: { xs: 2, sm: 3, md: 4 }, width: '100%', border: '1px solid black', backgroundColor: '#ffffff' }}>
       {showMunicipioPage || codIbgeParam ? (
-        <MunicipioPage 
+        <MunicipioPage
           ibge={selectedMunicipio?.codIbge || codIbgeParam}
           onBack={handleBackFromMunicipioPage}
         />
@@ -625,7 +625,7 @@ export default function HomePage() {
             elevation={1}
             sx={{
               display: "flex",
-              flexDirection: { sm: "column", md: "row" },
+              flexDirection: { xs: "column", md: "row" },
               mb: { xs: 4, sm: 5, md: 6 },
               border: "1px solid #D3D3D3",
               borderRadius: 1,
@@ -750,7 +750,7 @@ export default function HomePage() {
               </Box>
             </Box>
           </Paper>
-    
+
           {/* Main Content */}
           <Typography
             variant="h5"
@@ -782,7 +782,7 @@ export default function HomePage() {
           <Grid container spacing={3} sx={{ mb: { xs: 4, sm: 5, md: 6 } }}>
             {/* Map Section */}
 
-            
+
             <Grid item xs={12} md={8}>
               <Paper
                 elevation={1}
@@ -794,27 +794,27 @@ export default function HomePage() {
                   alignItems: "center",
                 }}
               >
-                <BrazilMap 
-                  missionPanoramaData={missionPanoramaById} 
+                <BrazilMap
+                  missionPanoramaData={missionPanoramaById}
                   selectedMunicipio={selectedMunicipio?.codIbge}
                   onMunicipioSelect={handleMapMunicipioSelect}
                   levelDistribution={mapPanorama?.desempenho?.levelDistribution}
                 />
               </Paper>
-              
+
             </Grid>
 
 {isTablet && (
   <Grid item xs={12} md={12}>
-    <MapLegend 
+    <MapLegend
       selectedMissao={selectedMissao}
-      levelDistribution={mapPanorama?.desempenho?.levelDistribution} 
+      levelDistribution={mapPanorama?.desempenho?.levelDistribution}
     />
   </Grid>
 )}
 
 
-    
+
             {/* Municipality Details */}
             <Grid item xs={12} md={4}>
               {selectedMissao && (
@@ -851,12 +851,12 @@ export default function HomePage() {
                   </Button>
                 </Box>
               )}
-    
+
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: { xs: 1, sm: 1.5, md: 2 }, mb: { xs: 2, sm: 2.5, md: 3 } }}>
               <InputLabel htmlFor="my-input" sx={{ fontWeight: "500", color: "#333333", fontSize: { xs: "0.875rem", sm: "1rem", md: "1.25rem", lg: "1.5rem" } }}>{getOrgaoText('Prefeituras', 'Câmaras')}</InputLabel>
-                <FormControl 
-                  fullWidth 
-                  variant="outlined" 
+                <FormControl
+                  fullWidth
+                  variant="outlined"
                 >
                   <InputLabel id="municipio-select-label"
                   sx={{
@@ -924,11 +924,11 @@ export default function HomePage() {
                     <MenuItem value="all">Todas as {getOrgaoText('prefeituras', 'câmaras')}</MenuItem>
                   </Select>
                 </FormControl>
-                
+
                 {selectedMunicipio && (
                   <Button
                   variant="contained"
-                  
+
                     onClick={() => {
                       setSelectedMunicipio(null);
                       setMissionPanoramaById(null);
@@ -951,22 +951,22 @@ export default function HomePage() {
                   </Button>
                 )}
               </Box>
-              
+
               {memoizedMunicipioPreview}
             </Grid>
           </Grid>
-    
+
           {/* Mobile Legend - Only shows on mobile */}
-    
+
           {/* Interactive Map */}
-         
-    
+
+
           {errorStates.municipios && (
             <Alert severity="error" sx={{ mb: 2 }}>
               Ocorreu um erro ao carregar os dados dos municípios: {errorStates.municipios.message}
             </Alert>
           )}
-    
+
           {/* Missions */}
           <Typography
             variant="h5"
@@ -995,11 +995,11 @@ export default function HomePage() {
             para visualizar no mapa interativo os municípios que já completaram, estão em curso ou ainda não iniciaram esse
             compromisso.
           </Typography>
-    
+
           <Grid container spacing={8} sx={{ mb: { xs: 4, sm: 5, md: 6 }, mt: { xs: 1, sm: 2, md: 3 } }}>
             {missionCardsGrid}
           </Grid>
-    
+
           {/* Recent Progress */}
           <Typography
             variant="h5"
@@ -1034,8 +1034,8 @@ export default function HomePage() {
             </Box>
             .
           </Typography>
-    
-          <Box display="flex" flexDirection="row" alignItems="center" sx={{ mb: 3, display: "flex", flexDirection: "row", border: "0.0625rem solid #d3d3d3", borderRadius: 1, p: 2 }}>
+
+          <Box display="flex" flexDirection="row" alignItems="center" sx={{ mb: 3, display: "flex", flexDirection: {xs: "column",md: "row"}, border: "0.0625rem solid #d3d3d3", borderRadius: 1, p: 2 }}>
             <Box>
             <Typography
               variant="body2"
@@ -1096,14 +1096,14 @@ export default function HomePage() {
               </Button>
             </Box>
           </Box>
-    
+
           <Box container spacing={2} display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3,backgroundColor: "#FFFFFF" }}>
             <Box width={"30%"} sx={{minWidth: "9.375rem"}}>
-              <InputLabel 
-                htmlFor="municipio-search" 
-                sx={{ 
-                  fontWeight: "400", 
-                  color: "#333333", 
+              <InputLabel
+                htmlFor="municipio-search"
+                sx={{
+                  fontWeight: "400",
+                  color: "#333333",
                   fontSize: { xs: "0.875rem", sm: "1rem", md: "1.25rem", lg: "1.5rem" },
                   mb: 1
                 }}
@@ -1246,7 +1246,7 @@ export default function HomePage() {
               </Box>
             </Box>
           </Box>
-    
+
           {/* Pagination */}
           <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 2, sm: 2.5, md: 3 }, mb: { xs: 3, sm: 3.5, md: 4 }}}>
             {loadingStates.eventos ? (
@@ -1280,7 +1280,7 @@ export default function HomePage() {
               })
             )}
           </Box>
-    
+
           {/* Pagination */}
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Pagination

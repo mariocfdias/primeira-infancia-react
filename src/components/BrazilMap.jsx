@@ -43,18 +43,18 @@ const LegendDescription = ({ backgroundColor, color, description, number, title 
           {number}
           {(title === "Concluída" || title === "Nível 3" || title === "Concluído") ? <StarIcon style={{ color: "#FCBA38" }}/> : ""}
       </Box>
-      <Box sx={{ 
-        display: "flex", 
+      <Box sx={{
+        display: "flex",
         flexDirection: "column",
         flex: 1,
         minHeight: 40
       }}>
         {title && (
-          <Typography 
-            variant="body2" 
-            sx={{ 
-              fontSize: "1rem", 
-              fontWeight: "medium", 
+          <Typography
+            variant="body2"
+            sx={{
+              fontSize: "1rem",
+              fontWeight: "medium",
               lineHeight: 1.2,
               mb: 0.5
             }}
@@ -62,10 +62,10 @@ const LegendDescription = ({ backgroundColor, color, description, number, title 
             {title}
           </Typography>
         )}
-        <Typography 
-          variant="body2" 
-          sx={{ 
-            fontSize: "0.85rem", 
+        <Typography
+          variant="body2"
+          sx={{
+            fontSize: "0.85rem",
             lineHeight: 1.2,
             color: "#525252"
           }}
@@ -89,26 +89,26 @@ const MapLegendInternal = ({ selectedMissao, levelDistribution, missionPanoramaD
   // Get counts for mission status
   const getMissionCounts = () => {
     if (!missionPanoramaData) return { completed: 0, inProgress: 0, pending: 0, notParticipating: 0 };
-    
+
     console.log('Mission Panorama Data:', missionPanoramaData);
-    
+
     // Check data structure
-    const completedMunicipios = Array.isArray(missionPanoramaData.completedMunicipios) ? 
-      missionPanoramaData.completedMunicipios : 
+    const completedMunicipios = Array.isArray(missionPanoramaData.completedMunicipios) ?
+      missionPanoramaData.completedMunicipios :
       missionPanoramaData.completed || [];
-      
+
     const startedMunicipios = Array.isArray(missionPanoramaData.startedMunicipios) ?
       missionPanoramaData.startedMunicipios :
       missionPanoramaData.started || [];
-      
+
     const pendingMunicipios = Array.isArray(missionPanoramaData.pendingMunicipios) ?
       missionPanoramaData.pendingMunicipios :
       missionPanoramaData.pending || [];
-    
+
     console.log('Completed municipalities:', completedMunicipios);
     console.log('Started municipalities:', startedMunicipios);
     console.log('Pending municipalities:', pendingMunicipios);
-    
+
     // When dealing with prefixed IDs, we need to count unique original IDs
     const extractOriginalId = (mun) => {
       if (typeof mun === 'string') {
@@ -116,29 +116,29 @@ const MapLegendInternal = ({ selectedMissao, levelDistribution, missionPanoramaD
       }
       return mun.codIbge;
     };
-    
+
     // Count unique municipalities by their original ID
     const countUniqueByOriginalId = (municipalities) => {
       if (!Array.isArray(municipalities)) return 0;
-      
+
       const uniqueIds = new Set();
       municipalities.forEach(mun => {
         uniqueIds.add(extractOriginalId(mun));
       });
-      
+
       return uniqueIds.size;
     };
-    
+
     const completed = countUniqueByOriginalId(completedMunicipios);
     const inProgress = countUniqueByOriginalId(startedMunicipios);
     const pending = countUniqueByOriginalId(pendingMunicipios);
-    
+
     // Get not participating count directly from levelDistribution
     const notParticipating = levelDistribution?.find(l => l.level === "NP")?.count || 0;
 
     const counts = { completed, inProgress, pending, notParticipating };
     console.log('Final counts:', counts);
-    
+
     return counts;
   };
 
@@ -176,25 +176,25 @@ const MapLegendInternal = ({ selectedMissao, levelDistribution, missionPanoramaD
       >
         {selectedMissao ? "Legenda do Compromisso" : "Legenda"}
       </Typography>
-      
+
       {selectedMissao ? (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          <LegendDescription 
+          <LegendDescription
             backgroundColor="#12447F"
             title="Concluído"
             number={missionCounts.completed}
           />
-          <LegendDescription 
+          <LegendDescription
             backgroundColor="#72C576"
             title="Em Ação"
             number={missionCounts.inProgress}
           />
-          <LegendDescription 
+          <LegendDescription
             backgroundColor="#9F9F9F"
             title="Não Iniciado"
             number={missionCounts.pending}
           />
-          <LegendDescription 
+          <LegendDescription
             backgroundColor="#ffffff"
             color="#525252"
             title="Não aderiram o Pacto"
@@ -203,31 +203,31 @@ const MapLegendInternal = ({ selectedMissao, levelDistribution, missionPanoramaD
         </Box>
       ) : (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          <LegendDescription 
+          <LegendDescription
             backgroundColor="#707070"
             title="Não iniciado"
             description="Município sem pontos"
             number={level0Count}
           />
-          <LegendDescription 
+          <LegendDescription
             backgroundColor="#50B755"
             title="Nível 1"
             description="Entre 1 e 100 pontos"
             number={level1Count}
           />
-          <LegendDescription 
+          <LegendDescription
             backgroundColor="#066829"
             title="Nível 2"
             description="Entre 101 e 199 pontos"
             number={level2Count}
           />
-          <LegendDescription 
+          <LegendDescription
             backgroundColor="#12447f"
             title="Concluído"
             description="200 pontos"
             number={level3Count}
           />
-          <LegendDescription 
+          <LegendDescription
             backgroundColor="white"
             color="#525252"
             title="Não aderiram o Pacto"
@@ -283,24 +283,24 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
     if (missionPanoramaData?.completedMunicipios) {
       console.log('Number of completed municipalities:', missionPanoramaData.completedMunicipios.length);
       const newMarkers = [];
-      
+
       missionPanoramaData.completedMunicipios.forEach((municipality) => {
         // Get the codIbge from the municipality object or use it directly if it's a string
-        const originalId = typeof municipality === 'string' ? 
+        const originalId = typeof municipality === 'string' ?
           municipality : municipality.codIbge;
-          
+
         if (!originalId) {
           console.log('Municipality data is invalid:', municipality);
           return;
         }
 
         console.log('Processing completed municipality with ID:', originalId);
-        
+
         // Look for the feature with the ID directly since they already have prefixes
-        const feature = geoJsonData.features.find(f => 
+        const feature = geoJsonData.features.find(f =>
           f.properties.id === originalId
         );
-        
+
         if (feature) {
           console.log('Found matching feature for municipality:', originalId);
           const center = getMunicipalityCenter(feature);
@@ -324,28 +324,28 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
     else if (levelDistribution && !missionPanoramaData) {
       console.log('Adding markers for level 3 municipalities');
       const level3Data = levelDistribution.find(l => l.level === 3);
-      
+
       if (level3Data && Array.isArray(level3Data.municipios)) {
         console.log('Number of level 3 municipalities:', level3Data.municipios.length);
         const newMarkers = [];
-        
+
         level3Data.municipios.forEach(municipality => {
           // Extract codIbge from municipality object
-          const originalId = typeof municipality === 'string' ? 
+          const originalId = typeof municipality === 'string' ?
             municipality : municipality.codIbge;
-            
+
           if (!originalId) {
             console.log('Level 3 municipality data is invalid:', municipality);
             return;
           }
-          
+
           console.log('Processing level 3 municipality with ID:', originalId);
-          
+
           // Look for the feature with the ID directly
-          const feature = geoJsonData.features.find(f => 
+          const feature = geoJsonData.features.find(f =>
             f.properties.id === originalId
           );
-          
+
           if (feature) {
             console.log('Found matching feature for level 3 municipality:', originalId);
             const center = getMunicipalityCenter(feature);
@@ -361,7 +361,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
             console.log('No matching feature found for level 3 municipality:', originalId);
           }
         });
-        
+
         console.log('Setting new markers for level 3 municipalities:', newMarkers);
         setCompletedMarkers(newMarkers);
       }
@@ -376,7 +376,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
   // Check if a municipality is in a specific level group
   const isMunicipioInLevel = (codIbge, levelData) => {
     if (!levelData || !Array.isArray(levelData.municipios)) return false;
-    
+
     // IDs already come with prefixes like "CAMARA-" or "PREFEITURA-"
     return levelData.municipios.some(mun => mun.codIbge === codIbge);
   };
@@ -390,21 +390,21 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
   // Get mission status for a municipality
   const getMissionStatus = (codIbge) => {
     if (!missionPanoramaData) return "not_available";
-    
+
     // IDs already have prefixes like "CAMARA-" or "PREFEITURA-"
-    
+
     // Check in completed municipios
-    if (Array.isArray(missionPanoramaData.completedMunicipios) && 
+    if (Array.isArray(missionPanoramaData.completedMunicipios) &&
         missionPanoramaData.completedMunicipios.some(mun => mun.codIbge === codIbge)) {
       return "completed";
     }
-    
+
     // Check in started municipios
-    if (Array.isArray(missionPanoramaData.startedMunicipios) && 
+    if (Array.isArray(missionPanoramaData.startedMunicipios) &&
         missionPanoramaData.startedMunicipios.some(mun => mun.codIbge === codIbge)) {
       return "in_progress";
     }
-    
+
     // Default to pending
     return "pending";
   };
@@ -412,9 +412,9 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
   // Get level for a municipality
   const getMunicipioLevel = (codIbge) => {
     if (!levelDistribution) return null;
-    
+
     // IDs already come with prefixes
-    
+
     // Check in each level
     for (let levelData of levelDistribution) {
       if (levelData && Array.isArray(levelData.municipios)) {
@@ -425,7 +425,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
         }
       }
     }
-    
+
     return null;
   };
 
@@ -434,16 +434,16 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
     const codIbge = feature.properties.id;
 
     const isSelected = codIbge === selectedMunicipioCode;
-    
+
     let color = "#9F9F9F"; // Default gray color
     let fillColor = "#9F9F9F";
     let fillOpacity = 1;
-    
+
     // If we have mission panorama data, color based on mission status
     if (missionPanoramaData) {
       console.log({missionPanoramaData})
       const status = getMissionStatus(codIbge);
-      
+
       switch(status) {
         case "completed":
           color = "#FFFFFF"; // Blue for completed
@@ -470,7 +470,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
           fillColor = "#FFFFFF";
           fillOpacity = 0.0;
       }
-    } 
+    }
     // If we have level distribution data, color based on level
     else if (levelDistribution) {
       const level = getMunicipioLevel(codIbge);
@@ -519,7 +519,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
       fillColor = "#FFA500";
       fillOpacity = 0.7;
     }
-    
+
     return {
       weight: isSelected ? 3 : 1,
       dashArray: "",
@@ -534,13 +534,13 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
   const onEachFeature = (feature, layer) => {
     const codIbge = feature.properties.id;
     const municipioName = getMunicipioName(codIbge, feature);
-    
+
     // Create tooltip content
     if (missionPanoramaData) {
       // If showing mission panorama, include mission status in tooltip
       const missionStatus = getMissionStatus(codIbge);
       let statusText;
-      
+
       switch(missionStatus) {
         case "completed":
           statusText = "Concluída";
@@ -557,7 +557,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
         default:
           statusText = "Não disponível";
       }
-      
+
       layer.bindTooltip(`
         <div>
           <strong>${municipioName}</strong>
@@ -570,7 +570,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
       const level = getMunicipioLevel(codIbge);
       let status = "Não disponível";
       let points = "0";
-      
+
       if (level === "NP") {
         status = "Não participante";
       } else if (level === 0) {
@@ -589,14 +589,10 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
         status = "Sem dados";
         points = "N/A";
       }
-      
+
       layer.bindTooltip(`
         <div>
           <strong>${municipioName}</strong>
-          <br>
-          Status: ${status}
-          <br>
-          Pontos: ${points}
         </div>
       `);
     } else {
@@ -604,12 +600,10 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
       layer.bindTooltip(`
         <div>
           <strong>${municipioName}</strong>
-          <br>
-          Status: Sem dados
         </div>
       `);
     }
-    
+
     // Add click handler to select a municipality
     layer.on({
       click: () => {
@@ -646,7 +640,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
   useEffect(() => {
     if (geoJsonRef.current && missionPanoramaData === null && levelDistribution) {
       console.log('Mission panorama data reset to null - reverting to level distribution view' + {levelDistribution});
-      
+
       // Force a redraw to show level distribution data
       geoJsonRef.current.setStyle(feature => getFeatureStyle(feature));
     }
@@ -656,7 +650,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
   useEffect(() => {
     if (!geoJsonRef.current || !mapRef.current) return;
 
-    // Remove fit bounds functionality 
+    // Remove fit bounds functionality
   }, [geoJsonData, isMobile]);
 
   // Component to handle markers
@@ -668,7 +662,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
           // Encontrar o nome do município para o tooltip
           const feature = geoJsonData.features.find(f => f.properties.id === marker.id);
           const municipioName = feature ? feature.properties.name : `Município ${marker.id}`;
-          
+
           return (
             <Marker
               key={marker.id}
@@ -711,7 +705,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
         }
       }}
     >
-      <MapContainer 
+      <MapContainer
         center={[-5.5, -39.3]}
         zoom={7.3}
         style={{ width: "100%", height: "100%" }}
@@ -740,8 +734,8 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
           crossOrigin={true}
         />
         {geoJsonData && (
-          <GeoJSON 
-            data={geoJsonData} 
+          <GeoJSON
+            data={geoJsonData}
             style={getFeatureStyle}
             onEachFeature={onEachFeature}
             ref={geoJsonRef}
@@ -749,10 +743,10 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
         )}
         <MarkersList />
       </MapContainer>
-      
+
       {/* Show legend inside the map for non-mobile */}
-      {!isMobile && <MapLegendInternal 
-        selectedMissao={missionPanoramaData ? true : null} 
+      {!isMobile && <MapLegendInternal
+        selectedMissao={missionPanoramaData ? true : null}
         levelDistribution={levelDistribution}
         missionPanoramaData={missionPanoramaData}
       />}
@@ -766,7 +760,7 @@ export default function BrazilMap({ missionPanoramaData, selectedMunicipio, onMu
   const [geoJsonData, setGeoJsonData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [hasWindow, setHasWindow] = useState(false)
-  
+
   // Add this to get access to URL parameters
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
@@ -776,7 +770,7 @@ export default function BrazilMap({ missionPanoramaData, selectedMunicipio, onMu
   useEffect(() => {
     console.log('BrazilMap received missionPanoramaData:', missionPanoramaData);
     console.log('BrazilMap received levelDistribution:', levelDistribution);
-    
+
     // Log when reverting from mission panorama to level distribution view
     if (missionPanoramaData === null && levelDistribution) {
       console.log('Reverting from mission view to level distribution view');
@@ -812,7 +806,7 @@ export default function BrazilMap({ missionPanoramaData, selectedMunicipio, onMu
               return feature;
             })
           };
-          
+
           console.log('Processed GeoJSON data with orgaoParam prefix:', processedData);
           setGeoJsonData(processedData);
         } else {
@@ -855,11 +849,11 @@ export default function BrazilMap({ missionPanoramaData, selectedMunicipio, onMu
     >
       {hasWindow && (
         <>
-          <Box 
-            sx={{ 
-              position: "absolute", 
-              top: 10, 
-              left: 10, 
+          <Box
+            sx={{
+              position: "absolute",
+              top: 10,
+              left: 10,
               zIndex: 1000,
               backgroundColor: "rgba(255, 255, 255, 0.8)",
               padding: "6px 10px",
@@ -871,22 +865,22 @@ export default function BrazilMap({ missionPanoramaData, selectedMunicipio, onMu
             }}
           >
             <Typography variant="caption" sx={{ display: "flex", alignItems: "center" }}>
-              <Box 
-                component="span" 
-                sx={{ 
-                  display: "inline-block", 
-                  width: 10, 
-                  height: 10, 
-                  borderRadius: "50%", 
+              <Box
+                component="span"
+                sx={{
+                  display: "inline-block",
+                  width: 10,
+                  height: 10,
+                  borderRadius: "50%",
                   backgroundColor: "#12447f",
                   mr: 1
-                }} 
+                }}
               />
               Clique em um município para selecioná-lo
             </Typography>
           </Box>
-          <LeafletMap 
-            geoJsonData={geoJsonData} 
+          <LeafletMap
+            geoJsonData={geoJsonData}
             isMobile={isMobile}
             missionPanoramaData={missionPanoramaData}
             selectedMunicipioCode={selectedMunicipio}
