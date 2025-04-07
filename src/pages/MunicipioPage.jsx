@@ -14,7 +14,7 @@ export default function MunicipioPage({ onBack, ibge }) {
   const urlParams = new URLSearchParams(location.search);
   const codIbge = urlParams.get('codIbge');
   const orgaoParam = urlParams.get('orgao');
-  
+
   const [loading, setLoading] = useState(true)
   const [municipioData, setMunicipioData] = useState(null)
   const [desempenhoData, setDesempenhoData] = useState(null)
@@ -23,39 +23,39 @@ export default function MunicipioPage({ onBack, ibge }) {
 
   const formatImageUrl = (imageUrl) => {
     if (!imageUrl) return null;
-    
+
     // Check if it's a Google Drive link (file/d/ format)
     const driveMatch = imageUrl.match(/drive\.google\.com\/file\/d\/(.*?)\/view/);
     if (driveMatch && driveMatch[1]) {
       const imageId = driveMatch[1];
       return `https://lh3.google.com/u/0/d/${imageId}`;
     }
-    
+
     // Check if it's a Google Drive link (uc?export=view&id= format)
     const ucMatch = imageUrl.match(/drive\.google\.com\/uc\?export=view&id=(.*?)(?:&|$)/);
     if (ucMatch && ucMatch[1]) {
       const imageId = ucMatch[1];
       return `https://lh3.google.com/u/0/d/${imageId}`;
     }
-    
+
     // If not a Drive URL, return the original URL
     return imageUrl;
   };
-  
+
   useEffect(() => {
     console.log({codIbge})
   }, [codIbge])
-  
+
   useEffect(() => {
     const fetchMunicipioData = async () => {
       try {
         setLoading(true)
         // Create params object with orgaoParam if available
         const params = orgaoParam ? { orgao: orgaoParam } : {};
-        
+
         // Pass params to API calls
         const response = await services.municipiosService.getMunicipioByIbge(ibge, params)
-        
+
         // Fetch desempenhos for this municipality with orgao parameter
 
         const desempenhosResponse = await services.desempenhosService.getDesempenhosByMunicipio(ibge, params)
@@ -63,7 +63,7 @@ export default function MunicipioPage({ onBack, ibge }) {
         // Process the evidence items directly after fetching
         const processedDesempenhos = desempenhosResponse.data.map(desempenho => {
           let evidenceItems = []
-          
+
           if (desempenho.evidence && Array.isArray(desempenho.evidence)) {
             // If evidence is already an array, use it directly
             evidenceItems = desempenho.evidence.map((item, index) => ({
@@ -77,10 +77,10 @@ export default function MunicipioPage({ onBack, ibge }) {
             // If evidence is in missao.evidencias
             try {
               // Check if evidencias is already an array or needs parsing
-              const evidenciasData = typeof desempenho.missao.evidencias === 'string' 
-                ? JSON.parse(desempenho.missao.evidencias) 
+              const evidenciasData = typeof desempenho.missao.evidencias === 'string'
+                ? JSON.parse(desempenho.missao.evidencias)
                 : desempenho.missao.evidencias;
-                
+
               evidenceItems = evidenciasData.map((item, index) => ({
                 id: index + 1,
                 title: item.titulo,
@@ -91,20 +91,20 @@ export default function MunicipioPage({ onBack, ibge }) {
               console.error("Failed to parse evidencias:", e)
             }
           }
-          
+
           // Return the processed desempenho with evidence items
           return {
             ...desempenho,
             processedEvidence: evidenceItems
           }
         })
-        
+
         // Combine the data
         const combinedData = {
           ...response.data,
           desempenhos: processedDesempenhos
         }
-        
+
         console.log({combinedData})
         setDesempenhoData(processedDesempenhos)
         setMunicipioData(combinedData)
@@ -115,7 +115,7 @@ export default function MunicipioPage({ onBack, ibge }) {
         setLoading(false)
       }
     }
-    
+
     if (ibge) {
       fetchMunicipioData()
     }
@@ -128,12 +128,12 @@ export default function MunicipioPage({ onBack, ibge }) {
   useEffect(() => {
     console.log({municipioData})
   }, [municipioData])
-  
+
   // Add debug information
   console.log("Loading:", loading)
   console.log("Error:", error)
   console.log("Municipality data:", municipioData)
-  
+
   if (loading) {
     return (
       <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh" }}>
@@ -141,7 +141,7 @@ export default function MunicipioPage({ onBack, ibge }) {
       </Container>
     )
   }
-  
+
   if (error) {
     return (
       <Container>
@@ -168,7 +168,7 @@ export default function MunicipioPage({ onBack, ibge }) {
       </Container>
     )
   }
-  
+
   // Handle case where data is missing
   if (!municipioData) {
     return (
@@ -213,15 +213,15 @@ export default function MunicipioPage({ onBack, ibge }) {
   }, {}) || {}
 
   // Calculate total points and progress
-  const totalPointsAvailable = municipioData?.desempenhos?.reduce((total, desempenho) => 
+  const totalPointsAvailable = municipioData?.desempenhos?.reduce((total, desempenho) =>
     total + parseInt(desempenho.missao.qnt_pontos), 0) || 0
-    
-  const earnedPoints = municipioData?.desempenhos?.reduce((total, desempenho) => 
+
+  const earnedPoints = municipioData?.desempenhos?.reduce((total, desempenho) =>
     desempenho.validation_status === "VALID" ? total + parseInt(desempenho.missao.qnt_pontos) : total, 0) || 0
-  
+
   // Calculate number of emblems earned (categories with all missions completed)
   const categoriasList = Object.values(categorias)
-  const emblemCount = municipioData?.desempenhos?.filter(desempenho => 
+  const emblemCount = municipioData?.desempenhos?.filter(desempenho =>
     desempenho.validation_status === "VALID"
   ).length || 0
 
@@ -338,7 +338,7 @@ export default function MunicipioPage({ onBack, ibge }) {
               <LinearProgress
                 variant="determinate"
                 value={earnedPoints % 100}
-                
+
                 sx={{
                   height: 10,
                   borderRadius: 5,
@@ -362,22 +362,22 @@ export default function MunicipioPage({ onBack, ibge }) {
               </Typography>
                 </Box>
               </Box>
-              <Box sx={{ 
-                display: "flex", 
-                flexDirection: "row", 
+              <Box sx={{
+                display: "flex",
+                flexDirection: "row",
                 justifyContent: isMobile ? "center" : "space-around",
                 alignItems: "center",
-                mb: 4, 
-                pt: 1, 
-                gap: 4 
+                mb: 4,
+                pt: 1,
+                gap: 4
               }}>
-              <NumericIcon 
+              <NumericIcon
                 icon={<Star sx={{ color: "#f5d664", fontSize: { xs: "1.25rem", sm: "1.5rem", lg: "3rem" } }} />}
                 number={earnedPoints}
                 description="pontos"
                 sx={{backgroundColor: "#FDF9DE", borderRadius: 2, p: 1}}
               />
-              <NumericIcon 
+              <NumericIcon
                 icon={<WorkspacePremium sx={{ color: "#0076B1", fontSize: { xs: "1.25rem", sm: "1.5rem", lg: "3rem" } }} />}
                 number={emblemCount}
                 description="emblemas"
@@ -387,8 +387,8 @@ export default function MunicipioPage({ onBack, ibge }) {
             </Box>
 
             <Box sx={{ mb: 3 }}>
-            
-           
+
+
             </Box>
 
 
@@ -429,7 +429,7 @@ export default function MunicipioPage({ onBack, ibge }) {
                 "CTG2": "#27884a", // Fortalecimento da Governança
                 "CTG3": "#3f6087", // Melhoria da Gestão de Recursos
               }
-              
+
               return (
                 <Grid item md={4} xs={12} key={categoria.id}>
                   <EmblemCard
@@ -473,7 +473,7 @@ export default function MunicipioPage({ onBack, ibge }) {
             {/* Map through all missions and render MissionEvidenceCard for each */}
             {municipioData.desempenhos.map((desempenho) => {
               // Use the pre-processed evidence items
-              
+
               // Map API status to component status
               let status = "not-started"
               if (desempenho.validation_status === "VALID") {
@@ -481,14 +481,14 @@ export default function MunicipioPage({ onBack, ibge }) {
               } else if (desempenho.validation_status === "STARTED") {
                 status = "in-progress"
               }
-              
+
               return (
                 <MissionEvidenceCard
                   key={desempenho.missaoId}
                   category={desempenho.missao.descricao_da_categoria.toUpperCase()}
                   categoryId={desempenho.missao.categoria}
                   title={desempenho.missao.descricao_da_missao}
-                  status={status}
+                  status={'not-started'}
                   points={parseInt(desempenho.missao.qnt_pontos)}
                   iconUrl={desempenho.missao.emblema_da_categoria || "/placeholder.svg?height=60&width=60"}
                   evidenceItems={desempenho.evidence ||[]}
