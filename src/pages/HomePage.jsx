@@ -668,7 +668,7 @@ export default function HomePage() {
                     mt: { xs: -1, sm: -1, md: -1 }
                   }}
                 >
-                  {getOrgaoText('prefeituras', 'câmaras')}
+                  {getOrgaoText(mapPanorama?.totalParticipatingPrefeituras == 1 ? 'prefeitura' : 'prefeituras', mapPanorama?.totalParticipatingPrefeituras == 1 ? 'câmara' : 'câmaras')}
                 </Typography>
                 <Typography
                   variant="body2"
