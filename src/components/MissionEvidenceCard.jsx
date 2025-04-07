@@ -28,7 +28,7 @@ export default function MissionEvidenceCard({
     if (categoryId) {
       return `/icons/${categoryId}.png`
     }
-    
+
     // Fallback to the provided iconUrl or placeholder
     return "/placeholder.svg"
   }
@@ -70,8 +70,8 @@ export default function MissionEvidenceCard({
     };
 
     // Usar o effectiveStatus em vez do status original
-    const config = statusConfig[effectiveStatus];
-    
+    const config = statusConfig[status];
+
     return (
       <Chip
         icon={config.icon}
@@ -180,9 +180,9 @@ export default function MissionEvidenceCard({
                   ml: 2,
                 }}
               >
-                +{points} 
+                +{points}
               </Typography>
-              <StarRounded sx={{ 
+              <StarRounded sx={{
                   color: "#F6CD54",
                   textShadow: "1px 1px 1px #EE9C06",
                   fontWeight: "bold",
@@ -191,7 +191,7 @@ export default function MissionEvidenceCard({
                  display: "flex",
                  alignItems: "center",
               }} />
-              
+
             </Box>
           </Box>
         </Box>
