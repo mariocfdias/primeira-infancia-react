@@ -443,6 +443,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
     if (missionPanoramaData) {
       console.log({missionPanoramaData})
       const status = getMissionStatus(codIbge);
+      const level = getMunicipioLevel(codIbge);
 
       switch(status) {
         case "completed":
@@ -456,9 +457,15 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
           fillOpacity = 1;
           break;
         case "pending":
-          color = "#FFFFFF"; // Gray for pending
-          fillColor = "#9F9F9F";
-          fillOpacity = 1;
+          if(level === "NP"){
+            color = "#707070"; // Gray for pending
+            fillColor = "#FFFFFF";
+            fillOpacity = 1;
+          }else{
+            color = "#FFFFFF"; // Gray for pending
+            fillColor = "#9F9F9F";
+            fillOpacity = 1;
+          }
           break;
         case "not_available":
           color = "#FFA500"; // Orange for no data
