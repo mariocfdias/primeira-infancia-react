@@ -655,7 +655,7 @@ export default function HomePage() {
                   fontSize: { xs: "2.5rem", sm: "3.5rem", md: "4.75rem", lg: "6rem" },
                 }}
               >
-                {loadingStates.mapPanorama ? <CircularProgress size={24} /> : (mapPanorama?.totalParticipatingPrefeituras || municipios.length || 0)}
+                {loadingStates.mapPanorama ? <CircularProgress size={24} /> : (mapPanorama?.totalParticipatingPrefeituras || 0)}
               </Typography>
               <Box>
                 <Typography
