@@ -474,8 +474,6 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
     // If we have level distribution data, color based on level
     else if (levelDistribution) {
       const level = getMunicipioLevel(codIbge);
-      console.log({levelDistribution})
-      console.log({testededistribuicao: level})
 
       if (level === "NP") {
         // Non-participant municipalities
@@ -484,7 +482,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
         fillOpacity = 0.0;
       } else if (level === 0) {
         // Level 0 - Not started
-        color = "#707070";
+        color = "#FFFFFF";
         fillColor = "#707070";
         fillOpacity = 1;
       } else if (level === 1) {
@@ -561,8 +559,6 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
       layer.bindTooltip(`
         <div>
           <strong>${municipioName}</strong>
-          <br>
-          Status: ${statusText}
         </div>
       `);
     } else if (levelDistribution) {
@@ -607,9 +603,21 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
     // Add click handler to select a municipality
     layer.on({
       click: () => {
+        console.log("click",{codIbge,selectedMunicipioCode})
+
         if (onMunicipioSelect) {
-          // Pass the current codIbge with the orgaoParam prefix to the handler
-          onMunicipioSelect(codIbge);
+          // Se o município clicado já estiver selecionado, remova a seleção
+
+          if (codIbge === selectedMunicipioCode) {
+            console.log('Removendo seleção do município:', codIbge);
+            onMunicipioSelect(null);
+          } else {
+            // Caso contrário, selecione o município
+                    console.log("click",{codIbge,selectedMunicipioCode})
+
+            console.log('Selecionando município:', codIbge);
+            onMunicipioSelect(codIbge);
+          }
         }
       }
     });
@@ -670,9 +678,17 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
               icon={starIcon}
               eventHandlers={{
                 click: () => {
+                  
                   if (onMunicipioSelect) {
-                    // Pass the marker ID with prefix to maintain consistency
-                    onMunicipioSelect(marker.id);
+                    // Se o marcador clicado já estiver selecionado, remova a seleção
+                    if (marker.id === selectedMunicipioCode) {
+                      console.log('Removendo seleção do marcador:', marker.id);
+                      onMunicipioSelect(null);
+                    } else {
+                      // Caso contrário, selecione o município
+                      console.log('Selecionando marcador:', marker.id);
+                      onMunicipioSelect(marker.id);
+                    }
                   }
                 }
               }}
