@@ -2,9 +2,9 @@ import axios from 'axios';
 
 // Determine the base URL based on the environment
 const isProduction = process.env.NODE_ENV === 'production';
-const baseURL = isProduction 
+const baseURL = isProduction
   ? 'https://primeira-infancia-backend.onrender.com/api'
-  : 'http://localhost:3001/api';
+  : "https://primeira-infancia-backend.onrender.com/api"//'http://localhost:3001/api';
 
 // Create an axios instance with default config
 const apiClient = axios.create({
@@ -43,4 +43,4 @@ apiClient.interceptors.response.use(
   }
 );
 
-export default apiClient; 
+export default apiClient;
