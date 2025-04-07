@@ -679,7 +679,7 @@ export default function HomePage() {
                     letterSpacing: "0.01em"
                   }}
                 >
-                  aderiram o Pacto
+                  {mapPanorama?.totalParticipatingPrefeituras == 1 ? "aderiu o Pacto" : "aderiram o Pacto"}
                 </Typography>
               </Box>
             </Box>
