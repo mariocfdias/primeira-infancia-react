@@ -9,6 +9,7 @@ export default function MissionEvidenceCard({
   title,
   status,
   points,
+  linkUrl,
   iconUrl,
   evidenceItems,
   viewOnly = false,
@@ -239,6 +240,8 @@ export default function MissionEvidenceCard({
             <Button
               variant="contained"
               size="medium"
+              onClick={() =>     window.open(linkUrl.link_formulario)
+}
               endIcon={<OpenInNew />}
               sx={{
                 bgcolor: "#12447f",
