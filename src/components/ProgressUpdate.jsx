@@ -26,6 +26,7 @@ export default function ProgressUpdate({
   orgaoCode,
   isMobile = false 
 }) {  
+  console.log({orgaoCode, mission})
   const orgaoName = getOrgaoName(orgaoCode)
   
   const renderMessage = () => {

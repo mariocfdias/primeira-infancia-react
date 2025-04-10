@@ -1275,6 +1275,7 @@ export default function HomePage() {
                 return (
                   <ProgressUpdate
                     key={evento.id}
+                    orgaoCode={evento.municipio?.codIbge}
                     city={evento.municipio?.nome || "Município não encontrado"}
                     eventType={evento.event}
                     mission={missionDetails.descricao_da_missao}
