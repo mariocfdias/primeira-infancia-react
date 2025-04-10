@@ -16,6 +16,10 @@ const eventosService = {
    * @returns {Promise} Promise object representing the API call
    */
   getEventos: async (params = {}) => {
+    // If event filter is null, don't include it in the params
+    if (params.event === null) {
+      delete params.event;
+    }
     return await apiClient.get('/eventos', { params });
   },
 

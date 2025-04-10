@@ -489,7 +489,7 @@ export default function MunicipioPage({ onBack, ibge }) {
                   categoryId={desempenho.missao.categoria}
                   title={desempenho.missao.descricao_da_missao}
                   linkUrl={desempenho.missao}
-                  status={"not-started"}
+                  status={status}
                   points={parseInt(desempenho.missao.qnt_pontos)}
                   iconUrl={desempenho.missao.emblema_da_categoria || "/placeholder.svg?height=60&width=60"}
                   evidenceItems={desempenho.evidence ||[]}

@@ -9,57 +9,64 @@ const getCategoryColor = (category) => {
   return "#333333"
 }
 
-export default function ProgressUpdate({ city, mission, points, badge, date, isMobile = false }) {
-  return (
-    <Paper
-      elevation={2}
-      sx={{
-        p: { xs: 0.5, sm: 1 },
-        borderRadius: 1,
-        backgroundColor: "#FAFAFA",
-        transition: "all 0.2s ease-in-out",
-        "&:hover": {
-          boxShadow: 3,
-        },
-      }}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          alignItems: { xs: "flex-start", sm: "flex-start" },
-          gap: { xs: 1.5, sm: 0 },
-        }}
-      >
-        <Avatar
-          variant="square"
-          sx={{
-            bgcolor: "#12447f",
-            color: "white",
-            fontSize: { xs: "0.65rem", sm: "0.75rem" },
-            width: { xs: 28, sm: 32, md: 40 },
-            height: { xs: 28, sm: 32, md: 40 },
-            mr: { xs: 0, sm: 1.5 },
-            mt: { xs: 0, sm: 0.5 },
-            borderRadius: 1,
-            flexShrink: 0,
-          }}
-        >
-          {city.substring(0, 2).toUpperCase()}
-        </Avatar>
-        <Box sx={{ flex: 1 }}>
-          <Typography
-            sx={{
-              mb: 0.5,
-              fontSize: { xs: "12px", sm: "16px", lg: "18px" },
-              lineHeight: 1.5,
-            }}
-          >
-            Prefeitura de {" "}
+const getOrgaoName = (codIbge) => {
+  if (codIbge && codIbge.includes("PREFEITURA")) return "Prefeitura"
+  if (codIbge && codIbge.includes("CAMARA")) return "Câmara"
+  return "Prefeitura" // default fallback
+}
+
+export default function ProgressUpdate({ 
+  city, 
+  mission, 
+  points, 
+  badge, 
+  date, 
+  url,
+  eventType = "mission_completed", 
+  orgaoCode,
+  isMobile = false 
+}) {  
+  const orgaoName = getOrgaoName(orgaoCode)
+  
+  const renderMessage = () => {
+    switch(eventType) {
+      case "participante_evento":
+        return (
+          <>
+            {orgaoName} de{" "}
             <Typography component="span" sx={{ fontWeight: "bold", fontSize: { xs: "1rem", sm: "1.2rem", md: "1.4rem" } }}>
               {city}
             </Typography>{" "}
-            concluiu a missão "{mission}" e ganhou{" "}
+            está participando do Pacto da Primeira Infância
+          </>
+        )
+      case "mission_started":
+        return (
+          <>
+            {orgaoName} de{" "}
+            <Typography component="span" sx={{ fontWeight: "bold", fontSize: { xs: "1rem", sm: "1.2rem", md: "1.4rem" } }}>
+              {city}
+            </Typography>{" "}
+            progrediu no compromisso "
+            <Typography component="span" sx={{ fontWeight: "bold", fontSize: { xs: "1rem", sm: "1.2rem", md: "1.4rem" } }}>
+              {mission}
+            </Typography>
+            "
+          </>
+        )
+      case "mission_completed":
+      default:
+        return (
+          <>
+            {orgaoName} de{" "}
+            <Typography component="span" sx={{ fontWeight: "bold", fontSize: { xs: "1rem", sm: "1.2rem", md: "1.4rem" } }}>
+              {city}
+            </Typography>{" "}
+            concluiu o compromisso "
+            <Typography component="span" sx={{ fontWeight: "bold", fontSize: { xs: "1rem", sm: "1.2rem", md: "1.4rem" } }}>
+              {mission}
+            </Typography>
+            " e ganhou{" "}
             <Box
               component="span"
               sx={{
@@ -92,6 +99,58 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
                 ml: 0.5,
               }}
             />
+          </>
+        )
+    }
+  }
+
+  return (
+    <Paper
+      elevation={2}
+      sx={{
+        p: { xs: 0.5, sm: 1 },
+        borderRadius: 1,
+        backgroundColor: "#FAFAFA",
+        transition: "all 0.2s ease-in-out",
+        "&:hover": {
+          boxShadow: 3,
+        },
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
+          alignItems: { xs: "flex-start", sm: "flex-start" },
+          gap: { xs: 1.5, sm: 0 },
+        }}
+      >
+        <Avatar
+          variant="square"
+          src={formatImageUrl(url)}
+          sx={{
+            bgcolor: "#12447f",
+            color: "white",
+            fontSize: { xs: "0.65rem", sm: "0.75rem" },
+            width: { xs: 28, sm: 32, md: 40 },
+            height: { xs: 28, sm: 32, md: 40 },
+            mr: { xs: 0, sm: 1.5 },
+            mt: { xs: 0, sm: 0.5 },
+            borderRadius: 1,
+            flexShrink: 0,
+          }}
+        >
+          {city.substring(0, 2).toUpperCase()}
+        </Avatar>
+        <Box sx={{ flex: 1 }}>
+          <Typography
+            sx={{
+              mb: 0.5,
+              fontSize: { xs: "12px", sm: "16px", lg: "18px" },
+              lineHeight: 1.5,
+            }}
+          >
+            {renderMessage()}
           </Typography>
           <Typography
             variant="caption"
@@ -112,10 +171,33 @@ export default function ProgressUpdate({ city, mission, points, badge, date, isM
 
 ProgressUpdate.propTypes = {
   city: PropTypes.string.isRequired,
-  mission: PropTypes.string.isRequired,
-  points: PropTypes.number.isRequired,
-  badge: PropTypes.string.isRequired,
+  mission: PropTypes.string,
+  points: PropTypes.number,
+  badge: PropTypes.string,
   date: PropTypes.string.isRequired,
+  eventType: PropTypes.oneOf(['participante_evento', 'mission_started', 'mission_completed']),
+  orgaoCode: PropTypes.string,
   isMobile: PropTypes.bool
 }
 
+
+const formatImageUrl = (imageUrl) => {
+  if (!imageUrl) return null;
+
+  // Check if it's a Google Drive link (file/d/ format)
+  const driveMatch = imageUrl.match(/drive\.google\.com\/file\/d\/(.*?)\/view/);
+  if (driveMatch && driveMatch[1]) {
+    const imageId = driveMatch[1];
+    return `https://lh3.google.com/u/0/d/${imageId}`;
+  }
+
+  // Check if it's a Google Drive link (uc?export=view&id= format)
+  const ucMatch = imageUrl.match(/drive\.google\.com\/uc\?export=view&id=(.*?)(?:&|$)/);
+  if (ucMatch && ucMatch[1]) {
+    const imageId = ucMatch[1];
+    return `https://lh3.google.com/u/0/d/${imageId}`;
+  }
+
+  // If not a Drive URL, return the original URL
+  return imageUrl;
+};

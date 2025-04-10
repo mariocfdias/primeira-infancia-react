@@ -71,7 +71,7 @@ export default function HomePage() {
   const [mapPanorama, setMapPanorama] = useState(null)
   const [currentPage, setCurrentPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
-  const [eventFilter, setEventFilter] = useState("mission_completed")
+  const [eventFilter, setEventFilter] = useState(null)
   const [municipioSearch, setMunicipioSearch] = useState("")
   const [debouncedSearch, setDebouncedSearch] = useState("")
   const [sortDirection, setSortDirection] = useState("DESC")
@@ -521,7 +521,12 @@ export default function HomePage() {
 
   // Handle event filter change
   const handleEventFilterChange = (filterValue) => {
-    setEventFilter(filterValue)
+    // If clicking the same filter that's already active, deactivate it
+    if (eventFilter === filterValue) {
+      setEventFilter(null);
+    } else {
+      setEventFilter(filterValue);
+    }
     setCurrentPage(0) // Reset to first page when changing filter
   }
 
@@ -1266,14 +1271,17 @@ export default function HomePage() {
             ) : (
               eventos.map((evento) => {
                 const missionDetails = getMissionDetails(evento.description)
+                console.log({evento})
                 return (
                   <ProgressUpdate
                     key={evento.id}
                     city={evento.municipio?.nome || "Município não encontrado"}
+                    eventType={evento.event}
                     mission={missionDetails.descricao_da_missao}
                     points={missionDetails.qnt_pontos}
                     badge={missionDetails.descricao_da_categoria}
                     date={formatDate(evento.data_alteracao)}
+                    url={evento.municipio?.imagemAvatar}
                     isMobile={isMobile}
                   />
                 )

@@ -4,7 +4,7 @@ import axios from 'axios';
 const isProduction = process.env.NODE_ENV === 'production';
 const baseURL = isProduction
   ? 'https://primeira-infancia-backend.onrender.com/api'
-  : "https://primeira-infancia-backend.onrender.com/api"//'http://localhost:3001/api';
+  : 'http://localhost:3001/api';
 
 // Create an axios instance with default config
 const apiClient = axios.create({
