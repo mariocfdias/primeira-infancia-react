@@ -921,7 +921,7 @@ export default function HomePage() {
                     <MenuItem value="">
                       <em>Selecione...</em>
                     </MenuItem>
-                    {municipios.map((municipio) => (
+                    {municipios.sort((a, b) => a.nome.localeCompare(b.nome)).map((municipio) => (
                       <MenuItem key={municipio.codIbge} value={municipio.codIbge}>
                         {municipio.nome}
                       </MenuItem>
