@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import React from 'react';
-import { 
-  Box, 
-  Typography, 
-  Paper, 
-  LinearProgress, 
-  Avatar, 
-  Chip, 
-  Button, 
+import {
+  Box,
+  Typography,
+  Paper,
+  LinearProgress,
+  Avatar,
+  Chip,
+  Button,
   Divider,
   CircularProgress,
   useTheme,
@@ -19,7 +19,7 @@ import { InfoOutlined, StarOutlined, Star, OpenInNew, EmojiEventsOutlined } from
 import EvidenceItem from './EvidenceItem'
 import { useApiRequest, services } from '../api';
 
-const MunicipioPreview = ({ 
+const MunicipioPreview = ({
   codIbge,
   missaoId,
   onViewProfile = () => {}
@@ -40,14 +40,14 @@ const MunicipioPreview = ({
   // Format Google Drive image URL if it's a drive URL
   const formatImageUrl = (imageUrl) => {
     if (!imageUrl) return null;
-    
+
     // Check if it's a Google Drive link (file/d/ format)
     const driveMatch = imageUrl.match(/drive\.google\.com\/file\/d\/(.*?)\/view/);
     if (driveMatch && driveMatch[1]) {
       const imageId = driveMatch[1];
       return `https://lh3.google.com/u/0/d/${imageId}`;
     }
-    
+
     // Check if it's a Google Drive link (uc?export=view&id= format)
     const ucMatch = imageUrl.match(/drive\.google\.com\/uc\?export=view&id=(.*?)(?:&|$)/);
     if (ucMatch && ucMatch[1]) {
@@ -55,7 +55,7 @@ const MunicipioPreview = ({
       console.log({imageId})
       return `https://lh3.google.com/u/0/d/${imageId}`;
     }
-    
+
     // If not a Drive URL, return the original URL
     return imageUrl;
   };
@@ -68,12 +68,12 @@ const MunicipioPreview = ({
         setError(null);
         return;
       }
-      
+
       try {
         let response;
         if (missaoId) {
           // Fetch mission-specific data
-          response = await makeRequest(() => 
+          response = await makeRequest(() =>
             services.desempenhosService.getDesempenhoByMunicipioAndMissao(
               codIbge,
               missaoId
@@ -81,7 +81,7 @@ const MunicipioPreview = ({
           );
         } else {
           // Fetch general panorama data
-          response = await makeRequest(() => 
+          response = await makeRequest(() =>
             services.dashboardService.getMapPanoramaByIbge(codIbge)
           );
         }
@@ -176,7 +176,7 @@ const MunicipioPreview = ({
 
   // Extract data based on the type of response
   let municipio, evidence, missao, points, badges, status, nome;
-  
+
   if (missaoId) {
     // Mission-specific data
     municipio = data?.municipio || {};
@@ -205,7 +205,7 @@ const MunicipioPreview = ({
 
   // Get color based on level
   const getLevelColor = (points) => {
-      return "#FFCA61"; 
+      return "#FFCA61";
 
   };
 
@@ -216,7 +216,7 @@ const MunicipioPreview = ({
     if (points >= 1) return points / 2; // 0.5-50%
     return 0;
   };
-  
+
   const level = getLevel(points);
   const levelColor = getLevelColor(points);
   const progressPercentage = getProgressPercentage(points);
@@ -233,10 +233,10 @@ const MunicipioPreview = ({
         minHeight: "fit-content"
       }}
     >
-      <Box 
-        p={{ xs: 2, sm: 3 }} 
+      <Box
+        p={{ xs: 2, sm: 3 }}
         sx={{
-          display: "flex", 
+          display: "flex",
           flexDirection: "column"
         }}
       >
@@ -244,7 +244,7 @@ const MunicipioPreview = ({
           console.log({imgError, imageUrl})
         }
         <Box display="flex" gap={2} mb={2} >
-          <Box 
+          <Box
             sx={{
               width: { xs: 80, sm: 100 },
               height: { xs: 80, sm: 100, lg: 140 },
@@ -261,14 +261,14 @@ const MunicipioPreview = ({
                 alt={`${nome} logo`}
                 height={"100%"}
                 variant="square"
-                sx={{ 
+                sx={{
                   width: "100%",
                   height: "100%"
                 }}
                 onError={handleImageError}
               />
             ) : (
-              <Box 
+              <Box
                 sx={{
                   height: "100%",
                   width: "100%",
@@ -290,16 +290,16 @@ const MunicipioPreview = ({
             <Typography variant="h5" fontWeight="bold" mb={0.5}>
               {nome}
             </Typography>
-            
+
             <Box display="flex" justifyContent="space-between" alignItems="center">
               <Typography color={points > 0 ? levelColor : "#FFFFFF"} fontFamily={"Atkinson Hyperlegible"} sx={{fontSize: { xs: "0.875rem", sm: "1rem", lg: "20px" }}}>
-                {level}
+                {level === "Não iniciado" ? status : level}
               </Typography>
               <Box display="flex" alignItems="center" gap={0.5}>
-                <Typography color={levelColor} variant="subtitle1" fontWeight="medium"                 
+                <Typography color={levelColor} variant="subtitle1" fontWeight="medium"
                 fontFamily={"Atkinson Hyperlegible"}
                 sx={{
-                  fontSize: { xs: "0.875rem", sm: "1rem", lg: "20px" }}}> 
+                  fontSize: { xs: "0.875rem", sm: "1rem", lg: "20px" }}}>
                   {points % 100}/100
                 </Typography>
                 <Star sx={{ color: levelColor }} />
@@ -346,15 +346,15 @@ const MunicipioPreview = ({
           </Box>
         </Box>
         {!missaoId && (
-          
+
 
         <Box>
         <Typography variant="subtitle1" fontWeight="bold" mb={1} sx={{fontSize: { xs: "12px", sm: "14px", lg: "20px" }}}>
           Compromissos
         </Typography>
-          <Box 
-            display="flex" 
-            gap={1} 
+          <Box
+            display="flex"
+            gap={1}
             flexWrap="wrap"
             sx={{
               '& .MuiChip-root': {
@@ -406,7 +406,7 @@ const MunicipioPreview = ({
             <Typography variant="body2" color="text.secondary" mb={2} sx={{ color: "#ffffff", fontWeight: "400", fontSize: { xs: "12px", sm: "14px", lg: "20px" } }}>
               Evidências desta missão:
             </Typography>
-            
+
             <Box display="flex" flexDirection="column" gap={1}>
               {evidence.length > 0 && (
                 evidence.map((item, index) => {
@@ -469,7 +469,7 @@ export default React.memo(MunicipioPreview, (prevProps, nextProps) => {
   const codIbgeChanged = prevProps.codIbge !== nextProps.codIbge;
   const missaoIdChanged = prevProps.missaoId !== nextProps.missaoId;
   const viewProfileChanged = prevProps.onViewProfile !== nextProps.onViewProfile;
-  
+
   // If any important prop changed, we should re-render
   return !(codIbgeChanged || missaoIdChanged || viewProfileChanged);
-}); 
+});
