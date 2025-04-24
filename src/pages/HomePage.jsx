@@ -303,7 +303,7 @@ export default function HomePage() {
       setLoading('eventos', true);
       const params = {
         page: currentPage,
-        limit: 100,
+        limit: 20,
         event: eventFilter,
         sortDirection: sortDirection,
         orgao: orgaoParam
