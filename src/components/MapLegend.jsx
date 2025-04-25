@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Paper } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
-const LegendItem = ({ backgroundColor, count, title, description }) => {
+const LegendItem = ({ backgroundColor, count, title, description, fontWeight, color }) => {
   return (
     <Box sx={{ display: "flex", alignItems: "flex-start", mb: 1.5, width: "100%" }}>
       <Box
@@ -9,7 +9,8 @@ const LegendItem = ({ backgroundColor, count, title, description }) => {
           width: 30,
           height: 30,
           bgcolor: backgroundColor,
-          color: backgroundColor === "#ffffff" || backgroundColor === "white" ? "#525252" : "white",
+          fontWeight: fontWeight || "normal",
+          color: color || "white",
           border: backgroundColor === "#ffffff" || backgroundColor === "white" ? "1px solid #000000" : "none",
           display: "flex",
           alignItems: "center",
@@ -118,6 +119,7 @@ export default function MapLegend({ selectedMissao, levelDistribution }) {
           />
           <LegendItem
             backgroundColor="#ffffff"
+            color="#525252"
             count=""
             title="Não aderiram ao Pacto"
           />
@@ -126,9 +128,11 @@ export default function MapLegend({ selectedMissao, levelDistribution }) {
         // General performance legend
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <LegendItem
-            backgroundColor="#707070"
+            backgroundColor="#81BBFF"
+            color="#000000"
             count={level0Count}
-            title="Não iniciado"
+            title="Iniciantes"
+            fontWeight="bold"
             description="Município sem pontos"
           />
           <LegendItem
@@ -152,7 +156,8 @@ export default function MapLegend({ selectedMissao, levelDistribution }) {
           <LegendItem
             backgroundColor="#ffffff"
             count={npCount}
-            title="Não aderiu"
+            color="#525252"
+            title="Não Aderentes"
             description="Município não participante"
           />
         </Box>

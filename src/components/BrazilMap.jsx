@@ -16,7 +16,7 @@ L.Icon.Default.mergeOptions({
 });
 
 // Legend Description component
-const LegendDescription = ({ backgroundColor, color, description, number, title }) => {
+const LegendDescription = ({ backgroundColor, color, description, number, title, fontWeight }) => {
   return (
     <Box sx={{ display: "flex", alignItems: "flex-start", width: "100%" }}>
       <Box
@@ -25,6 +25,7 @@ const LegendDescription = ({ backgroundColor, color, description, number, title 
           height: 30,
           bgcolor: backgroundColor,
           color: color || "white",
+          fontWeight: fontWeight || "normal",
           display: "flex",
           minWidth: 40,
           flexDirection: "row",
@@ -197,15 +198,17 @@ const MapLegendInternal = ({ selectedMissao, levelDistribution, missionPanoramaD
           <LegendDescription
             backgroundColor="#ffffff"
             color="#525252"
-            title="Não aderiram o Pacto"
+            title="Não Aderentes"
             number={missionCounts.notParticipating}
           />
         </Box>
       ) : (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
           <LegendDescription
-            backgroundColor="#707070"
-            title="Não iniciado"
+            backgroundColor="#81BBFF"
+            color="#000000"
+            title="Iniciantes"
+            fontWeight="bold"
             description="Município sem pontos"
             number={level0Count}
           />
@@ -230,7 +233,7 @@ const MapLegendInternal = ({ selectedMissao, levelDistribution, missionPanoramaD
           <LegendDescription
             backgroundColor="white"
             color="#525252"
-            title="Não aderiram o Pacto"
+            title="Não Aderentes"
             number={npCount}
           />
         </Box>
@@ -456,7 +459,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
           fillColor = "#72C576";
           fillOpacity = 1;
           break;
-        case "pending":
+          case "pending":
           if(level === "NP"){
             color = "#707070"; // Gray for pending
             fillColor = "#FFFFFF";
@@ -490,7 +493,7 @@ const LeafletMap = ({ geoJsonData, isMobile, missionPanoramaData, selectedMunici
       } else if (level === 0) {
         // Level 0 - Not started
         color = "#FFFFFF";
-        fillColor = "#707070";
+        fillColor = "#81BBFF";
         fillOpacity = 1;
       } else if (level === 1) {
         // Level 1 - Between 1-100 points
