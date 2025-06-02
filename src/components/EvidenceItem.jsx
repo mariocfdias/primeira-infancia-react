@@ -14,7 +14,18 @@ export default function EvidenceItem({
   const handleEvidenceClick = (url) => {
     console.log({url})
     if (!url) return;
-    window.open(url, '_blank');
+    console.log({url})
+    
+    // Check if the string contains multiple URLs separated by commas
+    if (url.includes(',')) {
+      const urls = url.split(',').map(link => link.trim());
+      console.log({urls})
+      urls.forEach(link => {
+        window.open(link, '_blank');
+      });
+    } else {
+      window.open(url, '_blank');
+    }
   };
 
   const getTooltipTitle = () => {
