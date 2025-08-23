@@ -1,5 +1,5 @@
-import { Box, Typography, Tooltip, Button, ButtonGroup, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList } from "@mui/material"
-import { Info, OpenInNew, ArrowDropDown } from "@mui/icons-material"
+import { Box, Typography, Tooltip, Button, ButtonGroup, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material"
+import { Info, OpenInNew, ArrowDropDown, TextFields, Close } from "@mui/icons-material"
 import PropTypes from 'prop-types'
 import { useState, useRef } from 'react'
 
@@ -12,10 +12,22 @@ export default function EvidenceItem({
   showId = true
 }) {
   const [open, setOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const anchorRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   console.log({evidence})
+
+  // Function to detect if a string is a URL
+  const isUrl = (str) => {
+    if (!str) return false;
+    try {
+      new URL(str);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 
   const getEvidenceUrls = () => {
     if (!evidence) return [];
@@ -25,12 +37,35 @@ export default function EvidenceItem({
     return [evidence];
   };
 
+  // Function to check if evidence contains only text (no URLs)
+  const isTextEvidence = () => {
+    const evidenceList = getEvidenceUrls();
+    return evidenceList.length > 0 && evidenceList.every(item => !isUrl(item));
+  };
+
+  // Function to check if evidence contains URLs
+  const hasUrlEvidence = () => {
+    const evidenceList = getEvidenceUrls();
+    return evidenceList.some(item => isUrl(item));
+  };
+
   const evidenceUrls = getEvidenceUrls();
 
-  const handleEvidenceClick = (url) => {
-    console.log({url})
-    if (!url) return;
-    window.open(url, '_blank');
+  const handleEvidenceClick = (item) => {
+    console.log({item})
+    if (!item) return;
+    
+    // If it's a URL, open it in a new tab
+    if (isUrl(item)) {
+      window.open(item, '_blank');
+    } else {
+      // If it's text, show the modal
+      setModalOpen(true);
+    }
+  };
+
+  const handleTextModalClose = () => {
+    setModalOpen(false);
   };
 
   const handleMainButtonClick = () => {
@@ -73,6 +108,18 @@ export default function EvidenceItem({
     const hasLink = evidence;
 
     if (hasLink) {
+      // If it's text evidence, show text icon instead of open icon
+      if (isTextEvidence()) {
+        return (
+          <TextFields sx={{
+            color: "#ffffff",
+            fontSize: { xs: "0.9rem", sm: "1rem", lg: "24px" },
+            ml: "auto",
+            cursor: "pointer"
+          }} />
+        );
+      }
+      
       return (
         <OpenInNew sx={{
           color: "#ffffff",
@@ -93,7 +140,8 @@ export default function EvidenceItem({
     );
   };
 
-  if (evidenceUrls.length > 1) {
+  // Show expandable list only if there are multiple URLs, not for text evidence
+  if (evidenceUrls.length > 1 && hasUrlEvidence()) {
     return (
       <Box
         sx={{
@@ -221,10 +269,17 @@ export default function EvidenceItem({
                           }}
                         >
                           Evidência {index + 1}
-                          <OpenInNew sx={{
-                            fontSize: { xs: "1rem", sm: "1.2rem", lg: "20px" },
-                            ml: 1
-                          }} />
+                          {isUrl(url) ? (
+                            <OpenInNew sx={{
+                              fontSize: { xs: "1rem", sm: "1.2rem", lg: "20px" },
+                              ml: 1
+                            }} />
+                          ) : (
+                            <TextFields sx={{
+                              fontSize: { xs: "1rem", sm: "1.2rem", lg: "20px" },
+                              ml: 1
+                            }} />
+                          )}
                         </MenuItem>
                       </Tooltip>
                     ))}
@@ -234,17 +289,73 @@ export default function EvidenceItem({
             </Grow>
           )}
         </Popper>
+        
+        {/* Text Evidence Modal */}
+        <Dialog
+          open={modalOpen}
+          onClose={handleTextModalClose}
+          maxWidth="md"
+          fullWidth
+          PaperProps={{
+            sx: {
+              borderRadius: 2,
+              maxHeight: '80vh'
+            }
+          }}
+        >
+          <DialogTitle sx={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center',
+            pb: 1
+          }}>
+            <Typography variant="h6" component="div">
+              {title}
+            </Typography>
+            <Button
+              onClick={handleTextModalClose}
+              sx={{ minWidth: 'auto', p: 0.5 }}
+            >
+              <Close />
+            </Button>
+          </DialogTitle>
+          <DialogContent sx={{ pt: 1 }}>
+            {description && (
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                {description}
+              </Typography>
+            )}
+            <Typography 
+              variant="body1" 
+              sx={{ 
+                whiteSpace: 'pre-line', 
+                lineHeight: 1.5,
+                fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem' },
+                color: 'text.primary',
+                wordBreak: 'break-word'
+              }}
+            >
+              {evidenceUrls.join(' ')}
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleTextModalClose} variant="contained" sx={{ bgcolor: "#12447f" }}>
+              Fechar
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     );
   }
 
   return (
-    <Box
-      onClick={(e) => {
-        console.log({title, evidence, description})
-        const linkToOpen = evidence;
-        linkToOpen && handleEvidenceClick(linkToOpen);
-      }}
+    <>
+      <Box
+        onClick={(e) => {
+          console.log({title, evidence, description})
+          const linkToOpen = evidence;
+          linkToOpen && handleEvidenceClick(linkToOpen);
+        }}
       sx={{
         display: "flex",
         alignItems: "center",
@@ -274,6 +385,62 @@ export default function EvidenceItem({
         {getIcon(evidence)}
       </Tooltip>
     </Box>
+    
+    {/* Text Evidence Modal for single evidence */}
+    <Dialog
+      open={modalOpen}
+      onClose={handleTextModalClose}
+      maxWidth="md"
+      fullWidth
+      PaperProps={{
+        sx: {
+          borderRadius: 2,
+          maxHeight: '80vh'
+        }
+      }}
+    >
+      <DialogTitle sx={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        pb: 1
+      }}>
+        <Typography variant="h6" component="div">
+          {title}
+        </Typography>
+        <Button
+          onClick={handleTextModalClose}
+          sx={{ minWidth: 'auto', p: 0.5 }}
+        >
+          <Close />
+        </Button>
+      </DialogTitle>
+      <DialogContent sx={{ pt: 1 }}>
+        {description && (
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            {description}
+          </Typography>
+        )}
+        <Typography 
+          variant="body1" 
+          sx={{ 
+            whiteSpace: 'pre-line', 
+            lineHeight: 1.5,
+            fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem' },
+            color: 'text.primary',
+            wordBreak: 'break-word'
+          }}
+        >
+          {evidence}
+        </Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleTextModalClose} variant="contained" sx={{ bgcolor: "#12447f" }}>
+          Fechar
+        </Button>
+      </DialogActions>
+    </Dialog>
+  </>
   );
 }
 
